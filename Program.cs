@@ -38,10 +38,10 @@ internal readonly ref struct Editor
       {
         // case 'w': MoveHorizontalWrap(45); break;
         // case 'b': MoveHorizontalWrap(-45); break;
-        case 'q': MoveHorizontalByPattern(TextPattern.WordBeginPrev); break;
-        case 'w': MoveHorizontalByPattern(TextPattern.WordEndPrev); break;
-        case 'e': MoveHorizontalByPattern(TextPattern.WordEndNext); break;
-        case 'r': MoveHorizontalByPattern(TextPattern.WordBeginNext); break;
+        case 'a': MoveHorizontalByPattern(TextPattern.WordBeginBackward); break;
+        case 's': MoveHorizontalByPattern(TextPattern.WordEndBackward); break;
+        case 'd': MoveHorizontalByPattern(TextPattern.WordEndForward); break;
+        case 'f': MoveHorizontalByPattern(TextPattern.WordBeginFoward); break;
         case 'h': MoveHorizontal(-1); break;
         case 'j': MoveVertical(1); break;
         case 'k': MoveVertical(-1); break;
@@ -106,10 +106,10 @@ internal readonly ref struct Editor
     var (left, top) = Console.GetCursorPosition();
     var (newLeft, newTop) = textPattern switch
     {
-      TextPattern.WordBeginPrev => buffer.GetNextWordBeginPosition(left, top),
-      TextPattern.WordEndPrev => buffer.GetNextWordEndPosition(left, top),
-      TextPattern.WordEndNext => buffer.GetNextWordEndPosition(left, top),
-      TextPattern.WordBeginNext => buffer.GetNextWordBeginPosition(left, top),
+      TextPattern.WordBeginBackward => buffer.GetWordBeginPositionBackward(left, top),
+      TextPattern.WordEndBackward => buffer.GetWordEndPositionBackward(left, top),
+      TextPattern.WordEndForward => buffer.GetWordEndPositionForward(left, top),
+      TextPattern.WordBeginFoward => buffer.GetWordBeginPositionForward(left, top),
       _ => throw new NotImplementedException(),
     };
     // var txt = buffer.GetTextUnderCursor(left, top);
@@ -124,11 +124,11 @@ internal readonly ref struct Editor
 }
 enum TextPattern
 {
-  WordEndPrev = -2,
-  WordBeginPrev,
+  WordEndBackward = -2,
+  WordBeginBackward,
   None,
-  WordBeginNext,
-  WordEndNext,
+  WordBeginFoward,
+  WordEndForward,
 }
 internal readonly ref struct DummyBuffer
 {
@@ -149,63 +149,77 @@ internal readonly ref struct DummyBuffer
   private readonly ReadOnlySpan<char> _template;
   private readonly int _width;
   //TODO: add unit test
-  private (int, int) FromWordToNonWord(int left2D, int top2D)
+  private (int, int) FindNonWordForward(int left2D, int top2D, int anchor1D)
   {
-    var begin1D = top2D * _width + left2D;
-    //qqqqq wwwww,  eeeee
-    //      ^
-    ReadOnlySpan<char> beginAnchor = _template[begin1D..];
-    //wwwww,  eeeee
-    //     ^
-    var beginAnchorEnd1D = beginAnchor.IndexOfAny(_searchNonWordClass);
-    if (beginAnchorEnd1D == -1) return (left2D, top2D);
-    //wwwww,
-    //^    ^
-    var rtn = beginAnchor[..beginAnchorEnd1D].ToString();
+    ReadOnlySpan<char> spanAnchorToEnd = _template[anchor1D..];
+    var foundIndexInSpan1D = spanAnchorToEnd.IndexOfAny(_searchNonWordClass);
+    if (foundIndexInSpan1D == -1) return (left2D, top2D);
+    var txt = spanAnchorToEnd[..foundIndexInSpan1D].ToString();
     Console.SetCursorPosition(0, Cfg.WinHEI - 1);
-    Console.Write(rtn.PadRight(Cfg.WinWID, ' '));
+    Console.Write(txt.PadRight(Cfg.WinWID, ' '));
     Console.SetCursorPosition(left2D, top2D);
-    var newLeft2D = left2D + beginAnchorEnd1D;
+    var newLeft2D = left2D + foundIndexInSpan1D;
     return (newLeft2D, top2D);
   }
-  internal (int, int) GetNextWordEndPosition(int left, int top)
+  //TODO: add unit test
+  private (int, int) FindWordForward(int left2D, int top2D, int anchor1D)
   {
-    // var (useAltAlgorythm, offset) = ProbeAlgorithm(left, top);
-    // if (useAltAlgorythm)
-    //   (left, top) = FromNonWordToWord(left + offset, top);
-    (left, top) = FromNonWordToWord(left + 1, top);
-    var (newLeft, newTop) = FromWordToNonWord(left, top);
+    ReadOnlySpan<char> spanAnchorToEnd = _template[anchor1D..];
+    var foundIndexInSpan1D = spanAnchorToEnd.IndexOfAny(_searchWordClass);
+    if (foundIndexInSpan1D == -1) return (left2D, top2D);
+    var newLeft2D = left2D + foundIndexInSpan1D;
+    return (newLeft2D, top2D);
+  }
+  internal (int, int) GetWordEndPositionForward(int left2D, int top2D)
+  {
+    var anchor1D = top2D * _width + left2D;
+    // var 
+    (left2D, top2D) = FindWordForward(left2D + 1, top2D, anchor1D);
+    var (newLeft, newTop) = FindNonWordForward(left2D, top2D, anchor1D);
     return (newLeft - 1, newTop);
   }
-  // private (bool, int) ProbeAlgorithm(int left, int top)
-  // {
-  //   var begin1D = top * _width + left;
-  //   ReadOnlySpan<char> beginAnchor = _template[begin1D..(begin1D + 2)];
-  //   if (beginAnchor.Length == 1) return (false, 0);
-  //   else if (beginAnchor.IndexOfAny(_searchNonWordClass) > 0)
-  //   {
-  //     var offset = _searchNonWordClass.Contains(beginAnchor[0]) ? 0 : 1;
-  //     return (true, offset);
-  //   }
-  //   return (false, 0);
-  // }
-  //TODO: add unit test
-  private (int, int) FromNonWordToWord(int left2D, int top2D)
+  internal (int, int) GetWordBeginPositionForward(int left2D, int top2D)
   {
-    var begin1D = top2D * _width + left2D;
-    //qqqqq wwwww,  eeeee rrrrr
-    //           ^
-    ReadOnlySpan<char> beginAnchor = _template[begin1D..];
-    //,  eeeee rrrrr
-    //   ^
-    var beginAnchorEnd1D = beginAnchor.IndexOfAny(_searchWordClass);
-    if (beginAnchorEnd1D == -1) return (left2D, top2D);
-    var newLeft2D = left2D + beginAnchorEnd1D;
+    var anchor1D = top2D * _width + left2D;
+    var (newLeft, newTop) = FindNonWordForward(left2D, top2D, anchor1D);
+    return FindWordForward(newLeft, newTop, anchor1D);
+  }
+  //TODO: add unit test
+  private (int, int) FindNonWordBackward(int left2D, int top2D, int anchor1D)
+  {
+    ReadOnlySpan<char> spanBeginToAnchor = _template[..anchor1D];
+    var foundIndexInSpan1D = spanBeginToAnchor.LastIndexOfAny(_searchNonWordClass);
+    if (foundIndexInSpan1D == -1) return (left2D, top2D);
+    var txt = spanBeginToAnchor[(foundIndexInSpan1D + 1)..].ToString();
+    Console.SetCursorPosition(0, Cfg.WinHEI - 1);
+    Console.Write(txt.PadRight(Cfg.WinWID, ' '));
+    Console.SetCursorPosition(left2D, top2D);
+    var newLeft2D = left2D - (anchor1D - foundIndexInSpan1D);
     return (newLeft2D, top2D);
   }
-  internal (int, int) GetNextWordBeginPosition(int left, int top)
+  //TODO: add unit test
+  private (int, int) FindWordBackward(int left2D, int top2D, int anchor1D)
   {
-    var (newLeft, newTop) = FromWordToNonWord(left, top);
-    return FromNonWordToWord(newLeft, newTop);
+    ReadOnlySpan<char> spanBeginToAnchor = _template[..anchor1D];
+    var foundIndexInSpan1D = spanBeginToAnchor.LastIndexOfAny(_searchWordClass);
+    if (foundIndexInSpan1D == -1) return (left2D, top2D);
+    var newLeft2D = left2D - (anchor1D - foundIndexInSpan1D);
+    return (newLeft2D, top2D);
+  }
+  internal (int, int) GetWordEndPositionBackward(int left2D, int top2D)
+  {
+    var anchor1D = top2D * _width + left2D;
+    var isWord = _wordClass.Contains(_template[anchor1D]);
+    if (isWord)
+      (left2D, top2D) = FindNonWordBackward(left2D, top2D, anchor1D);
+    var (newLeft, newTop) = FindWordBackward(left2D, top2D, anchor1D);
+    return (newLeft, newTop);
+  }
+  internal (int, int) GetWordBeginPositionBackward(int left2D, int top2D)
+  {
+    var anchor1D = top2D * _width + left2D;
+    (left2D, top2D) = FindWordBackward(left2D - 1, top2D, anchor1D);
+    var (newLeft, newTop) = FindNonWordBackward(left2D, top2D, anchor1D);
+    return (newLeft + 1, newTop);
   }
 }

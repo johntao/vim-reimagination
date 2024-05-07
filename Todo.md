@@ -37,3 +37,165 @@
     - should at least migrate to Terminal.Gui
     - afterward, we might have better support for migration to other platforms
     - probably, the best way to do this is to develop with lower level API
+
+## word algorithm rework
+
+### version 1
+```txt
+Search WordBegin Forward 4,2
+qqq  www  eee
+^
+>nw>w
+qqq  www  eee
+ ^
+>nw>w
+qqq  www  eee
+  ^
+>nw>w
+qqq  www  eee
+   ^
+>w
+qqq  www  eee
+    ^
+>w
+qqq  www  eee
+     ^
+>nw>w
+Search WordEnd Forward 4(2),2
+qqq  www  eee
+  ^
+>w!>nw
+qqq  www  eee
+   ^
+>w>nw
+qqq  www  eee
+    ^
+>w>nw
+qqq  www  eee
+     ^
+>nw
+qqq  www  eee
+      ^
+>nw
+qqq  www  eee
+       ^
+>w!>nw
+Search WordBegin Backward 4(2),2
+qqq  www  eee
+          ^
+<w!<nw
+qqq  www  eee
+         ^
+<w<nw
+qqq  www  eee
+        ^
+<w<nw
+qqq  www  eee
+       ^
+<nw
+qqq  www  eee
+      ^
+<nw
+qqq  www  eee
+     ^
+<w!<nw
+Search WordEnd Backward 4,2
+qqq  www  eee
+            ^
+<nw<w
+qqq  www  eee
+           ^
+<nw<w
+qqq  www  eee
+          ^
+<nw<w
+qqq  www  eee
+         ^
+<w
+qqq  www  eee
+        ^
+<w
+qqq  www  eee
+       ^
+<nw<w
+```
+### version 2 symmetrical and reduced
+```txt
+Search WordBegin Forward 3,3 v2
+qqq  www  eee
+^
+>nw>w!
+qqq  www  eee
+ ^
+>nw>w!
+qqq  www  eee
+  ^
+>w!
+qqq  www  eee
+   ^
+>w!
+qqq  www  eee
+    ^
+>w!
+qqq  www  eee
+     ^
+>nw>w!
+Search WordEnd Forward 4,2 v2
+qqq  www  eee
+  ^
+>w!>nw
+qqq  www  eee
+   ^
+>w!>nw
+qqq  www  eee
+    ^
+>w!>nw
+qqq  www  eee
+     ^
+>nw
+qqq  www  eee
+      ^
+>nw
+qqq  www  eee
+       ^
+>w!>nw
+
+Search WordBegin Backward 4,2 v2
+qqq  www  eee
+          ^
+<w!<nw
+qqq  www  eee
+         ^
+<w!<nw
+qqq  www  eee
+        ^
+<w!<nw
+qqq  www  eee
+       ^
+<nw
+qqq  www  eee
+      ^
+<nw
+qqq  www  eee
+     ^
+<w!<nw
+Search WordEnd Backward 3,3 v2
+qqq  www  eee
+            ^
+<nw<w!
+qqq  www  eee
+           ^
+<nw<w!
+qqq  www  eee
+          ^
+<w!
+qqq  www  eee
+         ^
+<w!
+qqq  www  eee
+        ^
+<w!
+qqq  www  eee
+       ^
+<nw<w!
+```
