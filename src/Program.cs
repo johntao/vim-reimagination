@@ -13,14 +13,14 @@ internal readonly ref struct Editor
   {
   }
   private readonly DummyBuffer _buffer;
-  private readonly WordMotionV1 _wordMotion;
+  private readonly WordMotionV2 _wordMotion;
   public Editor()
   {
     // ReadOnlySpan<char> tmpl = File.ReadAllText("./template.txt");
     var tmpl = File.ReadAllLines("./template.txt");
     ReadOnlySpan<char> src = string.Join("", tmpl);
     _buffer = new DummyBuffer(src, Cfg.WinWID);
-    _wordMotion = new WordMotionV1();
+    _wordMotion = new WordMotionV2();
     Console.Write(src.ToString());
     Console.SetCursorPosition(0, 0);
   }
