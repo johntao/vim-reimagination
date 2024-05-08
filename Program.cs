@@ -1,5 +1,4 @@
 ﻿using System.Buffers;
-
 Console.Clear();
 Console.CancelKeyPress += delegate { Console.Clear(); };
 new Editor().Run();
@@ -106,15 +105,14 @@ internal readonly ref struct Editor
     var (left, top) = Console.GetCursorPosition();
     var (newLeft, newTop) = textPattern switch
     {
-      TextPattern.WordBeginBackward => buffer.GetWordBeginPositionBackward(left, top),
-      TextPattern.WordEndBackward => buffer.GetWordEndPositionBackward(left, top),
-      TextPattern.WordEndForward => buffer.GetWordEndPositionForward(left, top),
-      TextPattern.WordBeginFoward => buffer.GetWordBeginPositionForward(left, top),
+      TextPattern.WordBeginBackward => buffer.GetSmallWordBeginBackward(left, top),
+      TextPattern.WordEndBackward => buffer.GetSmallWordEndBackward(left, top),
+      TextPattern.WordEndForward => buffer.GetSmallWordEndForward(left, top),
+      TextPattern.WordBeginFoward => buffer.GetSmallWordBeginForward(left, top),
       _ => throw new NotImplementedException(),
     };
     // var txt = buffer.GetTextUnderCursor(left, top);
     Console.SetCursorPosition(newLeft, newTop);
-
     // var idx = Buffer.GetChunks().ToString().IndexOfAny(pattern, pos);
     // if (idx == -1) return;
     // var newTop = idx / winWID;
@@ -136,23 +134,26 @@ internal readonly ref struct DummyBuffer
   {
   }
   // private readonly ReadOnlySpan<char> _nonWordClass = " \t\n\r\f\v,:+=-*/\\(){}[]<>!@#$%^&*;\"'`~|?";
-  private readonly ReadOnlySpan<char> _nonWordClass = " ,.:;!?";
-  private readonly ReadOnlySpan<char> _wordClass = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
-  private readonly SearchValues<char> _searchWordClass, _searchNonWordClass;
+  // private readonly ReadOnlySpan<char> _nonWordClass = " ,.:;!?";
+  private readonly ReadOnlySpan<char> _smallWord = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
+  private readonly SearchValues<char> _searchSmallWord;
+  // private readonly SearchValues<char> _searchNonWordClass;
   public DummyBuffer(ReadOnlySpan<char> Template, int Width)
   {
     _width = Width;
     _template = Template;
-    _searchWordClass = SearchValues.Create(_wordClass);
-    _searchNonWordClass = SearchValues.Create(_nonWordClass);
+    _searchSmallWord = SearchValues.Create(_smallWord);
+    // _searchNonWordClass = SearchValues.Create(_nonWordClass);
   }
   private readonly ReadOnlySpan<char> _template;
   private readonly int _width;
+  #region forward
   //TODO: add unit test
-  private (int, int) FindNonWordForward(int left2D, int top2D, int anchor1D)
+  private (int, int) FindNegtiveForward(int left2D, int top2D)
   {
+    var anchor1D = top2D * _width + left2D;
     ReadOnlySpan<char> spanAnchorToEnd = _template[anchor1D..];
-    var foundIndexInSpan1D = spanAnchorToEnd.IndexOfAny(_searchNonWordClass);
+    var foundIndexInSpan1D = spanAnchorToEnd.IndexOfAnyExcept(_searchSmallWord);
     if (foundIndexInSpan1D == -1) return (left2D, top2D);
     var txt = spanAnchorToEnd[..foundIndexInSpan1D].ToString();
     Console.SetCursorPosition(0, Cfg.WinHEI - 1);
@@ -162,33 +163,51 @@ internal readonly ref struct DummyBuffer
     return (newLeft2D, top2D);
   }
   //TODO: add unit test
-  private (int, int) FindWordForward(int left2D, int top2D, int anchor1D)
+  private (int, int) FindPositiveForward(int left2D, int top2D)
   {
+    var anchor1D = top2D * _width + left2D;
     ReadOnlySpan<char> spanAnchorToEnd = _template[anchor1D..];
-    var foundIndexInSpan1D = spanAnchorToEnd.IndexOfAny(_searchWordClass);
+    var foundIndexInSpan1D = spanAnchorToEnd.IndexOfAny(_searchSmallWord);
     if (foundIndexInSpan1D == -1) return (left2D, top2D);
     var newLeft2D = left2D + foundIndexInSpan1D;
     return (newLeft2D, top2D);
   }
-  internal (int, int) GetWordEndPositionForward(int left2D, int top2D)
+  internal (int, int) GetSmallWordEndForward(int left2D, int top2D)
   {
-    var anchor1D = top2D * _width + left2D;
-    // var 
-    (left2D, top2D) = FindWordForward(left2D + 1, top2D, anchor1D);
-    var (newLeft, newTop) = FindNonWordForward(left2D, top2D, anchor1D);
+    var isWordEndOrSpace = IsWordEndOrSpace(left2D, top2D);
+    if (isWordEndOrSpace)
+      (left2D, top2D) = FindPositiveForward(left2D + 1, top2D);
+    var (newLeft, newTop) = FindNegtiveForward(left2D, top2D);
     return (newLeft - 1, newTop);
   }
-  internal (int, int) GetWordBeginPositionForward(int left2D, int top2D)
+  internal (int, int) GetSmallWordBeginForward(int left2D, int top2D)
+  {
+    var isWordEndOrSpace = IsWordEndOrSpace(left2D, top2D);
+    if (!isWordEndOrSpace)
+      (left2D, top2D) = FindNegtiveForward(left2D, top2D);
+    var (newLeft, newTop) = FindPositiveForward(left2D + 1, top2D);
+    return (newLeft, newTop);
+  }
+  private bool IsWordEndOrSpace(int left2D, int top2D)
   {
     var anchor1D = top2D * _width + left2D;
-    var (newLeft, newTop) = FindNonWordForward(left2D, top2D, anchor1D);
-    return FindWordForward(newLeft, newTop, anchor1D);
+    var span = _template[anchor1D..(anchor1D + 2)];
+    var isWordEnd = span.Length == 1 || (
+      _smallWord.Contains(span[0]) &&
+      !_smallWord.Contains(span[1])
+    );
+    if (isWordEnd) return true;
+    var isSpace = !_smallWord.Contains(span[0]);
+    return isSpace;
   }
+  #endregion
+  #region backward
   //TODO: add unit test
-  private (int, int) FindNonWordBackward(int left2D, int top2D, int anchor1D)
+  private (int, int) FindNegativeBackward(int left2D, int top2D)
   {
-    ReadOnlySpan<char> spanBeginToAnchor = _template[..anchor1D];
-    var foundIndexInSpan1D = spanBeginToAnchor.LastIndexOfAny(_searchNonWordClass);
+    var anchor1D = top2D * _width + left2D;
+    ReadOnlySpan<char> spanBeginToAnchor = _template[..(anchor1D + 1)];
+    var foundIndexInSpan1D = spanBeginToAnchor.LastIndexOfAnyExcept(_searchSmallWord);
     if (foundIndexInSpan1D == -1) return (left2D, top2D);
     var txt = spanBeginToAnchor[(foundIndexInSpan1D + 1)..].ToString();
     Console.SetCursorPosition(0, Cfg.WinHEI - 1);
@@ -198,28 +217,42 @@ internal readonly ref struct DummyBuffer
     return (newLeft2D, top2D);
   }
   //TODO: add unit test
-  private (int, int) FindWordBackward(int left2D, int top2D, int anchor1D)
+  private (int, int) FindPositiveBackward(int left2D, int top2D)
   {
-    ReadOnlySpan<char> spanBeginToAnchor = _template[..anchor1D];
-    var foundIndexInSpan1D = spanBeginToAnchor.LastIndexOfAny(_searchWordClass);
+    var anchor1D = top2D * _width + left2D;
+    ReadOnlySpan<char> spanBeginToAnchor = _template[..(anchor1D + 1)];
+    var foundIndexInSpan1D = spanBeginToAnchor.LastIndexOfAny(_searchSmallWord);
     if (foundIndexInSpan1D == -1) return (left2D, top2D);
     var newLeft2D = left2D - (anchor1D - foundIndexInSpan1D);
     return (newLeft2D, top2D);
   }
-  internal (int, int) GetWordEndPositionBackward(int left2D, int top2D)
+  internal (int, int) GetSmallWordEndBackward(int left2D, int top2D)
   {
-    var anchor1D = top2D * _width + left2D;
-    var isWord = _wordClass.Contains(_template[anchor1D]);
-    if (isWord)
-      (left2D, top2D) = FindNonWordBackward(left2D, top2D, anchor1D);
-    var (newLeft, newTop) = FindWordBackward(left2D, top2D, anchor1D);
+    var isWordBeginOrSpace = IsWordBeginOrSpace(left2D, top2D);
+    if (!isWordBeginOrSpace)
+      (left2D, top2D) = FindNegativeBackward(left2D, top2D);
+    var (newLeft, newTop) = FindPositiveBackward(left2D - 1, top2D);
     return (newLeft, newTop);
   }
-  internal (int, int) GetWordBeginPositionBackward(int left2D, int top2D)
+  internal (int, int) GetSmallWordBeginBackward(int left2D, int top2D)
   {
-    var anchor1D = top2D * _width + left2D;
-    (left2D, top2D) = FindWordBackward(left2D - 1, top2D, anchor1D);
-    var (newLeft, newTop) = FindNonWordBackward(left2D, top2D, anchor1D);
+    var isWordBeginOrSpace = IsWordBeginOrSpace(left2D, top2D);
+    if (isWordBeginOrSpace)
+      (left2D, top2D) = FindPositiveBackward(left2D - 1, top2D);
+    var (newLeft, newTop) = FindNegativeBackward(left2D, top2D);
     return (newLeft + 1, newTop);
   }
+  private bool IsWordBeginOrSpace(int left2D, int top2D)
+  {
+    var anchor1D = top2D * _width + left2D;
+    var span = _template[(anchor1D - 1)..(anchor1D + 1)];
+    var isWordBegin = span.Length == 1 || (
+      !_smallWord.Contains(span[0]) &&
+      _smallWord.Contains(span[1])
+    );
+    if (isWordBegin) return true;
+    var isSpace = !_smallWord.Contains(span[0]);
+    return isSpace;
+  }
+  #endregion
 }
