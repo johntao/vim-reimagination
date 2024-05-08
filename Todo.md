@@ -198,3 +198,17 @@
   |       ^
   |<nw<w!
   ```
+
+## OO abstraction
+
+- Moral of the day...
+- Editor knows about the renderer which is Console for now
+  - also knows about the buffer which is 1D `ReadOnly<Span>` for now
+  - editor also instantiate the motion algorithm
+- Motion algorithm accept renderer and buffer as input
+  - motion calculates the new cursor position and return it
+- We make this design by the nature limitation of readonly ref struct
+  - it does not simply support inheritance or static readonly member
+  - we think twice before making a class
+  - in the end the Motion algorithm is a class and it cannot hold buffer as a static readonly member
+  - so the final design pass in buffer as a parameter
