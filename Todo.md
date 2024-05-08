@@ -38,164 +38,126 @@
     - afterward, we might have better support for migration to other platforms
     - probably, the best way to do this is to develop with lower level API
 
-## word algorithm rework
-
-### version 1
+## Word Motion Algorithm
+version 2 use symmetrical algorithm and reduced some of the ad-hoc algorithm
+- `^` is the cursor position
+- `|` is the boundary of the line 
+  - p.s. so that "this text document itself" would not be affected by editor indentation
+- `!` means exclusive search
+- `>` means forward search
+- `<` means backward search
+- `w` means word
+- `nw` means not word
+  ### Subject1: Search WordBegin, Forward
+  Use IsWordEndOrSpace to distinct patterns
   ```txt
-  |Search WordBegin Forward 4,2
-  |qqq  www  eee
+  |case 1: word begin
+  |qq  ww  eeeee
   |^
-  |>nw>w
-  |qqq  www  eee
+  |>nw>w!
+  |
+  |case 2: word end
+  |qq  ww  eeeee
   | ^
-  |>nw>w
-  |qqq  www  eee
+  |>w!
+  |
+  |case 3: space begin
+  |qq  ww  eeeee
   |  ^
-  |>nw>w
-  |qqq  www  eee
+  |>w!
+  |
+  |case 4: space end
+  |qq  ww  eeeee
   |   ^
-  |>w
-  |qqq  www  eee
+  |>w!
+  |
+  |case 1: word begin
+  |qq  ww  eeeee
   |    ^
-  |>w
-  |qqq  www  eee
-  |     ^
-  |>nw>w
-  |Search WordEnd Forward 4(2),2
-  |qqq  www  eee
-  |  ^
-  |>w!>nw
-  |qqq  www  eee
-  |   ^
-  |>w>nw
-  |qqq  www  eee
-  |    ^
-  |>w>nw
-  |qqq  www  eee
-  |     ^
-  |>nw
-  |qqq  www  eee
-  |      ^
-  |>nw
-  |qqq  www  eee
-  |       ^
-  |>w!>nw
-  |Search WordBegin Backward 4(2),2
-  |qqq  www  eee
-  |          ^
-  |<w!<nw
-  |qqq  www  eee
-  |         ^
-  |<w<nw
-  |qqq  www  eee
-  |        ^
-  |<w<nw
-  |qqq  www  eee
-  |       ^
-  |<nw
-  |qqq  www  eee
-  |      ^
-  |<nw
-  |qqq  www  eee
-  |     ^
-  |<w!<nw
-  |Search WordEnd Backward 4,2
-  |qqq  www  eee
-  |            ^
-  |<nw<w
-  |qqq  www  eee
-  |           ^
-  |<nw<w
-  |qqq  www  eee
-  |          ^
-  |<nw<w
-  |qqq  www  eee
-  |         ^
-  |<w
-  |qqq  www  eee
-  |        ^
-  |<w
-  |qqq  www  eee
-  |       ^
-  |<nw<w
+  |>nw>w!
   ```
-### version 2 symmetrical and reduced
+  ### Subject2: Search WordEnd, Forward
+  Use IsWordEndOrSpace to distinct patterns
   ```txt
-  |Search WordBegin Forward 3,3 IsWordEndOrSpace
-  |qqq  www  eee
-  |^
-  |>nw>w!
-  |qqq  www  eee
+  |case 1: word end
+  |qq  ww  eeeee
   | ^
-  |>nw>w!
-  |qqq  www  eee
-  |  ^
-  |>w!
-  |qqq  www  eee
-  |   ^
-  |>w!
-  |qqq  www  eee
-  |    ^
-  |>w!
-  |qqq  www  eee
-  |     ^
-  |>nw>w!
-  |Search WordEnd Forward 4,2 IsWordEndOrSpace
-  |qqq  www  eee
+  |>w!>nw
+  |
+  |case 2: space begin
+  |qq  ww  eeeee
   |  ^
   |>w!>nw
-  |qqq  www  eee
+  |
+  |case 3: space end
+  |qq  ww  eeeee
   |   ^
   |>w!>nw
-  |qqq  www  eee
+  |
+  |case 4: word begin
+  |qq  ww  eeeee
   |    ^
-  |>w!>nw
-  |qqq  www  eee
+  |>nw
+  |
+  |case 1: word end
+  |qq  ww  eeeee
   |     ^
-  |>nw
-  |qqq  www  eee
-  |      ^
-  |>nw
-  |qqq  www  eee
-  |       ^
   |>w!>nw
-  |Search WordBegin Backward 4,2
-  |qqq  www  eee
+  ```
+  ### Subject3: Search WordBegin, Backward
+  Use IsWordBeginOrSpace to distinct patterns
+  ```txt
+  |case 1: word begin
+  |qqqqq  ww  ee
+  |           ^
+  |<w!<nw
+  |
+  |case 2: space end
+  |qqqqq  ww  ee
   |          ^
   |<w!<nw
-  |qqq  www  eee
+  |
+  |case 3: space begin
+  |qqqqq  ww  ee
   |         ^
   |<w!<nw
-  |qqq  www  eee
+  |
+  |case 4: word end
+  |qqqqq  ww  ee
   |        ^
-  |<w!<nw
-  |qqq  www  eee
+  |<nw
+  |
+  |case 1: word begin
+  |qqqqq  ww  ee
   |       ^
-  |<nw
-  |qqq  www  eee
-  |      ^
-  |<nw
-  |qqq  www  eee
-  |     ^
   |<w!<nw
-  |Search WordEnd Backward 3,3
-  |qqq  www  eee
+  ```
+  ### Subject4: Search WordEnd, Backward
+  Use IsWordBeginOrSpace to distinct patterns
+  ```txt
+  |case 1: word end
+  |qqqqq  ww  ee
   |            ^
   |<nw<w!
-  |qqq  www  eee
+  |
+  |case 2: word begin
+  |qqqqq  ww  ee
   |           ^
-  |<nw<w!
-  |qqq  www  eee
+  |<w!
+  |
+  |case 3: space end
+  |qqqqq  ww  ee
   |          ^
   |<w!
-  |qqq  www  eee
+  |
+  |case 4: space begin
+  |qqqqq  ww  ee
   |         ^
   |<w!
-  |qqq  www  eee
+  |
+  |case 1: word end
+  |qqqqq  ww  ee
   |        ^
-  |<w!
-  |qqq  www  eee
-  |       ^
   |<nw<w!
   ```
 

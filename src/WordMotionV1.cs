@@ -1,5 +1,8 @@
 using System.Buffers;
 namespace VimRenaissance;
+/// <summary>
+/// this implementation failed to handle secondary word class which is neither space nor small word
+/// </summary>
 internal class WordMotionV1 : IWordMotion
 {
   // private readonly ReadOnlySpan<char> _nonWordClass = " \t\n\r\f\v,:+=-*/\\(){}[]<>!@#$%^&*;\"'`~|?";
