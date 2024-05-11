@@ -1,14 +1,13 @@
 namespace VimRenaissance;
 internal class WordMotionV2 : IWordMotion
 {
-  public (int, int) GetSmallWordEndForward(int left2D, int top2D, DummyBuffer buffer)
+  public (int, int) GetSmallWordEndForward(int left2D, int top2D, Buffer1D buffer)
   {
-    var anchor1D = top2D * buffer.Width + left2D;
-    buffer.Reset(anchor1D);
-    var current = buffer.Current;
+    buffer.Reset(left2D, top2D);
+    var prev = buffer.Current;
     var hasNext = buffer.MoveNext();
-    var next = hasNext ? buffer.Current : CharKind.None;
-    switch ((current, next))
+    var current = hasNext ? buffer.Current : CharKind.None;
+    switch ((prev, current))
     {
       case (CharKind.Primary, CharKind.Primary):
       case (CharKind.Secondary, CharKind.Secondary):
@@ -17,86 +16,82 @@ internal class WordMotionV2 : IWordMotion
       case (CharKind.Primary, CharKind.Secondary):
       case (CharKind.Secondary, CharKind.Primary):
         {
-          while (buffer.MoveNext() && buffer.Current == next) ;
-          return (buffer.Anchor1D - 1, top2D);
+          while (buffer.FetchNext()) ;
+          return (buffer.Left2D - 1, buffer.Top2D);
         }
       case (_, CharKind.Space):
         {
-          while (buffer.MoveNext() && buffer.Current == next) ;
-          var newKind = buffer.Current;
-          while (buffer.MoveNext() && buffer.Current == newKind) ;
-          return (buffer.Anchor1D - 1, top2D);
+          while (buffer.FetchNext()) ;
+          while (buffer.FetchNext()) ;
+          return (buffer.Left2D - 1, buffer.Top2D);
         }
       default:
         return (left2D, top2D);
     }
   }
-  public (int, int) GetSmallWordBeginForward(int left2D, int top2D, DummyBuffer buffer)
+  public (int, int) GetSmallWordBeginForward(int left2D, int top2D, Buffer1D buffer)
   {
-    var anchor1D = top2D * buffer.Width + left2D;
-    buffer.Reset(anchor1D);
-    var current = buffer.Current;
+    buffer.Reset(left2D, top2D);
+    var prev = buffer.Current;
     var hasNext = buffer.MoveNext();
-    var next = hasNext ? buffer.Current : CharKind.None;
-    switch ((current, next))
+    var current = hasNext ? buffer.Current : CharKind.None;
+    switch ((prev, current))
     {
       case (_, CharKind.Space):
-        while (buffer.MoveNext() && buffer.Current == next) ;
-        return (buffer.Anchor1D, top2D);
+        while (buffer.FetchNext()) ;
+        return (buffer.Left2D, buffer.Top2D);
       case (CharKind.Primary, CharKind.Secondary):
       case (CharKind.Secondary, CharKind.Primary):
       case (CharKind.Space, CharKind.Primary):
       case (CharKind.Space, CharKind.Secondary):
-        return (left2D + 1, top2D);
+        return (buffer.Left2D, buffer.Top2D);
       case (CharKind.Primary, CharKind.Primary):
       case (CharKind.Secondary, CharKind.Secondary):
-        while (buffer.MoveNext() && buffer.Current == next) ;
+        while (buffer.FetchNext()) ;
         var newKind = buffer.Current;
         if (newKind != CharKind.Space) // this is the case of alternative kind
-          return (buffer.Anchor1D, top2D);
-        while (buffer.MoveNext() && buffer.Current == newKind) ;
-        return (buffer.Anchor1D, top2D);
+          return (buffer.Left2D, buffer.Top2D);
+        while (buffer.FetchNext()) ;
+        return (buffer.Left2D, buffer.Top2D);
       default:
         return (left2D, top2D);
     }
   }
-  public (int, int) GetSmallWordEndBackward(int left2D, int top2D, DummyBuffer buffer)
+  public (int, int) GetSmallWordEndBackward(int left2D, int top2D, Buffer1D buffer)
   {
-    var anchor1D = top2D * buffer.Width + left2D;
-    buffer.Reset(anchor1D);
-    var current = buffer.Current;
-    var hasPrev = buffer.MovePrev();
-    var prev = hasPrev ? buffer.Current : CharKind.None;
-    switch ((current, prev))
+    buffer.Reset(left2D, top2D);
+    var prev = buffer.Current;
+    var hasNext = buffer.MovePrev();
+    var current = hasNext ? buffer.Current : CharKind.None;
+    switch ((prev, current))
     {
       case (_, CharKind.Space):
-        while (buffer.MovePrev() && buffer.Current == prev) ;
-        return (buffer.Anchor1D, top2D);
+        while (buffer.FetchPrev()) ;
+        return (buffer.Left2D, buffer.Top2D);
       case (CharKind.Primary, CharKind.Secondary):
       case (CharKind.Secondary, CharKind.Primary):
       case (CharKind.Space, CharKind.Primary):
       case (CharKind.Space, CharKind.Secondary):
-        return (left2D - 1, top2D);
+        return (buffer.Left2D, buffer.Top2D);
       case (CharKind.Primary, CharKind.Primary):
       case (CharKind.Secondary, CharKind.Secondary):
-        while (buffer.MovePrev() && buffer.Current == prev) ;
+        while (buffer.FetchPrev()) ;
         var newKind = buffer.Current;
         if (newKind != CharKind.Space) // this is the case of alternative kind
-          return (buffer.Anchor1D, top2D);
-        while (buffer.MovePrev() && buffer.Current == newKind) ;
-        return (buffer.Anchor1D, top2D);
+          return (buffer.Left2D, buffer.Top2D);
+        while (buffer.FetchPrev()) ;
+        return (buffer.Left2D, buffer.Top2D);
       default:
         return (left2D, top2D);
     }
   }
-  public (int, int) GetSmallWordBeginBackward(int left2D, int top2D, DummyBuffer buffer)
+  public (int, int) GetSmallWordBeginBackward(int left2D, int top2D, Buffer1D buffer)
   {
-    var anchor1D = top2D * buffer.Width + left2D;
-    buffer.Reset(anchor1D);
-    var current = buffer.Current;
-    var hasPrev = buffer.MovePrev();
-    var prev = hasPrev ? buffer.Current : CharKind.None;
-    switch ((current, prev))
+    buffer.Reset(left2D, top2D);
+    var prev = buffer.Current;
+    var hasNext = buffer.MovePrev();
+    var current = hasNext ? buffer.Current : CharKind.None;
+    switch ((prev, current))
     {
       case (CharKind.Primary, CharKind.Primary):
       case (CharKind.Secondary, CharKind.Secondary):
@@ -105,15 +100,14 @@ internal class WordMotionV2 : IWordMotion
       case (CharKind.Primary, CharKind.Secondary):
       case (CharKind.Secondary, CharKind.Primary):
         {
-          while (buffer.MovePrev() && buffer.Current == prev) ;
-          return (buffer.Anchor1D + 1, top2D);
+          while (buffer.FetchPrev()) ;
+          return (buffer.Left2D + 1, buffer.Top2D);
         }
       case (_, CharKind.Space):
         {
-          while (buffer.MovePrev() && buffer.Current == prev) ;
-          var newKind = buffer.Current;
-          while (buffer.MovePrev() && buffer.Current == newKind) ;
-          return (buffer.Anchor1D + 1, top2D);
+          while (buffer.FetchPrev()) ;
+          while (buffer.FetchPrev()) ;
+          return (buffer.Left2D + 1, buffer.Top2D);
         }
       default:
         return (left2D, top2D);

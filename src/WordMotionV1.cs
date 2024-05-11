@@ -21,7 +21,7 @@ internal class WordMotionV1 : IWordMotion
   // }
   #region forward
   //TODO: add unit test
-  private static (int, int) FindNegtiveForward(int left2D, int top2D, DummyBuffer buffer)
+  private static (int, int) FindNegtiveForward(int left2D, int top2D, Buffer1D buffer)
   {
     var anchor1D = top2D * buffer.Width + left2D;
     ReadOnlySpan<char> spanAnchorToEnd = buffer.Content[anchor1D..];
@@ -35,7 +35,7 @@ internal class WordMotionV1 : IWordMotion
     return (newLeft2D, top2D);
   }
   //TODO: add unit test
-  private static (int, int) FindPositiveForward(int left2D, int top2D, DummyBuffer buffer)
+  private static (int, int) FindPositiveForward(int left2D, int top2D, Buffer1D buffer)
   {
     var anchor1D = top2D * buffer.Width + left2D;
     ReadOnlySpan<char> spanAnchorToEnd = buffer.Content[anchor1D..];
@@ -44,7 +44,7 @@ internal class WordMotionV1 : IWordMotion
     var newLeft2D = left2D + foundIndexInSpan1D;
     return (newLeft2D, top2D);
   }
-  public (int, int) GetSmallWordEndForward(int left2D, int top2D, DummyBuffer buffer)
+  public (int, int) GetSmallWordEndForward(int left2D, int top2D, Buffer1D buffer)
   {
     var isWordEndOrSpace = IsWordEndOrSpace(left2D, top2D, buffer);
     if (isWordEndOrSpace)
@@ -52,7 +52,7 @@ internal class WordMotionV1 : IWordMotion
     var (newLeft, newTop) = FindNegtiveForward(left2D, top2D, buffer);
     return (newLeft - 1, newTop);
   }
-  public (int, int) GetSmallWordBeginForward(int left2D, int top2D, DummyBuffer buffer)
+  public (int, int) GetSmallWordBeginForward(int left2D, int top2D, Buffer1D buffer)
   {
     var isWordEndOrSpace = IsWordEndOrSpace(left2D, top2D, buffer);
     if (!isWordEndOrSpace)
@@ -60,7 +60,7 @@ internal class WordMotionV1 : IWordMotion
     var (newLeft, newTop) = FindPositiveForward(left2D + 1, top2D, buffer);
     return (newLeft, newTop);
   }
-  private static bool IsWordEndOrSpace(int left2D, int top2D, DummyBuffer buffer)
+  private static bool IsWordEndOrSpace(int left2D, int top2D, Buffer1D buffer)
   {
     var anchor1D = top2D * buffer.Width + left2D;
     var span = buffer.Content[anchor1D..(anchor1D + 2)];
@@ -75,7 +75,7 @@ internal class WordMotionV1 : IWordMotion
   #endregion
   #region backward
   //TODO: add unit test
-  private static (int, int) FindNegativeBackward(int left2D, int top2D, DummyBuffer buffer)
+  private static (int, int) FindNegativeBackward(int left2D, int top2D, Buffer1D buffer)
   {
     var anchor1D = top2D * buffer.Width + left2D;
     ReadOnlySpan<char> spanBeginToAnchor = buffer.Content[..(anchor1D + 1)];
@@ -89,7 +89,7 @@ internal class WordMotionV1 : IWordMotion
     return (newLeft2D, top2D);
   }
   //TODO: add unit test
-  private static (int, int) FindPositiveBackward(int left2D, int top2D, DummyBuffer buffer)
+  private static (int, int) FindPositiveBackward(int left2D, int top2D, Buffer1D buffer)
   {
     var anchor1D = top2D * buffer.Width + left2D;
     ReadOnlySpan<char> spanBeginToAnchor = buffer.Content[..(anchor1D + 1)];
@@ -98,7 +98,7 @@ internal class WordMotionV1 : IWordMotion
     var newLeft2D = left2D - (anchor1D - foundIndexInSpan1D);
     return (newLeft2D, top2D);
   }
-  public (int, int) GetSmallWordEndBackward(int left2D, int top2D, DummyBuffer buffer)
+  public (int, int) GetSmallWordEndBackward(int left2D, int top2D, Buffer1D buffer)
   {
     var isWordBeginOrSpace = IsWordBeginOrSpace(left2D, top2D, buffer);
     if (!isWordBeginOrSpace)
@@ -106,7 +106,7 @@ internal class WordMotionV1 : IWordMotion
     var (newLeft, newTop) = FindPositiveBackward(left2D - 1, top2D, buffer);
     return (newLeft, newTop);
   }
-  public (int, int) GetSmallWordBeginBackward(int left2D, int top2D, DummyBuffer buffer)
+  public (int, int) GetSmallWordBeginBackward(int left2D, int top2D, Buffer1D buffer)
   {
     var isWordBeginOrSpace = IsWordBeginOrSpace(left2D, top2D, buffer);
     if (isWordBeginOrSpace)
@@ -114,7 +114,7 @@ internal class WordMotionV1 : IWordMotion
     var (newLeft, newTop) = FindNegativeBackward(left2D, top2D, buffer);
     return (newLeft + 1, newTop);
   }
-  private static bool IsWordBeginOrSpace(int left2D, int top2D, DummyBuffer buffer)
+  private static bool IsWordBeginOrSpace(int left2D, int top2D, Buffer1D buffer)
   {
     var anchor1D = top2D * buffer.Width + left2D;
     var span = buffer.Content[(anchor1D - 1)..(anchor1D + 1)];
