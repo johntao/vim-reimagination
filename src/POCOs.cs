@@ -24,10 +24,11 @@ public enum CharKind
 public ref struct DummyBuffer
 {
   private readonly ReadOnlySpan<char> _primary = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
-  private readonly ReadOnlySpan<char> _secondary = ",:+=-*/\\(){}[]<>!@#$%^&*;\"'`~|?";
+  private readonly ReadOnlySpan<char> _secondary = ",.:+=-*/\\(){}[]<>!@#$%^&*;\"'`~|?";
   private readonly ReadOnlySpan<char> _space = " \t\n\r\f\v";
   private readonly SearchValues<char> _searchPrimary, _searchSecondary, _searchSpace;
   private int _anchor1D;
+  internal readonly int Anchor1D => _anchor1D;
   public DummyBuffer(ReadOnlySpan<char> Content, int Width)
   {
     this.Content = Content;
@@ -47,6 +48,7 @@ public ref struct DummyBuffer
     _ => CharKind.None,
   };
   public bool MoveNext() => ++_anchor1D < Content.Length;
+  public bool MovePrev() => --_anchor1D >= 0;
   public void Reset(int anchor1D) => _anchor1D = anchor1D;
 }
 // internal ref struct BufferIterator //(int anchor1D, DummyBuffer buffer) : IEnumerator<CharKind>
