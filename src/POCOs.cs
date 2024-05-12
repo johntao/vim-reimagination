@@ -21,19 +21,48 @@ public enum CharKind
   Secondary,
   Space,
 }
+public struct Cursor2D(int Left, int Top)
+{
+  public int Left = Left;
+  public int Top = Top;
+  public static Cursor2D operator ++(Cursor2D a)
+  {
+    ++a.Left;
+    return a;
+  }
+  public static Cursor2D operator --(Cursor2D a)
+  {
+    --a.Left;
+    return a;
+  }
+  public static Cursor2D operator -(Cursor2D a, int b)
+  {
+    a.Left -= b;
+    return a;
+  }
+  public static Cursor2D operator +(Cursor2D a, int b)
+  {
+    a.Left += b;
+    return a;
+  }
+  public readonly void Deconstruct(out int Left, out int Top)
+  {
+    Left = this.Left;
+    Top = this.Top;
+  }
+}
 public ref struct Buffer1D
 {
   private readonly ReadOnlySpan<char> _primary = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
   private readonly ReadOnlySpan<char> _secondary = ",.:+=-*/\\(){}[]<>!@#$%^&*;\"'`~|?";
   private readonly ReadOnlySpan<char> _space = " \t\n\r\f\v";
-  private readonly SearchValues<char> _searchPrimary, _searchSecondary, _searchSpace;
+  private readonly SearchValues<char> _searchPrimary;
+  private readonly SearchValues<char> _searchSecondary;
+  private readonly SearchValues<char> _searchSpace;
   private int _cursor1D;
-  private int _left2D;
-  private int _top2D;
+  internal Cursor2D Cursor2D { get; private set; }
   private Direction _direction;
   private CharKind _prev;
-  internal readonly int Left2D => _left2D;
-  internal readonly int Top2D => _top2D;
   public Buffer1D(ReadOnlySpan<char> Content, int Width)
   {
     this.Content = Content;
@@ -53,8 +82,7 @@ public ref struct Buffer1D
   };
   public void Reset(int left2D, int top2D, Direction direction)
   {
-    _left2D = left2D;
-    _top2D = top2D;
+    Cursor2D = new Cursor2D { Left = left2D, Top = top2D };
     _cursor1D = top2D * Width + left2D;
     _prev = Current;
     _direction = direction;
@@ -65,59 +93,70 @@ public ref struct Buffer1D
     Direction.Backward => _cursor1D - 1 >= 0,
     _ => throw new NotImplementedException()
   };
-  public bool Move()
+  public bool Move(out CharKind charKind)
   {
-    if (_direction == Direction.Forward)
+    switch (_direction)
     {
-      var hasNext = _cursor1D + 1 < Content.Length;
-      if (hasNext)
-      {
-        ++_cursor1D;
-        ++_left2D;
-        _prev = Current;
-      }
-      return hasNext;
-    }
-    else
-    {
-      var hasNext = _cursor1D - 1 >= 0;
-      if (hasNext)
-      {
-        --_cursor1D;
-        --_left2D;
-        _prev = Current;
-      }
-      return hasNext;
+      case Direction.Forward:
+        {
+          var hasNext = _cursor1D + 1 < Content.Length;
+          if (hasNext)
+          {
+            ++_cursor1D;
+            ++Cursor2D;
+            _prev = Current;
+          }
+          charKind = Current;
+          return hasNext;
+        }
+      case Direction.Backward:
+        {
+          var hasNext = _cursor1D - 1 >= 0;
+          if (hasNext)
+          {
+            --_cursor1D;
+            --Cursor2D;
+            _prev = Current;
+          }
+          charKind = Current;
+          return hasNext;
+        }
+      default:
+        throw new NotImplementedException();
     }
   }
   public bool MoveCheck()
   {
-    if (_direction == Direction.Forward)
+    switch (_direction)
     {
-      var hasNext = _cursor1D + 1 < Content.Length;
-      if (hasNext)
-      {
-        ++_cursor1D;
-        ++_left2D;
-        var hasNextAndIsSameKind = Current == _prev;
-        _prev = Current;
-        // Console.SetCursorPosition(_left2D, _top2D);
-        return hasNextAndIsSameKind;
-      }
-      return hasNext;
-    }
-    else
-    {
-      var hasNext = _cursor1D - 1 >= 0;
-      if (hasNext)
-      {
-        --_cursor1D;
-        --_left2D;
-        var hasNextAndIsSameKind = Current == _prev;
-        _prev = Current;
-        return hasNextAndIsSameKind;
-      }
-      return hasNext;
+      case Direction.Forward:
+        {
+          var hasNext = _cursor1D + 1 < Content.Length;
+          if (hasNext)
+          {
+            ++_cursor1D;
+            ++Cursor2D;
+            var hasNextAndIsSameKind = Current == _prev;
+            _prev = Current;
+            return hasNextAndIsSameKind;
+          }
+          return hasNext;
+        }
+      case Direction.Backward:
+        {
+          var hasNext = _cursor1D - 1 >= 0;
+          if (hasNext)
+          {
+            --_cursor1D;
+            --Cursor2D;
+            var hasNextAndIsSameKind = Current == _prev;
+            _prev = Current;
+            return hasNextAndIsSameKind;
+          }
+          return hasNext;
+        }
+      default:
+        throw new NotImplementedException();
     }
   }
 }
