@@ -1,9 +1,7 @@
 namespace VimRenaissance;
-public enum Direction
-{
-  Forward,
-  Backward,
-}
+/// <summary>
+/// this implementation fully comply with vim word motion
+/// </summary>
 internal class WordMotionV2 : IWordMotionV2
 {
   public Cursor2D GetSmallWordEndForward(int left2D, int top2D, Buffer1D buffer)

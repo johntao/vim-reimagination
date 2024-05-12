@@ -5,22 +5,13 @@ namespace VimRenaissance;
 /// </summary>
 internal class WordMotionV1 : IWordMotion
 {
-  // private readonly ReadOnlySpan<char> _nonWordClass = " \t\n\r\f\v,:+=-*/\\(){}[]<>!@#$%^&*;\"'`~|?";
-  // private readonly ReadOnlySpan<char> _nonWordClass = " ,.:;!?";
-  // private static readonly ReadOnlySpan<char> _smallWord = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
   private static readonly string _smallWord = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
   private static readonly SearchValues<char> _searchSmallWord;
-  // private readonly SearchValues<char> _searchNonWordClass;
   static WordMotionV1()
   {
     _searchSmallWord = SearchValues.Create(_smallWord);
-    // _searchNonWordClass = SearchValues.Create(_nonWordClass);
   }
-  // public WordMotionV1()
-  // {
-  // }
   #region forward
-  //TODO: add unit test
   private static (int, int) FindNegtiveForward(int left2D, int top2D, Buffer1D buffer)
   {
     var anchor1D = top2D * buffer.Width + left2D;
@@ -34,7 +25,6 @@ internal class WordMotionV1 : IWordMotion
     var newLeft2D = left2D + foundIndexInSpan1D;
     return (newLeft2D, top2D);
   }
-  //TODO: add unit test
   private static (int, int) FindPositiveForward(int left2D, int top2D, Buffer1D buffer)
   {
     var anchor1D = top2D * buffer.Width + left2D;
@@ -74,7 +64,6 @@ internal class WordMotionV1 : IWordMotion
   }
   #endregion
   #region backward
-  //TODO: add unit test
   private static (int, int) FindNegativeBackward(int left2D, int top2D, Buffer1D buffer)
   {
     var anchor1D = top2D * buffer.Width + left2D;
@@ -88,7 +77,6 @@ internal class WordMotionV1 : IWordMotion
     var newLeft2D = left2D - (anchor1D - foundIndexInSpan1D);
     return (newLeft2D, top2D);
   }
-  //TODO: add unit test
   private static (int, int) FindPositiveBackward(int left2D, int top2D, Buffer1D buffer)
   {
     var anchor1D = top2D * buffer.Width + left2D;

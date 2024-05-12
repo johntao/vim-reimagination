@@ -1,12 +1,14 @@
 - [x] add text in the background. text aware cursor motion
 - Motion
   - resolve word-based motions
-    - [x] e, r first implementation
-    - [x] e needs to be fixed
+    - [x] d, f first implementation
+    - [x] a, s, d, f first implementation
+    - [x] d needs to be fixed
       - prefer symmetrical algorithm over ad-hoc algorithm
     - [ ] make status bar more informative
       - text-object algorithm
-    - [ ] q, w first implementation
+    - [ ] word wrap
+    - [ ] buffer boundary
 - Base framework
   - [ ] get current line number
   - [ ] remove text in the background
