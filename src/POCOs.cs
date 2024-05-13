@@ -29,14 +29,33 @@ internal struct Cursor2D(int Left, int Top)
 {
   internal int Left = Left;
   internal int Top = Top;
+  internal bool HasHitBoundary = false;
+  internal readonly Cursor2D Offset(Direction direction) => direction switch
+  {
+    Direction.Backward => HasHitBoundary ? this : new Cursor2D(Left - 1, Top),
+    Direction.Forward => HasHitBoundary ? this : new Cursor2D(Left + 1, Top),
+    _ => throw new NotImplementedException(),
+  };
   public static Cursor2D operator ++(Cursor2D a)
   {
     ++a.Left;
+    if (a.Left == Cfg.WinWID)
+    {
+      a.Left = 0;
+      ++a.Top;
+    }
+    a.HasHitBoundary = a.Left == Cfg.WinWID - 1 && a.Top == Cfg.WinHEI - 1;
     return a;
   }
   public static Cursor2D operator --(Cursor2D a)
   {
     --a.Left;
+    if (a.Left == -1)
+    {
+      a.Left = Cfg.WinWID - 1;
+      --a.Top;
+    }
+    a.HasHitBoundary = a.Left == 0 && a.Top == 0;
     return a;
   }
   public static Cursor2D operator -(Cursor2D a, int b)

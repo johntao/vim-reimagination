@@ -7,26 +7,26 @@ internal class WordMotionV2 : IWordMotionV2
   public Cursor2D GetSmallWordEndForward(int left2D, int top2D, Buffer1D buffer)
   {
     buffer.Reset(left2D, top2D, Direction.Forward);
-    if (!buffer.Move(out var prev)) return new (left2D, top2D);
-    while (buffer.MoveCheck()) ;
+    if (!buffer.HasNext_Move(out var prev)) return new (left2D, top2D);
+    while (buffer.HasNext_Move_Check()) ;
     if (prev == CharKind.Space)
     {
-      while (buffer.MoveCheck()) ;
-      return buffer.Cursor2D - 1;
+      while (buffer.HasNext_Move_Check()) ;
+      return buffer.Cursor2D.Offset(Direction.Backward);
     }
     else
     {
-      return buffer.Cursor2D - 1;
+      return buffer.Cursor2D.Offset(Direction.Backward);
     }
   }
   public Cursor2D GetSmallWordBeginForward(int left2D, int top2D, Buffer1D buffer)
   {
     buffer.Reset(left2D, top2D, Direction.Forward);
     if (!buffer.HasNext()) return new (left2D, top2D);
-    while (buffer.MoveCheck()) ;
+    while (buffer.HasNext_Move_Check()) ;
     if (buffer.Current == CharKind.Space)
     {
-      while (buffer.MoveCheck()) ;
+      while (buffer.HasNext_Move_Check()) ;
       return buffer.Cursor2D;
     }
     else
@@ -38,10 +38,10 @@ internal class WordMotionV2 : IWordMotionV2
   {
     buffer.Reset(left2D, top2D, Direction.Backward);
     if (!buffer.HasNext()) return new (left2D, top2D);
-    while (buffer.MoveCheck()) ;
+    while (buffer.HasNext_Move_Check()) ;
     if (buffer.Current == CharKind.Space)
     {
-      while (buffer.MoveCheck()) ;
+      while (buffer.HasNext_Move_Check()) ;
       return buffer.Cursor2D;
     }
     else
@@ -52,16 +52,16 @@ internal class WordMotionV2 : IWordMotionV2
   public Cursor2D GetSmallWordBeginBackward(int left2D, int top2D, Buffer1D buffer)
   {
     buffer.Reset(left2D, top2D, Direction.Backward);
-    if (!buffer.Move(out var prev)) return new (left2D, top2D);
-    while (buffer.MoveCheck()) ;
+    if (!buffer.HasNext_Move(out var prev)) return new (left2D, top2D);
+    while (buffer.HasNext_Move_Check()) ;
     if (prev == CharKind.Space)
     {
-      while (buffer.MoveCheck()) ;
-      return buffer.Cursor2D + 1;
+      while (buffer.HasNext_Move_Check()) ;
+      return buffer.Cursor2D.Offset(Direction.Forward);
     }
     else
     {
-      return buffer.Cursor2D + 1;
+      return buffer.Cursor2D.Offset(Direction.Forward);
     }
   }
 }

@@ -15,8 +15,8 @@ internal ref struct Buffer1D
     this.Content = Content;
     this.Width = Width;
     const string Primary = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
-    const string Secondary = ",.:+=-*/\\(){}[]<>!@#$%^&*;\"'`~|?";
-    const string Space = " \t\n\r\f\v";
+    const string Secondary = ",.:+=-*/\\(){}[]<>!@#$%^&*;\"'`~?";
+    const string Space = " \t\n\r\f\v|";
     _searchPrimary = SearchValues.Create(Primary);
     _searchSecondary = SearchValues.Create(Secondary);
     _searchSpace = SearchValues.Create(Space);
@@ -37,74 +37,49 @@ internal ref struct Buffer1D
     _prev = Current;
     _direction = direction;
   }
-  internal readonly bool HasNext() => _direction switch
+  internal readonly bool HasNext()
   {
-    Direction.Forward => _cursor1D + 1 < Content.Length,
-    Direction.Backward => _cursor1D - 1 >= 0,
-    _ => throw new NotImplementedException()
-  };
-  internal bool Move(out CharKind charKind)
-  {
-    switch (_direction)
+    //should also return true if has second line
+
+    return _direction switch
     {
-      case Direction.Forward:
-        {
-          var hasNext = _cursor1D + 1 < Content.Length;
-          if (hasNext)
-          {
-            ++_cursor1D;
-            ++Cursor2D;
-            _prev = Current;
-          }
-          charKind = Current;
-          return hasNext;
-        }
-      case Direction.Backward:
-        {
-          var hasNext = _cursor1D - 1 >= 0;
-          if (hasNext)
-          {
-            --_cursor1D;
-            --Cursor2D;
-            _prev = Current;
-          }
-          charKind = Current;
-          return hasNext;
-        }
-      default:
-        throw new NotImplementedException();
-    }
+      Direction.Forward => _cursor1D + 1 < Content.Length,
+      Direction.Backward => _cursor1D - 1 >= 0,
+      _ => throw new NotImplementedException(),
+    };
   }
-  internal bool MoveCheck()
+  internal bool HasNext_Move(out CharKind charKind)
+  {
+    var hasNext = HasNext();
+    if (hasNext)
+      MoveCursor();
+    _prev = Current;
+    charKind = Current;
+    return hasNext;
+  }
+  internal bool HasNext_Move_Check()
+  {
+    var hasNext = HasNext();
+    if (hasNext)
+    {
+      MoveCursor();
+      hasNext = Current == _prev; //hasNextAndIsSameKind
+    }
+    _prev = Current;
+    return hasNext;
+  }
+  private void MoveCursor()
   {
     switch (_direction)
     {
       case Direction.Forward:
-        {
-          var hasNext = _cursor1D + 1 < Content.Length;
-          if (hasNext)
-          {
-            ++_cursor1D;
-            ++Cursor2D;
-            var hasNextAndIsSameKind = Current == _prev;
-            _prev = Current;
-            return hasNextAndIsSameKind;
-          }
-          return hasNext;
-        }
+        ++_cursor1D;
+        ++Cursor2D;
+        break;
       case Direction.Backward:
-        {
-          var hasNext = _cursor1D - 1 >= 0;
-          if (hasNext)
-          {
-            --_cursor1D;
-            --Cursor2D;
-            var hasNextAndIsSameKind = Current == _prev;
-            _prev = Current;
-            return hasNextAndIsSameKind;
-          }
-          return hasNext;
-        }
+        --_cursor1D;
+        --Cursor2D;
+        break;
       default:
         throw new NotImplementedException();
     }
