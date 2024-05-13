@@ -37,17 +37,12 @@ internal ref struct Buffer1D
     _prev = Current;
     _direction = direction;
   }
-  internal readonly bool HasNext()
+  internal readonly bool HasNext() => _direction switch
   {
-    //should also return true if has second line
-
-    return _direction switch
-    {
-      Direction.Forward => _cursor1D + 1 < Content.Length,
-      Direction.Backward => _cursor1D - 1 >= 0,
-      _ => throw new NotImplementedException(),
-    };
-  }
+    Direction.Forward => _cursor1D + 1 < Content.Length,
+    Direction.Backward => _cursor1D - 1 >= 0,
+    _ => throw new NotImplementedException(),
+  };
   internal bool HasNext_Move(out CharKind charKind)
   {
     var hasNext = HasNext();

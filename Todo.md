@@ -5,10 +5,13 @@
     - [x] a, s, d, f first implementation
     - [x] d needs to be fixed
       - prefer symmetrical algorithm over ad-hoc algorithm
+    - [x] word wrap
+    - [x] buffer boundary
+    - [ ] useQwerty, useDvorak, useCustom
+    - [ ] big word motion
+    - [ ] buffer should not mix with motion algorithm, buffer should not store Cursor2D
     - [ ] make status bar more informative
       - text-object algorithm
-    - [ ] word wrap
-    - [ ] buffer boundary
 - Base framework
   - [ ] get current line number
   - [ ] remove text in the background
@@ -40,8 +43,12 @@
     - afterward, we might have better support for migration to other platforms
     - probably, the best way to do this is to develop with lower level API
 
-## Word Motion Algorithm
-version 2 use symmetrical algorithm and reduced some of the ad-hoc algorithm
+## Word Motion Algorithm v2
+
+no time to document the produce or design of the algorithm
+
+## Word Motion Algorithm v1
+use symmetrical algorithm and reduced some of the ad-hoc algorithm
 - `^` is the cursor position
 - `|` is the boundary of the line 
   - p.s. so that "this text document itself" would not be affected by editor indentation
