@@ -13,3 +13,8 @@ internal interface IWordMotionV2
   Cursor2D GetSmallWordEndBackward(Cursor2D cursor2D, Buffer1D buffer);
   Cursor2D GetSmallWordEndForward(Cursor2D cursor2D, Buffer1D buffer);
 }
+internal interface IWordMotionV3
+{
+  Cursor2D ChargeUntilSpaceExclusive(Cursor2D cursor2D, Buffer1D buffer, Direction direction);
+  Cursor2D ChargeUntilBeingInclusive(Cursor2D cursor2D, Buffer1D buffer, Direction direction);
+}

@@ -12,14 +12,14 @@ internal readonly ref struct Editor
   {
   }
   private readonly Buffer1D _buffer;
-  private readonly WordMotionV2 _wordMotion;
+  private readonly WordMotionV3 _wordMotion;
   public Editor()
   {
     // ReadOnlySpan<char> tmpl = File.ReadAllText("./template.txt");
     var tmpl = File.ReadAllLines("./template.txt");
     ReadOnlySpan<char> src = string.Join("", tmpl);
     _buffer = new Buffer1D(src, Cfg.WinWID);
-    _wordMotion = new WordMotionV2();
+    _wordMotion = new WordMotionV3();
     Console.Write(src.ToString());
     Console.SetCursorPosition(0, 0);
   }
@@ -33,10 +33,10 @@ internal readonly ref struct Editor
       {
         case 'n': MoveHorizontalWrap(-45); break;
         case '.': MoveHorizontalWrap(45); break;
-        case 'a': MoveHorizontalByPattern(TextPattern.WordBeginBackward); break;
-        case 's': MoveHorizontalByPattern(TextPattern.WordEndBackward); break;
-        case 'd': MoveHorizontalByPattern(TextPattern.WordEndForward); break;
-        case 'f': MoveHorizontalByPattern(TextPattern.WordBeginFoward); break;
+        case 'a': MoveHorizontalByPattern(TextPattern.SmallWordBegin, Direction.Backward); break;
+        case 's': MoveHorizontalByPattern(TextPattern.SmallWordEnd, Direction.Backward); break;
+        case 'd': MoveHorizontalByPattern(TextPattern.SmallWordEnd, Direction.Forward); break;
+        case 'f': MoveHorizontalByPattern(TextPattern.SmallWordBegin, Direction.Forward); break;
         case 'h': MoveHorizontal(-1); break;
         case 'j': MoveVertical(1); break;
         case 'k': MoveVertical(-1); break;
@@ -100,15 +100,15 @@ internal readonly ref struct Editor
     }
     Console.SetCursorPosition(newLeft, top);
   }
-  void MoveHorizontalByPattern(TextPattern textPattern)
+  void MoveHorizontalByPattern(TextPattern textPattern, Direction direction)
   {
     var cursor = new Cursor2D(Console.GetCursorPosition());
-    var (newLeft, newTop) = textPattern switch
+    var (newLeft, newTop) = (textPattern, direction) switch
     {
-      TextPattern.WordBeginBackward => _wordMotion.GetSmallWordBeginBackward(cursor, _buffer),
-      TextPattern.WordEndBackward => _wordMotion.GetSmallWordEndBackward(cursor, _buffer),
-      TextPattern.WordEndForward => _wordMotion.GetSmallWordEndForward(cursor, _buffer),
-      TextPattern.WordBeginFoward => _wordMotion.GetSmallWordBeginForward(cursor, _buffer),
+      (TextPattern.SmallWordBegin, Direction.Backward) => _wordMotion.ChargeUntilBeingInclusive(cursor, _buffer, Direction.Backward),
+      (TextPattern.SmallWordEnd, Direction.Backward) => _wordMotion.ChargeUntilSpaceExclusive(cursor, _buffer, Direction.Backward),
+      (TextPattern.SmallWordEnd, Direction.Forward) => _wordMotion.ChargeUntilSpaceExclusive(cursor, _buffer, Direction.Forward),
+      (TextPattern.SmallWordBegin, Direction.Forward) => _wordMotion.ChargeUntilBeingInclusive(cursor, _buffer, Direction.Forward),
       _ => throw new NotImplementedException(),
     };
     Console.SetCursorPosition(newLeft, newTop);

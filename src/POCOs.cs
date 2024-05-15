@@ -18,11 +18,9 @@ internal enum Direction
 }
 internal enum TextPattern
 {
-  WordEndBackward = -2,
-  WordBeginBackward,
   None,
-  WordBeginFoward,
-  WordEndForward,
+  SmallWordBegin,
+  SmallWordEnd,
 }
 internal enum CharKind
 {
