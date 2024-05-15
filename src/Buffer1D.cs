@@ -14,10 +14,10 @@ internal ref struct Buffer1D
   internal readonly int Width;
   internal char Previous { get; private set; }
   internal readonly char Current => Content[_cursor1D];
-  internal void Reset(int left2D, int top2D, Direction direction)
+  internal void Reset(Cursor2D cursor2D, Direction direction)
   {
-    Cursor2D = new Cursor2D { Left = left2D, Top = top2D };
-    _cursor1D = top2D * Width + left2D;
+    Cursor2D = cursor2D;
+    _cursor1D = cursor2D.Top * Width + cursor2D.Left;
     Previous = Current;
     _direction = direction;
   }

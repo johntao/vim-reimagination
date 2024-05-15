@@ -1,5 +1,4 @@
 using System.Buffers;
-
 namespace VimRenaissance;
 /// <summary>
 /// this implementation fully comply with vim word motion
@@ -18,22 +17,6 @@ internal class WordMotionV2 : IWordMotionV2
     _searchSecondary = SearchValues.Create(Secondary);
     _searchSpace = SearchValues.Create(Space);
   }
-  public Cursor2D GetSmallWordEndForward(int left2D, int top2D, Buffer1D buffer)
-  {
-    buffer.Reset(left2D, top2D, Direction.Forward);
-    if (!buffer.HasNext_Move()) return new(left2D, top2D);
-    while (buffer.HasNext_Move() && IsSameKind(buffer)) ;
-    if (IsSpace(buffer.Previous))
-    {
-      while (buffer.HasNext_Move() && IsSameKind(buffer)) ;
-      return buffer.Cursor2D.Offset(Direction.Backward);
-    }
-    else
-    {
-      return buffer.Cursor2D.Offset(Direction.Backward);
-    }
-  }
-
   private static bool IsSameKind(Buffer1D buffer)
   {
     var prev = GetCharKind(buffer.Previous);
@@ -48,41 +31,10 @@ internal class WordMotionV2 : IWordMotionV2
     _ => CharKind.None,
   };
   private static bool IsSpace(char prev) => _searchSpace.Contains(prev);
-
-  public Cursor2D GetSmallWordBeginForward(int left2D, int top2D, Buffer1D buffer)
+  public Cursor2D GetSmallWordEndForward(Cursor2D cursor, Buffer1D buffer)
   {
-    buffer.Reset(left2D, top2D, Direction.Forward);
-    if (!buffer.HasNext()) return new(left2D, top2D);
-    while (buffer.HasNext_Move() && IsSameKind(buffer)) ;
-    if (IsSpace(buffer.Current))
-    {
-      while (buffer.HasNext_Move() && IsSameKind(buffer)) ;
-      return buffer.Cursor2D;
-    }
-    else
-    {
-      return buffer.Cursor2D;
-    }
-  }
-  public Cursor2D GetSmallWordEndBackward(int left2D, int top2D, Buffer1D buffer)
-  {
-    buffer.Reset(left2D, top2D, Direction.Backward);
-    if (!buffer.HasNext()) return new(left2D, top2D);
-    while (buffer.HasNext_Move() && IsSameKind(buffer)) ;
-    if (IsSpace(buffer.Current))
-    {
-      while (buffer.HasNext_Move() && IsSameKind(buffer)) ;
-      return buffer.Cursor2D;
-    }
-    else
-    {
-      return buffer.Cursor2D;
-    }
-  }
-  public Cursor2D GetSmallWordBeginBackward(int left2D, int top2D, Buffer1D buffer)
-  {
-    buffer.Reset(left2D, top2D, Direction.Backward);
-    if (!buffer.HasNext_Move()) return new(left2D, top2D);
+    buffer.Reset(cursor, Direction.Forward);
+    if (!buffer.HasNext_Move()) return cursor;
     while (buffer.HasNext_Move() && IsSameKind(buffer)) ;
     if (IsSpace(buffer.Previous))
     {
@@ -92,6 +44,51 @@ internal class WordMotionV2 : IWordMotionV2
     else
     {
       return buffer.Cursor2D.Offset(Direction.Forward);
+    }
+  }
+  public Cursor2D GetSmallWordBeginForward(Cursor2D cursor2D, Buffer1D buffer)
+  {
+    buffer.Reset(cursor2D, Direction.Forward);
+    if (!buffer.HasNext()) return cursor2D;
+    while (buffer.HasNext_Move() && IsSameKind(buffer)) ;
+    if (IsSpace(buffer.Current))
+    {
+      while (buffer.HasNext_Move() && IsSameKind(buffer)) ;
+      return buffer.Cursor2D;
+    }
+    else
+    {
+      return buffer.Cursor2D;
+    }
+  }
+  public Cursor2D GetSmallWordEndBackward(Cursor2D cursor2D, Buffer1D buffer)
+  {
+    buffer.Reset(cursor2D, Direction.Backward);
+    if (!buffer.HasNext()) return cursor2D;
+    while (buffer.HasNext_Move() && IsSameKind(buffer)) ;
+    if (IsSpace(buffer.Current))
+    {
+      while (buffer.HasNext_Move() && IsSameKind(buffer)) ;
+      return buffer.Cursor2D;
+    }
+    else
+    {
+      return buffer.Cursor2D;
+    }
+  }
+  public Cursor2D GetSmallWordBeginBackward(Cursor2D cursor2D, Buffer1D buffer)
+  {
+    buffer.Reset(cursor2D, Direction.Backward);
+    if (!buffer.HasNext_Move()) return cursor2D;
+    while (buffer.HasNext_Move() && IsSameKind(buffer)) ;
+    if (IsSpace(buffer.Previous))
+    {
+      while (buffer.HasNext_Move() && IsSameKind(buffer)) ;
+      return buffer.Cursor2D.Offset(Direction.Backward);
+    }
+    else
+    {
+      return buffer.Cursor2D.Offset(Direction.Backward);
     }
   }
 }

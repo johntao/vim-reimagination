@@ -102,13 +102,13 @@ internal readonly ref struct Editor
   }
   void MoveHorizontalByPattern(TextPattern textPattern)
   {
-    var (left, top) = Console.GetCursorPosition();
+    var cursor = new Cursor2D(Console.GetCursorPosition());
     var (newLeft, newTop) = textPattern switch
     {
-      TextPattern.WordBeginBackward => _wordMotion.GetSmallWordBeginBackward(left, top, _buffer),
-      TextPattern.WordEndBackward => _wordMotion.GetSmallWordEndBackward(left, top, _buffer),
-      TextPattern.WordEndForward => _wordMotion.GetSmallWordEndForward(left, top, _buffer),
-      TextPattern.WordBeginFoward => _wordMotion.GetSmallWordBeginForward(left, top, _buffer),
+      TextPattern.WordBeginBackward => _wordMotion.GetSmallWordBeginBackward(cursor, _buffer),
+      TextPattern.WordEndBackward => _wordMotion.GetSmallWordEndBackward(cursor, _buffer),
+      TextPattern.WordEndForward => _wordMotion.GetSmallWordEndForward(cursor, _buffer),
+      TextPattern.WordBeginFoward => _wordMotion.GetSmallWordBeginForward(cursor, _buffer),
       _ => throw new NotImplementedException(),
     };
     Console.SetCursorPosition(newLeft, newTop);

@@ -8,8 +8,8 @@ internal interface IWordMotion
 }
 internal interface IWordMotionV2
 {
-  Cursor2D GetSmallWordBeginBackward(int left, int top, Buffer1D buffer);
-  Cursor2D GetSmallWordBeginForward(int left, int top, Buffer1D buffer);
-  Cursor2D GetSmallWordEndBackward(int left, int top, Buffer1D buffer);
-  Cursor2D GetSmallWordEndForward(int left, int top, Buffer1D buffer);
+  Cursor2D GetSmallWordBeginBackward(Cursor2D cursor2D, Buffer1D buffer);
+  Cursor2D GetSmallWordBeginForward(Cursor2D cursor2D, Buffer1D buffer);
+  Cursor2D GetSmallWordEndBackward(Cursor2D cursor2D, Buffer1D buffer);
+  Cursor2D GetSmallWordEndForward(Cursor2D cursor2D, Buffer1D buffer);
 }

@@ -36,10 +36,11 @@ internal struct Cursor2D(int Left, int Top)
   internal int Left = Left;
   internal int Top = Top;
   internal bool HasHitBoundary = false;
+  public Cursor2D((int Left, int Top) cursor) : this(cursor.Left, cursor.Top) { }
   internal readonly Cursor2D Offset(Direction direction) => direction switch
   {
-    Direction.Backward => HasHitBoundary ? this : new Cursor2D(Left - 1, Top),
-    Direction.Forward => HasHitBoundary ? this : new Cursor2D(Left + 1, Top),
+    Direction.Forward => HasHitBoundary ? this : new Cursor2D(Left - 1, Top),
+    Direction.Backward => HasHitBoundary ? this : new Cursor2D(Left + 1, Top),
     _ => throw new NotImplementedException(),
   };
   public static Cursor2D operator ++(Cursor2D a)
