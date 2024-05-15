@@ -1,9 +1,15 @@
 namespace VimRenaissance;
 internal static class Cfg
 {
-  //210,419,628,837
-  internal const int WinWID = 209; //Console.WindowWidth;
-  internal const int WinHEI = 51; //Console.WindowHeight;
+  /// <summary>
+  /// 204,46 in vscode integrated terminal
+  /// 209,51 in windows terminal (wide)
+  /// 156,41 in windows terminal (narrow)
+  /// </summary>
+  //WideWidth: 210,419,628,837
+  //NarrowWidth: 157,625,781,937
+  internal const int WinWID = 156; //Console.WindowWidth;
+  internal const int WinHEI = 41; //Console.WindowHeight;
 }
 internal enum Direction
 {

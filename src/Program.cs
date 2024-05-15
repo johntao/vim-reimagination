@@ -1,11 +1,10 @@
 ﻿using VimRenaissance;
 Console.Clear();
 Console.CancelKeyPress += delegate { Console.Clear(); };
+// Console.WriteLine($"{Console.WindowWidth},{Console.WindowHeight}");
 new Editor().Run();
 
 /// <summary>
-/// 204,46 in vscode integrated terminal
-/// 209,51 in windows terminal
 /// </summary>
 internal readonly ref struct Editor
 {
