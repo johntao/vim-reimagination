@@ -19,9 +19,9 @@ internal enum Direction
 internal enum TextPattern
 {
   None,
-  SmallWordBegin,
+  SmallWordStart,
   SmallWordEnd,
-  BigWordBegin,
+  BigWordStart,
   BigWordEnd,
 }
 internal enum CharKind

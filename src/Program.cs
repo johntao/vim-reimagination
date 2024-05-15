@@ -35,14 +35,14 @@ internal readonly ref struct Editor
       {
         case 'n': MoveHorizontalWrap(-45); break;
         case '.': MoveHorizontalWrap(45); break;
-        case 'q': MoveHorizontalByPattern(TextPattern.BigWordBegin, Direction.Backward); break;
+        case 'q': MoveHorizontalByPattern(TextPattern.BigWordStart, Direction.Backward); break;
         case 'w': MoveHorizontalByPattern(TextPattern.BigWordEnd, Direction.Backward); break;
-        case 'e': MoveHorizontalByPattern(TextPattern.BigWordEnd, Direction.Forward); break;
-        case 'r': MoveHorizontalByPattern(TextPattern.BigWordBegin, Direction.Forward); break;
-        case 'a': MoveHorizontalByPattern(TextPattern.SmallWordBegin, Direction.Backward); break;
+        case 'e': MoveHorizontalByPattern(TextPattern.BigWordStart, Direction.Forward); break;
+        case 'r': MoveHorizontalByPattern(TextPattern.BigWordEnd, Direction.Forward); break;
+        case 'a': MoveHorizontalByPattern(TextPattern.SmallWordStart, Direction.Backward); break;
         case 's': MoveHorizontalByPattern(TextPattern.SmallWordEnd, Direction.Backward); break;
-        case 'd': MoveHorizontalByPattern(TextPattern.SmallWordEnd, Direction.Forward); break;
-        case 'f': MoveHorizontalByPattern(TextPattern.SmallWordBegin, Direction.Forward); break;
+        case 'd': MoveHorizontalByPattern(TextPattern.SmallWordStart, Direction.Forward); break;
+        case 'f': MoveHorizontalByPattern(TextPattern.SmallWordEnd, Direction.Forward); break;
         case 'h': MoveHorizontal(-1); break;
         case 'j': MoveVertical(1); break;
         case 'k': MoveVertical(-1); break;
@@ -111,14 +111,14 @@ internal readonly ref struct Editor
     var cursor = new Cursor2D(Console.GetCursorPosition());
     var (newLeft, newTop) = (textPattern, direction) switch
     {
-      (TextPattern.SmallWordBegin, Direction.Backward) => _smallWordMotion.ChargeUntilBeingInclusive(cursor, _buffer, Direction.Backward),
-      (TextPattern.SmallWordEnd, Direction.Backward) => _smallWordMotion.ChargeUntilSpaceExclusive(cursor, _buffer, Direction.Backward),
+      (TextPattern.SmallWordStart, Direction.Backward) => _smallWordMotion.ChargeUntilSpaceExclusive(cursor, _buffer, Direction.Backward),
+      (TextPattern.SmallWordEnd, Direction.Backward) => _smallWordMotion.ChargeUntilBeingInclusive(cursor, _buffer, Direction.Backward),
+      (TextPattern.SmallWordStart, Direction.Forward) => _smallWordMotion.ChargeUntilBeingInclusive(cursor, _buffer, Direction.Forward),
       (TextPattern.SmallWordEnd, Direction.Forward) => _smallWordMotion.ChargeUntilSpaceExclusive(cursor, _buffer, Direction.Forward),
-      (TextPattern.SmallWordBegin, Direction.Forward) => _smallWordMotion.ChargeUntilBeingInclusive(cursor, _buffer, Direction.Forward),
-      (TextPattern.BigWordBegin, Direction.Backward) => _bigWordMotion.ChargeUntilBeingInclusive(cursor, _buffer, Direction.Backward),
-      (TextPattern.BigWordEnd, Direction.Backward) => _bigWordMotion.ChargeUntilSpaceExclusive(cursor, _buffer, Direction.Backward),
+      (TextPattern.BigWordStart, Direction.Backward) => _bigWordMotion.ChargeUntilSpaceExclusive(cursor, _buffer, Direction.Backward),
+      (TextPattern.BigWordEnd, Direction.Backward) => _bigWordMotion.ChargeUntilBeingInclusive(cursor, _buffer, Direction.Backward),
+      (TextPattern.BigWordStart, Direction.Forward) => _bigWordMotion.ChargeUntilBeingInclusive(cursor, _buffer, Direction.Forward),
       (TextPattern.BigWordEnd, Direction.Forward) => _bigWordMotion.ChargeUntilSpaceExclusive(cursor, _buffer, Direction.Forward),
-      (TextPattern.BigWordBegin, Direction.Forward) => _bigWordMotion.ChargeUntilBeingInclusive(cursor, _buffer, Direction.Forward),
       _ => throw new NotImplementedException(),
     };
     Console.SetCursorPosition(newLeft, newTop);
