@@ -3,11 +3,12 @@ namespace VimRenaissance;
 /// <summary>
 /// this implementation failed to handle secondary word class which is neither space nor small word
 /// </summary>
-internal class WordMotionV1 : IWordMotion
+[Obsolete("This implementation is not used anymore")]
+internal class WordMotion_v1 : IWordMotionV1
 {
   private static readonly string _smallWord = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
   private static readonly SearchValues<char> _searchSmallWord;
-  static WordMotionV1()
+  static WordMotion_v1()
   {
     _searchSmallWord = SearchValues.Create(_smallWord);
   }

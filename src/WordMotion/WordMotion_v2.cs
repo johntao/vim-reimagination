@@ -3,12 +3,13 @@ namespace VimRenaissance;
 /// <summary>
 /// this implementation fully comply with vim word motion
 /// </summary>
-internal class WordMotionV2 : IWordMotionV2
+[Obsolete("This implementation is not used anymore")]
+internal class WordMotion_v2 : IWordMotionV2
 {
   private static readonly SearchValues<char> _searchPrimary;
   private static readonly SearchValues<char> _searchSecondary;
   private static readonly SearchValues<char> _searchSpace;
-  static WordMotionV2()
+  static WordMotion_v2()
   {
     const string Primary = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
     const string Secondary = ",.:+=-*/\\(){}[]<>!@#$%^&*;\"'`~?";
