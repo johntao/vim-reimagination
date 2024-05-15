@@ -7,9 +7,9 @@
       - prefer symmetrical algorithm over ad-hoc algorithm
     - [x] word wrap
     - [x] buffer boundary
+    - [x] big word motion
+    - [x] buffer should not mix with motion algorithm, buffer should not store Cursor2D
     - [ ] useQwerty, useDvorak, useCustom
-    - [ ] big word motion
-    - [ ] buffer should not mix with motion algorithm, buffer should not store Cursor2D
     - [ ] make status bar more informative
       - text-object algorithm
 - Base framework
