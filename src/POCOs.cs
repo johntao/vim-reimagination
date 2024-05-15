@@ -21,6 +21,8 @@ internal enum TextPattern
   None,
   SmallWordBegin,
   SmallWordEnd,
+  BigWordBegin,
+  BigWordEnd,
 }
 internal enum CharKind
 {
