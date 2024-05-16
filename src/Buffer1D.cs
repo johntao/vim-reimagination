@@ -1,5 +1,7 @@
 namespace VimRenaissance;
-
+/// <summary>
+/// Can't tell the advantage of using ref struct, but it's required to use ref struct for `ReadOnlySpan<char> Content`
+/// </summary>
 internal ref struct Buffer1D
 {
   internal Cursor2D Cursor2D { get; private set; }

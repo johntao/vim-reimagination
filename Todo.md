@@ -14,7 +14,9 @@
       - text-object algorithm
 - Base framework
   - [ ] get current line number
+  - [ ] copy template during build process
   - [ ] remove text in the background
+  - [ ] algorithm to fill in empty spaces...
   - [ ] resolve newlines
   - [ ] resolve different buffer types
   - [ ] yank, putReplace
@@ -22,6 +24,7 @@
   - [ ] set up boundaries for status bar, motion and rendering
 - Advanced framework
   - [ ] should be able to scroll
+  - [ ] virtual boundary
   - [ ] editable: insert
   - [ ] putInsert
   - [ ] undo, redo, search, save, quit
