@@ -1,4 +1,32 @@
-using VimRenaissance;
+namespace VimRenaissance;
+internal enum NormalCommand
+{
+  None,
+  /// <summary>
+  /// experimental
+  /// </summary>
+  MoveHorizontal45uBackward,
+  /// <summary>
+  /// Experimental
+  /// </summary>
+  MoveHorizontal45uForward,
+  MoveHorizontalByPatternBigWordStartBackward,
+  MoveHorizontalByPatternBigWordEndBackward,
+  MoveHorizontalByPatternBigWordStartForward,
+  MoveHorizontalByPatternBigWordEndForward,
+  MoveHorizontalByPatternSmallWordStartBackward,
+  MoveHorizontalByPatternSmallWordEndBackward,
+  MoveHorizontalByPatternSmallWordStartForward,
+  MoveHorizontalByPatternSmallWordEndForward,
+  MoveHorizontal1uBackward,
+  MoveVertical1uForward,
+  MoveVertical1uBackward,
+  MoveHorizontal1uForward,
+  MoveHorizontalFullScreenBackwardStop,
+  MoveVerticalFullScreenForwardStop,
+  MoveVerticalFullScreenBackwardStop,
+  MoveHorizontalFullScreenForwardStop,
+}
 /// <summary>
 /// Can't tell the advantage of using ref struct, but it's required to use ref struct for `Buffer1D _buffer`
 /// I wonder the perf difference between ref struct and static class
@@ -22,40 +50,45 @@ internal readonly ref struct Editor
     Console.Write(src.ToString());
     Console.SetCursorPosition(0, 0);
   }
-  internal void Run()
+  internal void Run(Dictionary<char, NormalCommand> layout)
   {
+    //should pass in the keyboard layout here
     while (true)
     {
       var readkey = Console.ReadKey(true);
       var keychar = readkey.KeyChar;
-      switch (keychar)
-      {
-        case 'n': MoveHorizontalWrap(-45); break;
-        case '.': MoveHorizontalWrap(45); break;
-        case 'q': MoveHorizontalByPattern(TextPattern.BigWordStart, Direction.Backward); break;
-        case 'w': MoveHorizontalByPattern(TextPattern.BigWordEnd, Direction.Backward); break;
-        case 'e': MoveHorizontalByPattern(TextPattern.BigWordStart, Direction.Forward); break;
-        case 'r': MoveHorizontalByPattern(TextPattern.BigWordEnd, Direction.Forward); break;
-        case 'a': MoveHorizontalByPattern(TextPattern.SmallWordStart, Direction.Backward); break;
-        case 's': MoveHorizontalByPattern(TextPattern.SmallWordEnd, Direction.Backward); break;
-        case 'd': MoveHorizontalByPattern(TextPattern.SmallWordStart, Direction.Forward); break;
-        case 'f': MoveHorizontalByPattern(TextPattern.SmallWordEnd, Direction.Forward); break;
-        case 'h': MoveHorizontal(-1); break;
-        case 'j': MoveVertical(1); break;
-        case 'k': MoveVertical(-1); break;
-        case 'l': MoveHorizontal(1); break;
-        case 'H': MoveHorizontal(-Cfg.WinWID); break;
-        case 'J': MoveVertical(Cfg.WinHEI); break;
-        case 'K': MoveVertical(-Cfg.WinHEI); break;
-        case 'L': MoveHorizontal(Cfg.WinWID); break;
-      }
+      ProcessCommand(layout[keychar]);
+    }
+  }
+  private void ProcessCommand(NormalCommand cmd)
+  {
+    switch (cmd)
+    {
+      case NormalCommand.MoveHorizontal45uBackward: MoveHorizontal(-45); break;
+      case NormalCommand.MoveHorizontal45uForward: MoveHorizontal(45); break;
+      case NormalCommand.MoveHorizontalByPatternBigWordStartBackward: MoveHorizontalByPattern(TextPattern.BigWordStart, Direction.Backward); break;
+      case NormalCommand.MoveHorizontalByPatternBigWordEndBackward: MoveHorizontalByPattern(TextPattern.BigWordEnd, Direction.Backward); break;
+      case NormalCommand.MoveHorizontalByPatternBigWordStartForward: MoveHorizontalByPattern(TextPattern.BigWordStart, Direction.Forward); break;
+      case NormalCommand.MoveHorizontalByPatternBigWordEndForward: MoveHorizontalByPattern(TextPattern.BigWordEnd, Direction.Forward); break;
+      case NormalCommand.MoveHorizontalByPatternSmallWordStartBackward: MoveHorizontalByPattern(TextPattern.SmallWordStart, Direction.Backward); break;
+      case NormalCommand.MoveHorizontalByPatternSmallWordEndBackward: MoveHorizontalByPattern(TextPattern.SmallWordEnd, Direction.Backward); break;
+      case NormalCommand.MoveHorizontalByPatternSmallWordStartForward: MoveHorizontalByPattern(TextPattern.SmallWordStart, Direction.Forward); break;
+      case NormalCommand.MoveHorizontalByPatternSmallWordEndForward: MoveHorizontalByPattern(TextPattern.SmallWordEnd, Direction.Forward); break;
+      case NormalCommand.MoveHorizontal1uBackward: MoveHorizontal(-1); break;
+      case NormalCommand.MoveVertical1uForward: MoveVerticalStop(1); break;
+      case NormalCommand.MoveVertical1uBackward: MoveVerticalStop(-1); break;
+      case NormalCommand.MoveHorizontal1uForward: MoveHorizontal(1); break;
+      case NormalCommand.MoveHorizontalFullScreenBackwardStop: MoveHorizontalStop(-Cfg.WinWID); break;
+      case NormalCommand.MoveVerticalFullScreenForwardStop: MoveVerticalStop(Cfg.WinHEI); break;
+      case NormalCommand.MoveVerticalFullScreenBackwardStop: MoveVerticalStop(-Cfg.WinHEI); break;
+      case NormalCommand.MoveHorizontalFullScreenForwardStop: MoveHorizontalStop(Cfg.WinWID); break;
     }
   }
   /// <summary>
   /// stops at the edge
   /// </summary>
   /// <param name="unit"></param>
-  static void MoveVertical(int unit)
+  static void MoveVerticalStop(int unit)
   {
     var (left, top) = Console.GetCursorPosition();
     var newTop = top + unit;
@@ -67,7 +100,7 @@ internal readonly ref struct Editor
   /// stops at the edge
   /// </summary>
   /// <param name="unit"></param>
-  static void MoveHorizontal(int unit)
+  static void MoveHorizontalStop(int unit)
   {
     var (left, top) = Console.GetCursorPosition();
     var newLeft = left + unit;
@@ -79,7 +112,7 @@ internal readonly ref struct Editor
   /// move vertically if exceess the edge
   /// </summary>
   /// <param name="unit"></param>
-  static void MoveHorizontalWrap(int unit)
+  static void MoveHorizontal(int unit)
   {
     var (left, top) = Console.GetCursorPosition();
     var newLeft = left + unit;

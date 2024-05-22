@@ -1,3 +1,8 @@
+/// <summary>
+/// enum is something like a indicator or middle product or smnall product
+/// we could return the whole product directly if possible, then, there's no need for enum (at least in the interface level)
+/// however, if we make it in one blow, we probably disobey the single responsibility principle
+/// </summary>
 enum ChooseLayoutResult
 {
   None,

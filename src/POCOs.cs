@@ -11,6 +11,9 @@ internal static class Cfg
   internal const int WinWID = 156; //Console.WindowWidth;
   internal const int WinHEI = 41; //Console.WindowHeight;
 }
+/// <summary>
+/// maybe support upward and downward in the future
+/// </summary>
 internal enum Direction
 {
   Forward,

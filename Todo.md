@@ -14,6 +14,10 @@
       - text-object algorithm
 - Base framework
   - [ ] get current line number
+  - [ ] I wonder if it would be better to use raw literal string for Console.WriteLine
+  - [ ] add config to decide whether to move cursor to nextline on hitting the edge
+    - I think this is SUPER trivial, no need to waste extra keystrokes for this
+    - we need to save keystrokes whenever possible... (precious keystrokes...)
   - [ ] copy template during build process
   - [ ] remove text in the background
   - [ ] algorithm to fill in empty spaces...
@@ -186,3 +190,19 @@ use symmetrical algorithm and reduced some of the ad-hoc algorithm
   - we think twice before making a class
   - in the end the Motion algorithm is a class and it cannot hold buffer as a static readonly member
   - so the final design pass in buffer as a parameter
+
+## aggressive oo design
+
+- mark everything sealed if it's not meant to be inherited
+- hide every POCO inside a class if it's not used elsewhere
+
+## ReadOnlySpan
+
+- pros
+  - whenever we slice the buffer, we don't need to allocate new memory
+  - that's all
+- cons
+  - now we need to pass the buffer around. there's no way to store it as a static readonly member
+  - we could still store the buffer in a ref struct
+  - now we have to declare ref struct everywhere
+
