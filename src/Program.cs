@@ -29,7 +29,7 @@ class TableHelper
       _widths ??= new int[cells.Length];
       return cells.ForEach((q, colIdx) =>
       {
-        if (q?.Length > _widths[colIdx])
+        if (q.Length > _widths[colIdx])
           _widths[colIdx] = q.Length;
       });
     }).ToArray();
@@ -38,8 +38,8 @@ class TableHelper
   internal void WriteToConsole()
   {
     WriteRow(_rows[0], RowStyle.Header);
-    WriteRow(_rows[1], RowStyle.Separator);
-    _rows.Skip(2).ForEach((cells, _) => WriteRow(cells));
+    WriteRow(_rows[0], RowStyle.Separator);
+    _rows.Skip(1).ForEach((cells, _) => WriteRow(cells));
   }
   string PadMiddle(string q, int idx) => q.PadMiddle(_widths[idx]);
   string PadRight(string q, int idx) => q.PadRight(_widths[idx]);

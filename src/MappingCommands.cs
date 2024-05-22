@@ -77,7 +77,6 @@ internal static class MappingCommands
   internal static IEnumerable<string[]> To5ColTable(this Stuff[] stuffs)
   {
     yield return new[] { "NormalCommand", "Qwerty", "Dvorak", "YourChoice", "Description" };
-    yield return new string[5];
     foreach (var item in stuffs)
     {
       yield return new[]
