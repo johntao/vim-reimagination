@@ -1,3 +1,55 @@
+namespace VimRenaissance;
+class TableHelper
+{
+  enum RowStyle
+  {
+    None,
+    Header,
+    Separator,
+    Normal,
+  }
+  private int[] _widths = null!;
+  private readonly string[][] _rows = null!;
+  /*
+  future enhancement:
+  - column style
+  - row style
+  */
+  public TableHelper(IEnumerable<string[]> rows)
+  {
+    _rows = rows.Select(row =>
+    {
+      var cells = row;
+      _widths ??= new int[cells.Length];
+      return cells.ForEach((q, colIdx) =>
+      {
+        if (q.Length > _widths[colIdx])
+          _widths[colIdx] = q.Length;
+      });
+    }).ToArray();
+  }
+  const string Delimiter = " | ";
+  internal void WriteToConsole()
+  {
+    WriteRow(_rows[0], RowStyle.Header);
+    WriteRow(_rows[0], RowStyle.Separator);
+    _rows.Skip(1).ForEach((cells, _) => WriteRow(cells));
+  }
+  string PadMiddle(string q, int idx) => q.PadMiddle(_widths[idx]);
+  string PadRight(string q, int idx) => q.PadRight(_widths[idx]);
+  string Separator(string _, int idx) => new('-', _widths[idx]);
+  private void WriteRow(string[] cells, RowStyle style = RowStyle.Normal)
+  {
+    var formattedCells = style switch
+    {
+      RowStyle.Header => cells.Select(PadMiddle),
+      RowStyle.Separator => cells.Select(Separator),
+      RowStyle.Normal => cells.Select(PadRight),
+      _ => throw new NotImplementedException(),
+    };
+    Console.WriteLine(string.Join(Delimiter, formattedCells));
+  }
+}
 internal static class MarkdownTableRenderer
 {
   internal static void ForEach<T>(this IEnumerable<T> seq, Action<T> action)

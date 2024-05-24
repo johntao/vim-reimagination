@@ -1,5 +1,5 @@
 using System.Buffers;
-namespace VimRenaissance;
+namespace VimRenaissance.WordMotion;
 /// <summary>
 /// this implementation failed to handle secondary word class which is neither space nor small word
 /// </summary>

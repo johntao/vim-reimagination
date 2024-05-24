@@ -1,3 +1,5 @@
+using VimRenaissance.WordMotion;
+
 namespace VimRenaissance;
 internal enum NormalCommand
 {

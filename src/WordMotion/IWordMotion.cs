@@ -1,4 +1,4 @@
-namespace VimRenaissance;
+namespace VimRenaissance.WordMotion;
 internal interface IWordMotionV1
 {
   (int newLeft, int newTop) GetSmallWordBeginBackward(int left, int top, Buffer1D buffer);
