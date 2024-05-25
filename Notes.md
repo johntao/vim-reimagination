@@ -177,3 +177,7 @@ use symmetrical algorithm and reduced some of the ad-hoc algorithm
   - one of the reason that we cannot set _width as readonly is that we use LINQ in the algorithm
   - which delegate the execution of those statements to some other place
   - which means the _width is no longer readonly (i.e. only scoped in fields and constructor)
+
+## about cross platform
+
+- we should probably abstract the console renderer

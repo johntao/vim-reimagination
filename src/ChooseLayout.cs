@@ -1,3 +1,5 @@
+using VimRenaissance.Helper;
+using Ch = VimRenaissance.Helper.ConsoleHelper;
 namespace VimRenaissance;
 
 /// <summary>
@@ -18,10 +20,10 @@ internal static class ChooseLayout
   {
     var isChoosing = true;
     Console.CursorVisible = !isChoosing;
-    Console.WriteLine("Map keyboard layout from QWERTY to Dvorak?");
-    Console.WriteLine("> NO, thanks");
-    Console.WriteLine("  YES, please");
-    Console.WriteLine("  NO, I would like to map it myself");
+    Ch.WriteLine("Map keyboard layout from QWERTY to Dvorak?");
+    Ch.WriteLine("> NO, thanks");
+    Ch.WriteLine("  YES, please");
+    Ch.WriteLine("  NO, I would like to map it myself");
     Console.SetCursorPosition(0, 1);
     ChooseLayoutResult result = ChooseLayoutResult.None;
     while (isChoosing)
@@ -57,7 +59,7 @@ internal static class ChooseLayout
       }
     }
     Console.Clear();
-    Console.WriteLine(result);
+    Ch.WriteLine(result);
     Console.CursorVisible = !isChoosing;
     return result;
   }

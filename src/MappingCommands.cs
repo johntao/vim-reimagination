@@ -1,4 +1,6 @@
+using VimRenaissance.Helper;
 using Cmd = VimRenaissance.NormalCommand;
+using Ch = VimRenaissance.Helper.ConsoleHelper;
 namespace VimRenaissance;
 internal static class MappingCommands
 {
@@ -25,12 +27,9 @@ internal static class MappingCommands
   ];
   static readonly char[] _dvorakKeys = _stuff.Select(q => q.DvorakKey).ToArray();
   static readonly char[] _qwertyKeys = _stuff.Select(q => q.QwertyKey).ToArray();
-  // static char[] _yourChoices;
   internal static Dictionary<char, Cmd> Run(ChooseLayoutResult result)
   {
     var normalCommands = _stuff.Select(q => q.Command).ToArray();
-    // var qwertyKeys = _stuff.Select(q => q.QwertyKey);
-    // var dvorakKeys = _stuff.Select(q => q.DvorakKey);
     return result switch
     {
       ChooseLayoutResult.UseDefaultQwerty => _qwertyKeys.Zip(normalCommands).ToDictionary(),
@@ -39,70 +38,63 @@ internal static class MappingCommands
       _ => throw new InvalidOperationException(),
     };
   }
-  internal static char[] MapByUser()
+  private static char[] MapByUser()
   {
     Console.CursorVisible = false;
-    Console.WriteLine("Press any key to map the following command to the key");
-    Console.WriteLine("Press Enter to cancel mapping and use Qwerty");
-    Console.WriteLine("Press Backspace to cancel mapping and use Dvorak");
-    Console.WriteLine("Press arrow keys to navigate");
+    Ch.WriteLine("Press any key to map the following command to that key");
+    Ch.WriteLine("Press Enter to cancel mapping and map the rest using QWERTY");
+    Ch.WriteLine("Press Backspace to cancel mapping and map the rest using Dvorak");
+    Ch.WriteLine("Press arrow keys to navigate");
     var table = new TableHelper(_stuff.To5ColTable());
     table.WriteToConsole();
     var isLooping = true;
+    var useQwerty = false;
     while (isLooping)
     {
       var readkey = Console.ReadKey(true);
-      var (_, top) = Console.GetCursorPosition();
-      switch (readkey.Key)
+      var top = Console.CursorTop;
+      switch (readkey)
       {
-        case ConsoleKey.UpArrow:
-          if (top <= 1) break;
-          Console.Write(' ');
-          Console.SetCursorPosition(0, --top);
-          Console.Write('>');
-          Console.SetCursorPosition(0, top);
+        case var q when q.Key is ConsoleKey.UpArrow:
+          if (top <= table.StartLineIdx) break;
+          Ch.Write(' ');
+          --Console.CursorTop;
+          Ch.Write('>');
           break;
-        case ConsoleKey.DownArrow:
-          if (top >= 50) break;
-          Console.Write(' ');
-          Console.SetCursorPosition(0, ++top);
-          Console.Write('>');
-          Console.SetCursorPosition(0, top);
+        case var q when q.Key is ConsoleKey.DownArrow:
+          if (top >= table.EndLineIdx) break;
+          Ch.Write(' ');
+          ++Console.CursorTop;
+          Ch.Write('>');
           break;
-        case ConsoleKey.Escape:
-        case ConsoleKey.Enter:
+        case var q when !char.IsControl(q.KeyChar):
+          var idx = top - table.StartLineIdx;
+          var hasConflict = _stuff.Any(q => q.YourChoice == readkey.KeyChar);
+          if (hasConflict)
+          {
+            table.UpdateChoice("!!");
+            break;
+          }
+          var item = _stuff[idx];
+          item.YourChoice = readkey.KeyChar;
+          table.UpdateChoice(item.YourChoice + "");
+          break;
+        case var q when q.Key is ConsoleKey.Backspace:
+          isLooping = false;
+          break;
+        case var q when q.Key is ConsoleKey.Enter:
+          useQwerty = true;
           isLooping = false;
           break;
       }
     }
-    // for (int i = 0; i < _stuff.Length; i++)
-    // {
-    //   var item = _stuff[i];
-    //   Console.Clear();
-    //   Console.WriteLine($"Cmd: {i}. {item.Command}");
-    //   Console.WriteLine($"Qwerty layout: {item.QwertyKey}");
-    //   Console.WriteLine($"Dvorak layout: {item.DvorakKey}");
-    //   Console.WriteLine($"Your choice: '{item.YourChoice}'");
-    //   var key = Console.ReadKey(true);
-    //   switch (key.Key)
-    //   {
-    //     case ConsoleKey.Enter: return _qwertyKeys;
-    //     case ConsoleKey.Backspace: return _dvorakKeys;
-    //     case ConsoleKey.LeftArrow:
-    //       if (--i == -1 || --i == -1) { }
-    //       break;
-    //     case ConsoleKey.RightArrow:
-    //       // if (++i == _normalCommands.Length - 1) break;
-    //       // result[i] = result[i + 1];
-    //       // result[i + 1] = key.KeyChar;
-    //       break;
-    //     default:
-    //       item.YourChoice = key.KeyChar;
-    //       break;
-    //   }
-    // }
     Console.CursorVisible = true;
-    return _stuff.Select(q => q.YourChoice).ToArray(); ;
+    return _stuff.Select(q =>
+    {
+      if (q.YourChoice == ' ')
+        q.YourChoice = useQwerty ? q.QwertyKey : q.DvorakKey;
+      return q.YourChoice;
+    }).ToArray(); ;
   }
   internal static IEnumerable<string[]> To5ColTable(this Stuff[] stuffs)
   {
@@ -120,7 +112,6 @@ internal static class MappingCommands
     }
   }
 }
-
 internal class Stuff(Cmd command, string description, char qwertyKey, char dvorakKey)
 {
   public Cmd Command { get; } = command;
@@ -129,16 +120,3 @@ internal class Stuff(Cmd command, string description, char qwertyKey, char dvora
   public char DvorakKey { get; } = dvorakKey;
   public char YourChoice { get; internal set; } = ' ';
 }
-// public override bool Equals(object? obj)
-// {
-//     return obj is Stuff other &&
-//            Command == other.Command &&
-//            Description == other.Description &&
-//            QwertyKey == other.QwertyKey &&
-//            DvorakKey == other.DvorakKey &&
-//            YourChoice == other.YourChoice;
-// }
-// public override int GetHashCode()
-// {
-//     return HashCode.Combine(Command, Description, QwertyKey, DvorakKey, YourChoice);
-// }

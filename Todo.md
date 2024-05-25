@@ -9,7 +9,10 @@
     - [x] buffer boundary
     - [x] big word motion
     - [x] buffer should not mix with motion algorithm, buffer should not store Cursor2D
-    - [ ] useQwerty, useDvorak, useCustom
+    - [x] useQwerty, useDvorak, useCustom
+    - [ ] fix a bug where we cannot set YourChoice again
+    - [ ] fix a bug where double exclaimation mark is not working
+    - [ ] enhance the mapping algorithm so that users NO NEEDS to use arrow keys
     - [ ] make status bar more informative
       - text-object algorithm
 - Base framework
