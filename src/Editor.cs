@@ -1,5 +1,4 @@
 using VimRenaissance.WordMotion;
-
 namespace VimRenaissance;
 internal enum NormalCommand
 {
@@ -36,9 +35,7 @@ internal enum NormalCommand
 /// </summary>
 internal readonly ref struct Editor
 {
-  static Editor()
-  {
-  }
+  static Editor() { }
   private readonly Buffer1D _buffer;
   private readonly SmallWordMotionPattern _smallWordMotion;
   private readonly BigWordMotionPattern _bigWordMotion;
@@ -52,14 +49,14 @@ internal readonly ref struct Editor
     Console.Write(src.ToString());
     Console.SetCursorPosition(0, 0);
   }
-  internal void Run(Dictionary<char, NormalCommand> layout)
+  internal void Run(Dictionary<char, NormalCommand> keymap)
   {
-    //should pass in the keyboard layout here
     while (true)
     {
       var readkey = Console.ReadKey(true);
       var keychar = readkey.KeyChar;
-      ProcessCommand(layout[keychar]);
+      if (keymap.TryGetValue(keychar, out NormalCommand value))
+        ProcessCommand(value);
     }
   }
   private void ProcessCommand(NormalCommand cmd)

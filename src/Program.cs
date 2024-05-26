@@ -1,8 +1,10 @@
-﻿using VimRenaissance;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-Console.Clear();
-Console.CancelKeyPress += delegate { Console.Clear(); };
-var result = ChooseLayout.Run();
-var layout = MappingCommands.Run(result);
-new Editor().Run(layout);
-Console.Clear();
+HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+
+var services = builder.Services;
+services.AddHostedService<EditorHost>();
+
+using IHost host = builder.Build();
+await host.RunAsync();

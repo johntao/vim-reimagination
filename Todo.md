@@ -1,54 +1,67 @@
-- [x] add text in the background. text aware cursor motion
-- Motion
-  - resolve word-based motions
-    - [x] d, f first implementation
-    - [x] a, s, d, f first implementation
-    - [x] d needs to be fixed
-      - prefer symmetrical algorithm over ad-hoc algorithm
-    - [x] word wrap
-    - [x] buffer boundary
-    - [x] big word motion
-    - [x] buffer should not mix with motion algorithm, buffer should not store Cursor2D
+- Easy tasks (can be done in a day)
+  - Command key mapping
     - [x] useQwerty, useDvorak, useCustom
     - [x] fix a bug where we cannot set YourChoice again
-    - [x] fix a bug where double exclaimation mark is not working
+    - [x] fix a bug where double exclaimation mark is not working binding
     - [x] enhance the mapping algorithm so that users NO NEEDS to use arrow keys
+  - Console/ Buffer data binding and rendering
+    - [x] add text in the background. text aware cursor motion
+    - [x] buffer should not mix with motion algorithm, buffer should not store Cursor2D
+    - [x] buffer boundary
+    - [ ] remove text in the background
+    - [ ] resolve newlines
+    - [ ] algorithm to fill in empty spaces...
+    - [ ] resolve different buffer types
+  - Motion
+    - word-based motions
+      - [x] d, f first implementation
+      - [x] a, s, d, f first implementation
+      - [x] d needs to be fixed
+        - prefer symmetrical algorithm over ad-hoc algorithm
+      - [x] move cursor one unit up or down when hitting the edge
+      - [x] big word motion
+    - text-object algorithm
+  - Configurable
+    - [ ] add config to decide whether to move cursor to nextline on hitting the edge
+      - since this is SUPER trivial, no need to waste extra keystrokes for this feature
+      - we need to save keystrokes whenever possible... (precious keystrokes...)
+  - HUD
     - [ ] make status bar more informative
-      - text-object algorithm
-- Base framework
-  - [ ] get current line number
-  - [ ] I wonder if it would be better to use raw literal string for Console.WriteLine
-  - [ ] add config to decide whether to move cursor to nextline on hitting the edge
-    - I think this is SUPER trivial, no need to waste extra keystrokes for this
-    - we need to save keystrokes whenever possible... (precious keystrokes...)
-  - [ ] copy template during build process
-  - [ ] remove text in the background
-  - [ ] algorithm to fill in empty spaces...
-  - [ ] resolve newlines
-  - [ ] resolve different buffer types
-  - [ ] yank, putReplace
-  - [ ] editable: replace, delete, change
-  - [ ] set up boundaries for status bar, motion and rendering
-- Advanced framework
-  - [ ] should be able to scroll
-  - [ ] virtual cursor position
-  - [ ] editable: insert
-  - [ ] putInsert
-  - [ ] undo, redo, search, save, quit
-  - [ ] IHasRegister
-  - [ ] Multiple cursors
-  - [ ] IHasHistory
-  - [ ] visual mode
-- Advanced Hotkey Trigger or Accessibility
-  - [ ] resolve multiple key press
-  - [ ] resolve multiple key inputs
-  - [ ] flash visual
-- Vision
-  - remove ex command while keeping all the capacity
-  - support any kinds of keyboard layout
-  - should be able to run on any platform
-    - hence, the API should be platform agnostic
-    - beaware if platform doesn't support Console.Left, Console.Top
-    - should at least migrate to Terminal.Gui
-    - afterward, we might have better support for migration to other platforms
-    - probably, the best way to do this is to develop with lower level API
+    - [ ] get current line number
+    - [ ] set up boundaries for status bar, motion and rendering
+  - Refactor (engineering factor)
+    - [ ] Use dependency injection. abstract Console
+    - [x] copy template during build process
+    - [ ] I wonder if it would be better to use raw literal string for Console.WriteLine
+  - Editable
+    - [ ] yank, putReplace
+    - [ ] editable: replace, delete, change
+- Medium tasks (can be done in a few days)
+  - Console/ Buffer data binding and rendering
+    - [ ] should be able to scroll
+    - [ ] virtual cursor position
+  - Editable
+    - [ ] insert
+    - [ ] putInsert
+    - [ ] undo, redo, search, save, quit
+  - Universal command attribute
+    - [ ] IHasRegister
+    - [ ] IHasHistory
+  - Other Core Stuff
+    - [ ] visual mode
+- Hard tasks (can be done in a month or more or years...)
+  - Other Core Stuff
+    - [ ] Multiple cursors
+  - Advanced Hotkey Trigger or Accessibility
+    - [ ] resolve multiple key press
+    - [ ] resolve multiple key inputs
+    - [ ] flash visual
+  - Refactor (engineering factor)
+    - remove ex command while keeping all the capacity
+    - support any kinds of keyboard layout
+    - should be able to run on any platform
+      - hence, the API should be platform agnostic
+      - beaware if platform doesn't support Console.Left, Console.Top
+      - should at least migrate to Terminal.Gui
+      - afterward, we might have better support for migration to other platforms
+      - probably, the best way to do this is to develop with lower level API
