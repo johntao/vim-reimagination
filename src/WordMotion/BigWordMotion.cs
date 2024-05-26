@@ -3,10 +3,10 @@ namespace VimRenaissance.WordMotion;
 /// <summary>
 /// this implementation fully comply with vim word motion
 /// </summary>
-internal class BigWordMotion : WordMotion
+internal class BigWordMotionPattern : WordMotion
 {
   private static readonly SearchValues<char> _searchPrimary;
-  static BigWordMotion()
+  static BigWordMotionPattern()
   {
     const string Primary = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_,.:+=-*/\\(){}[]<>!@#$%^&*;\"'`~?";
     _searchPrimary = SearchValues.Create(Primary);

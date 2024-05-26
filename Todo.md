@@ -10,9 +10,9 @@
     - [x] big word motion
     - [x] buffer should not mix with motion algorithm, buffer should not store Cursor2D
     - [x] useQwerty, useDvorak, useCustom
-    - [ ] fix a bug where we cannot set YourChoice again
-    - [ ] fix a bug where double exclaimation mark is not working
-    - [ ] enhance the mapping algorithm so that users NO NEEDS to use arrow keys
+    - [x] fix a bug where we cannot set YourChoice again
+    - [x] fix a bug where double exclaimation mark is not working
+    - [x] enhance the mapping algorithm so that users NO NEEDS to use arrow keys
     - [ ] make status bar more informative
       - text-object algorithm
 - Base framework
@@ -31,7 +31,7 @@
   - [ ] set up boundaries for status bar, motion and rendering
 - Advanced framework
   - [ ] should be able to scroll
-  - [ ] virtual boundary
+  - [ ] virtual cursor position
   - [ ] editable: insert
   - [ ] putInsert
   - [ ] undo, redo, search, save, quit

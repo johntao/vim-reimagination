@@ -4,7 +4,7 @@ using Ch = VimRenaissance.Helper.ConsoleHelper;
 namespace VimRenaissance;
 internal static class MappingCommands
 {
-  internal static readonly Stuff[] _stuff =
+  internal static readonly CommandInfo[] _stuff =
   [
     new(Cmd.MoveHorizontal45uBackward, "Experimental, move horizontally by 45 units backward", 'n', 'b'),
     new(Cmd.MoveHorizontal45uForward, "Experimental, move horizontally by 45 units forward", '.', 'v'),
@@ -68,16 +68,20 @@ internal static class MappingCommands
           Ch.Write('>');
           break;
         case var q when !char.IsControl(q.KeyChar):
-          var idx = top - table.StartLineIdx;
-          var hasConflict = _stuff.Any(q => q.YourChoice == readkey.KeyChar);
+          var currentIdx = top - table.StartLineIdx;
+          var hasConflict = _stuff.Any((item, idx) => item.YourChoice == readkey.KeyChar && idx != currentIdx);
           if (hasConflict)
           {
             table.UpdateChoice("!!");
             break;
           }
-          var item = _stuff[idx];
+          var item = _stuff[currentIdx];
           item.YourChoice = readkey.KeyChar;
-          table.UpdateChoice(item.YourChoice + "");
+          table.UpdateChoice(item.YourChoice + " ");
+          if (top >= table.EndLineIdx) break;
+          Ch.Write(' ');
+          ++Console.CursorTop;
+          Ch.Write('>');
           break;
         case var q when q.Key is ConsoleKey.Backspace:
           isLooping = false;
@@ -96,7 +100,7 @@ internal static class MappingCommands
       return q.YourChoice;
     }).ToArray(); ;
   }
-  internal static IEnumerable<string[]> To5ColTable(this Stuff[] stuffs)
+  internal static IEnumerable<string[]> To5ColTable(this CommandInfo[] stuffs)
   {
     yield return new[] { "NormalCommand", "Qwerty", "Dvorak", "YourChoice", "Description" };
     foreach (var item in stuffs)
@@ -111,12 +115,12 @@ internal static class MappingCommands
       };
     }
   }
-}
-internal class Stuff(Cmd command, string description, char qwertyKey, char dvorakKey)
-{
-  public Cmd Command { get; } = command;
-  public string Description { get; } = description;
-  public char QwertyKey { get; } = qwertyKey;
-  public char DvorakKey { get; } = dvorakKey;
-  public char YourChoice { get; internal set; } = ' ';
+  internal class CommandInfo(Cmd command, string description, char qwertyKey, char dvorakKey)
+  {
+    public Cmd Command { get; } = command;
+    public string Description { get; } = description;
+    public char QwertyKey { get; } = qwertyKey;
+    public char DvorakKey { get; } = dvorakKey;
+    public char YourChoice { get; internal set; } = ' ';
+  }
 }

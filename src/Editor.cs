@@ -40,15 +40,15 @@ internal readonly ref struct Editor
   {
   }
   private readonly Buffer1D _buffer;
-  private readonly SmallWordMotion _smallWordMotion;
-  private readonly BigWordMotion _bigWordMotion;
+  private readonly SmallWordMotionPattern _smallWordMotion;
+  private readonly BigWordMotionPattern _bigWordMotion;
   public Editor()
   {
-    var tmpl = File.ReadAllLines("./template.txt");
+    var tmpl = File.ReadAllLines("./assets/template.txt");
     ReadOnlySpan<char> src = string.Join("", tmpl);
     _buffer = new Buffer1D(src, Cfg.WinWID);
-    _smallWordMotion = new SmallWordMotion();
-    _bigWordMotion = new BigWordMotion();
+    _smallWordMotion = new SmallWordMotionPattern();
+    _bigWordMotion = new BigWordMotionPattern();
     Console.Write(src.ToString());
     Console.SetCursorPosition(0, 0);
   }

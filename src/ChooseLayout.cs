@@ -1,4 +1,3 @@
-using VimRenaissance.Helper;
 using Ch = VimRenaissance.Helper.ConsoleHelper;
 namespace VimRenaissance;
 
@@ -20,31 +19,29 @@ internal static class ChooseLayout
   {
     var isChoosing = true;
     Console.CursorVisible = !isChoosing;
-    Ch.WriteLine("Map keyboard layout from QWERTY to Dvorak?");
-    Ch.WriteLine("> NO, thanks");
-    Ch.WriteLine("  YES, please");
-    Ch.WriteLine("  NO, I would like to map it myself");
+    Ch.WriteLine("Choose your keyboard layout:");
+    Ch.WriteLine("> QWERTY");
+    Ch.WriteLine("  Dvorak");
+    Ch.WriteLine("  Map commands by user");
     Console.SetCursorPosition(0, 1);
     ChooseLayoutResult result = ChooseLayoutResult.None;
     while (isChoosing)
     {
       var readkey = Console.ReadKey(true);
-      var (_, top) = Console.GetCursorPosition();
+      var top = Console.CursorTop;
       switch (readkey.Key)
       {
         case ConsoleKey.UpArrow:
           if (top <= 1) break;
-          Console.Write(' ');
-          Console.SetCursorPosition(0, --top);
-          Console.Write('>');
-          Console.SetCursorPosition(0, top);
+          Ch.Write(' ');
+          --Console.CursorTop;
+          Ch.Write('>');
           break;
         case ConsoleKey.DownArrow:
           if (top >= 3) break;
-          Console.Write(' ');
-          Console.SetCursorPosition(0, ++top);
-          Console.Write('>');
-          Console.SetCursorPosition(0, top);
+          Ch.Write(' ');
+          ++Console.CursorTop;
+          Ch.Write('>');
           break;
         case ConsoleKey.Enter:
           isChoosing = false;
