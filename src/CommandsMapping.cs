@@ -6,8 +6,6 @@ internal static class MappingCommands
 {
   internal static readonly CommandInfo[] _stuff =
   [
-    new(Cmd.MoveHorizontal45uBackward, "Experimental, move horizontally by 45 units backward", 'n', 'b'),
-    new(Cmd.MoveHorizontal45uForward, "Experimental, move horizontally by 45 units forward", '.', 'v'),
     new(Cmd.MoveHorizontalByPatternBigWordStartBackward, "Move horizontally by pattern 'Start of Big Word' backward", 'q', '"'),
     new(Cmd.MoveHorizontalByPatternBigWordEndBackward, "Move horizontally by pattern 'End of Big Word' backward", 'w', '<'),
     new(Cmd.MoveHorizontalByPatternBigWordStartForward, "Move horizontally by pattern 'Start of Big Word' forward", 'e', '>'),
@@ -24,6 +22,8 @@ internal static class MappingCommands
     new(Cmd.MoveVerticalFullScreenForwardStop, "Move vertically by full screen height forward, stop at the edge", 'J', 'H'),
     new(Cmd.MoveVerticalFullScreenBackwardStop, "Move vertically by full screen height backward, stop at the edge", 'K', 'T'),
     new(Cmd.MoveHorizontalFullScreenForwardStop, "Move horizontally by full screen width forward, stop at the edge", 'L', 'N'),
+    new(Cmd.MoveHorizontal45uBackward, "Experimental, move horizontally by 45 units backward", 'n', 'b'),
+    new(Cmd.MoveHorizontal45uForward, "Experimental, move horizontally by 45 units forward", '.', 'v'),
   ];
   static readonly char[] _dvorakKeys = _stuff.Select(q => q.DvorakKey).ToArray();
   static readonly char[] _qwertyKeys = _stuff.Select(q => q.QwertyKey).ToArray();
@@ -102,16 +102,16 @@ internal static class MappingCommands
   }
   internal static IEnumerable<string[]> To5ColTable(this CommandInfo[] stuffs)
   {
-    yield return new[] { "NormalCommand", "Qwerty", "Dvorak", "YourChoice", "Description" };
+    yield return new[] { "NormalCommand", "Description", "Qwerty", "Dvorak", "YourChoice" };
     foreach (var item in stuffs)
     {
       yield return new[]
       {
         item.Command.ToString(),
+        item.Description,
         item.QwertyKey.ToString(),
         item.DvorakKey.ToString(),
         item.YourChoice.ToString(),
-        item.Description,
       };
     }
   }

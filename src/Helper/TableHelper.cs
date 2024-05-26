@@ -33,7 +33,7 @@ class TableHelper
           _widths[colIdx] = q.Length;
       });
     }).ToArray();
-    const int ChoiceDistance = 3;
+    const int ChoiceDistance = 4;
     _choiceColIdx = hOffset + Delimiter.Length * ChoiceDistance + _widths.Take(ChoiceDistance).Sum();
   }
   const string Delimiter = " | ";

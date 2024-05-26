@@ -4,14 +4,6 @@ namespace VimRenaissance;
 internal enum NormalCommand
 {
   None,
-  /// <summary>
-  /// experimental
-  /// </summary>
-  MoveHorizontal45uBackward,
-  /// <summary>
-  /// Experimental
-  /// </summary>
-  MoveHorizontal45uForward,
   MoveHorizontalByPatternBigWordStartBackward,
   MoveHorizontalByPatternBigWordEndBackward,
   MoveHorizontalByPatternBigWordStartForward,
@@ -28,6 +20,14 @@ internal enum NormalCommand
   MoveVerticalFullScreenForwardStop,
   MoveVerticalFullScreenBackwardStop,
   MoveHorizontalFullScreenForwardStop,
+  /// <summary>
+  /// experimental
+  /// </summary>
+  MoveHorizontal45uBackward,
+  /// <summary>
+  /// Experimental
+  /// </summary>
+  MoveHorizontal45uForward,
 }
 /// <summary>
 /// Can't tell the advantage of using ref struct, but it's required to use ref struct for `Buffer1D _buffer`
@@ -66,8 +66,6 @@ internal readonly ref struct Editor
   {
     switch (cmd)
     {
-      case NormalCommand.MoveHorizontal45uBackward: MoveHorizontal(-45); break;
-      case NormalCommand.MoveHorizontal45uForward: MoveHorizontal(45); break;
       case NormalCommand.MoveHorizontalByPatternBigWordStartBackward: MoveHorizontalByPattern(TextPattern.BigWordStart, Direction.Backward); break;
       case NormalCommand.MoveHorizontalByPatternBigWordEndBackward: MoveHorizontalByPattern(TextPattern.BigWordEnd, Direction.Backward); break;
       case NormalCommand.MoveHorizontalByPatternBigWordStartForward: MoveHorizontalByPattern(TextPattern.BigWordStart, Direction.Forward); break;
@@ -84,6 +82,8 @@ internal readonly ref struct Editor
       case NormalCommand.MoveVerticalFullScreenForwardStop: MoveVerticalStop(Cfg.WinHEI); break;
       case NormalCommand.MoveVerticalFullScreenBackwardStop: MoveVerticalStop(-Cfg.WinHEI); break;
       case NormalCommand.MoveHorizontalFullScreenForwardStop: MoveHorizontalStop(Cfg.WinWID); break;
+      case NormalCommand.MoveHorizontal45uBackward: MoveHorizontal(-45); break;
+      case NormalCommand.MoveHorizontal45uForward: MoveHorizontal(45); break;
     }
   }
   /// <summary>
@@ -143,14 +143,14 @@ internal readonly ref struct Editor
     var cursor = new Cursor2D(Console.GetCursorPosition());
     var (newLeft, newTop) = (textPattern, direction) switch
     {
-      (TextPattern.SmallWordStart, Direction.Backward) => _smallWordMotion.ChargeUntilSpaceExclusive(cursor, _buffer, Direction.Backward),
-      (TextPattern.SmallWordEnd, Direction.Backward) => _smallWordMotion.ChargeUntilBeingInclusive(cursor, _buffer, Direction.Backward),
-      (TextPattern.SmallWordStart, Direction.Forward) => _smallWordMotion.ChargeUntilBeingInclusive(cursor, _buffer, Direction.Forward),
-      (TextPattern.SmallWordEnd, Direction.Forward) => _smallWordMotion.ChargeUntilSpaceExclusive(cursor, _buffer, Direction.Forward),
-      (TextPattern.BigWordStart, Direction.Backward) => _bigWordMotion.ChargeUntilSpaceExclusive(cursor, _buffer, Direction.Backward),
-      (TextPattern.BigWordEnd, Direction.Backward) => _bigWordMotion.ChargeUntilBeingInclusive(cursor, _buffer, Direction.Backward),
-      (TextPattern.BigWordStart, Direction.Forward) => _bigWordMotion.ChargeUntilBeingInclusive(cursor, _buffer, Direction.Forward),
-      (TextPattern.BigWordEnd, Direction.Forward) => _bigWordMotion.ChargeUntilSpaceExclusive(cursor, _buffer, Direction.Forward),
+      (TextPattern.SmallWordStart, Direction.Backward) => _smallWordMotion.ChargeUntilBlankExclusive(cursor, _buffer, Direction.Backward),
+      (TextPattern.SmallWordEnd, Direction.Backward) => _smallWordMotion.ChargeUntilMatterInclusive(cursor, _buffer, Direction.Backward),
+      (TextPattern.SmallWordStart, Direction.Forward) => _smallWordMotion.ChargeUntilMatterInclusive(cursor, _buffer, Direction.Forward),
+      (TextPattern.SmallWordEnd, Direction.Forward) => _smallWordMotion.ChargeUntilBlankExclusive(cursor, _buffer, Direction.Forward),
+      (TextPattern.BigWordStart, Direction.Backward) => _bigWordMotion.ChargeUntilBlankExclusive(cursor, _buffer, Direction.Backward),
+      (TextPattern.BigWordEnd, Direction.Backward) => _bigWordMotion.ChargeUntilMatterInclusive(cursor, _buffer, Direction.Backward),
+      (TextPattern.BigWordStart, Direction.Forward) => _bigWordMotion.ChargeUntilMatterInclusive(cursor, _buffer, Direction.Forward),
+      (TextPattern.BigWordEnd, Direction.Forward) => _bigWordMotion.ChargeUntilBlankExclusive(cursor, _buffer, Direction.Forward),
       _ => throw new NotImplementedException(),
     };
     Console.SetCursorPosition(newLeft, newTop);

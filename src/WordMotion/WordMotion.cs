@@ -20,7 +20,7 @@ internal abstract class WordMotion : IWordMotionV3
     var current = GetCharKind(buffer.Current);
     return prev == current;
   }
-  public Cursor2D ChargeUntilSpaceExclusive(Cursor2D cursor, Buffer1D buffer, Direction direction)
+  public Cursor2D ChargeUntilBlankExclusive(Cursor2D cursor, Buffer1D buffer, Direction direction)
   {
     buffer.Reset(cursor, direction);
     if (!buffer.HasNext_Move()) return cursor;
@@ -35,7 +35,7 @@ internal abstract class WordMotion : IWordMotionV3
       return buffer.Cursor2D.Offset(direction);
     }
   }
-  public Cursor2D ChargeUntilBeingInclusive(Cursor2D cursor2D, Buffer1D buffer, Direction direction)
+  public Cursor2D ChargeUntilMatterInclusive(Cursor2D cursor2D, Buffer1D buffer, Direction direction)
   {
     buffer.Reset(cursor2D, direction);
     if (!buffer.HasNext()) return cursor2D;
