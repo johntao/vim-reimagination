@@ -5,26 +5,29 @@ namespace VimRenaissance.Service;
 /// we could return the whole product directly if possible, then, there's no need for enum (at least in the interface level)
 /// however, if we make it in one blow, we probably disobey the single responsibility principle
 /// </summary>
-enum ChooseLayoutResult
+enum ChoosingKeymapTaskResult
 {
   None,
   UseDefaultQwerty,
   MapQwertyToDvorak,
   MapByUser,
 }
-internal class ChooseLayout(ITextRenderer tr) : IChooseLayout
+internal class ChoosingKeymapTask(ITextRenderer tr) : IChoosingKeymapTask
 {
   private readonly ITextRenderer _tr = tr;
-  public ChooseLayoutResult Run()
+  public ChoosingKeymapTaskResult Run()
   {
     var isChoosing = true;
     _tr.CursorVisible = !isChoosing;
-    _tr.WriteLine("Choose your keyboard layout:");
-    _tr.WriteLine("> QWERTY");
-    _tr.WriteLine("  Dvorak");
-    _tr.WriteLine("  Map commands by user");
+    const string Message = """
+Choose your keyboard layout:
+> QWERTY
+  Dvorak
+  Map commands by yourself
+""";
+    _tr.WriteLine(Message);
     _tr.SetCursorPosition(0, 1);
-    ChooseLayoutResult result = ChooseLayoutResult.None;
+    ChoosingKeymapTaskResult result = ChoosingKeymapTaskResult.None;
     while (isChoosing)
     {
       var readkey = _tr.ReadKey();
@@ -47,10 +50,10 @@ internal class ChooseLayout(ITextRenderer tr) : IChooseLayout
           isChoosing = false;
           result = top switch
           {
-            1 => ChooseLayoutResult.UseDefaultQwerty,
-            2 => ChooseLayoutResult.MapQwertyToDvorak,
-            3 => ChooseLayoutResult.MapByUser,
-            _ => ChooseLayoutResult.None,
+            1 => ChoosingKeymapTaskResult.UseDefaultQwerty,
+            2 => ChoosingKeymapTaskResult.MapQwertyToDvorak,
+            3 => ChoosingKeymapTaskResult.MapByUser,
+            _ => ChoosingKeymapTaskResult.None,
           };
           break;
       }
@@ -62,7 +65,7 @@ internal class ChooseLayout(ITextRenderer tr) : IChooseLayout
   }
 }
 
-internal interface IChooseLayout
+internal interface IChoosingKeymapTask
 {
-  ChooseLayoutResult Run();
+  ChoosingKeymapTaskResult Run();
 }

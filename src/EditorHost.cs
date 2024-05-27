@@ -2,11 +2,11 @@ using Microsoft.Extensions.Hosting;
 using VimRenaissance;
 using VimRenaissance.Service;
 
-internal class EditorHost(IMappingCommands mappingCommands, IChooseLayout chooseLayout, ITextRenderer tr) : IHostedService
+internal class EditorHost(ICustomizingKeymapTask mappingCommands, IChoosingKeymapTask chooseLayout, ITextRenderer tr) : IHostedService
 {
   private readonly ITextRenderer _tr = tr;
-  private readonly IMappingCommands _mappingCommands = mappingCommands;
-  private readonly IChooseLayout _chooseLayout = chooseLayout;
+  private readonly ICustomizingKeymapTask _mappingCommands = mappingCommands;
+  private readonly IChoosingKeymapTask _chooseLayout = chooseLayout;
   public Task StartAsync(CancellationToken cancellationToken)
   {
     Task.Delay(1000, cancellationToken).ContinueWith((_) =>

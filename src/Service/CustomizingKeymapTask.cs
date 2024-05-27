@@ -1,6 +1,6 @@
 using Cmd = VimRenaissance.NormalCommand;
 namespace VimRenaissance.Service;
-internal class MappingCommands(ITextRenderer tr, ITableRenderer tbl) : IMappingCommands
+internal class CustomizingKeymapTask(ITextRenderer tr, ITableRenderer tbl) : ICustomizingKeymapTask
 {
   private static readonly CommandInfo[] _stuff =
   [
@@ -28,24 +28,27 @@ internal class MappingCommands(ITextRenderer tr, ITableRenderer tbl) : IMappingC
   private readonly ITextRenderer _tr = tr;
   private readonly ITableRenderer _tbl = tbl;
 
-  public Dictionary<char, Cmd> Run(ChooseLayoutResult result)
+  public Dictionary<char, Cmd> Run(ChoosingKeymapTaskResult result)
   {
     var normalCommands = _stuff.Select(q => q.Command).ToArray();
     return result switch
     {
-      ChooseLayoutResult.UseDefaultQwerty => _qwertyKeys.Zip(normalCommands).ToDictionary(),
-      ChooseLayoutResult.MapQwertyToDvorak => _dvorakKeys.Zip(normalCommands).ToDictionary(),
-      ChooseLayoutResult.MapByUser => MapByUser().Zip(normalCommands).ToDictionary(),
+      ChoosingKeymapTaskResult.UseDefaultQwerty => _qwertyKeys.Zip(normalCommands).ToDictionary(),
+      ChoosingKeymapTaskResult.MapQwertyToDvorak => _dvorakKeys.Zip(normalCommands).ToDictionary(),
+      ChoosingKeymapTaskResult.MapByUser => MapByUser().Zip(normalCommands).ToDictionary(),
       _ => throw new InvalidOperationException(),
     };
   }
   private char[] MapByUser()
   {
     _tr.CursorVisible = false;
-    _tr.WriteLine("Press any key to map the following command to that key");
-    _tr.WriteLine("Press Enter to cancel mapping and map the rest using QWERTY");
-    _tr.WriteLine("Press Backspace to cancel mapping and map the rest using Dvorak");
-    _tr.WriteLine("Press arrow keys to navigate");
+    const string Message = """
+Press any key to map the following command to that key
+Press Enter to cancel mapping and map the rest using QWERTY
+Press Backspace to cancel mapping and map the rest using Dvorak
+Press arrow keys to navigate
+""";
+    _tr.WriteLine(Message);
     _tbl.Initialize(To5ColTable(_stuff));
     var isLooping = true;
     var useQwerty = false;
@@ -124,7 +127,7 @@ internal class MappingCommands(ITextRenderer tr, ITableRenderer tbl) : IMappingC
     public char YourChoice { get; internal set; } = ' ';
   }
 }
-internal interface IMappingCommands
+internal interface ICustomizingKeymapTask
 {
-  Dictionary<char, Cmd> Run(ChooseLayoutResult result);
+  Dictionary<char, Cmd> Run(ChoosingKeymapTaskResult result);
 }

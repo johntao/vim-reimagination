@@ -30,9 +30,9 @@
     - [ ] get current line number
     - [ ] set up boundaries for status bar, motion and rendering
   - Refactor (engineering factor)
-    - [ ] Use dependency injection. abstract Console
+    - [x] Use dependency injection. abstract Console
     - [x] copy template during build process
-    - [ ] I wonder if it would be better to use raw literal string for Console.WriteLine
+    - [x] I wonder if it would be better to use raw literal string for Console.WriteLine
   - Editable
     - [ ] yank, putReplace
     - [ ] editable: replace, delete, change

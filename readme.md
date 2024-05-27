@@ -9,7 +9,7 @@ Meanwhile, it aims to be as simple as possible, so that it can be easily underst
 ## Personal Flavor and Motivation
 
 Choosing C# as the programming language, was because it is the most familiar programming language for me at the time, and I was too lazy to learn C from the VIM source code.  
-I also use this project to explore the performance improvement features of C# and .NET in the recent updates.
+I also use this project to explore the performance improvement features of C# and .NET in the recent updates.  
 Lastly, I would like to implement some features that are not available in VIM, and also building such a project is a good way to re-imagine how VIM should be like in the future. (I'm a advactor of VIM, and I want extend its spirit)
 
 ## Features (In Progress)
@@ -22,14 +22,6 @@ Lastly, I would like to implement some features that are not available in VIM, a
 - [ ] Save and load file
 - [ ] Resize window and re-render text
 - [ ] Basic text editing
-
-## Table of Contents
-
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
 
 ## Installation
 

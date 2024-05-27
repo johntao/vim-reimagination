@@ -6,10 +6,10 @@ HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
 builder.Services
   .AddHostedService<EditorHost>()
-  .AddSingleton<IMappingCommands, MappingCommands>()
+  .AddSingleton<ICustomizingKeymapTask, CustomizingKeymapTask>()
   .AddSingleton<ITextRenderer, ConsoleRenderer>()
   .AddSingleton<ITableRenderer, TableRenderer>()
-  .AddSingleton<IChooseLayout, ChooseLayout>()
+  .AddSingleton<IChoosingKeymapTask, ChoosingKeymapTask>()
   ;
 
 using IHost host = builder.Build();

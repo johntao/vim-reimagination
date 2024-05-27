@@ -193,3 +193,15 @@
   - we tried to find a way to simplify these steps, but it seems that we cannot do that
     - the default ApplicationLifetime and HostService does not provide any hook
     - BackgroundService is not suitable for this case, since the editor blocks the thread with Console.ReadKey()
+
+## about class naming
+
+  - [reference: class name convention](https://stackoverflow.com/questions/8614356/using-verbs-in-class-names)
+  - we know that we should name the class with a noun
+    - however, it is difficult to name the class with a noun when the application is procedural and small
+    - we should probably name the class with a noun when the application grows bigger
+    - something like service or a manager or a controller
+  - for now, we just intentionally name the class with a verb...
+    - I think it is fine, since the class is just simple Task and expose a single method `Run()`
+    - after postfixing the class with Task, it is clear that the class is a simple task
+    - this is a good way to name the class when the class is simple and procedural without violating the naming convention
