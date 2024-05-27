@@ -42,7 +42,7 @@ internal class MappingCommands(ITextRenderer tr) : IMappingCommands
   private readonly ITextRenderer _tr = tr;
   private char[] MapByUser()
   {
-    Console.CursorVisible = false;
+    _tr.CursorVisible = false;
     _tr.WriteLine("Press any key to map the following command to that key");
     _tr.WriteLine("Press Enter to cancel mapping and map the rest using QWERTY");
     _tr.WriteLine("Press Backspace to cancel mapping and map the rest using Dvorak");
@@ -53,20 +53,20 @@ internal class MappingCommands(ITextRenderer tr) : IMappingCommands
     var useQwerty = false;
     while (isLooping)
     {
-      var readkey = Console.ReadKey(true);
-      var top = Console.CursorTop;
+      var readkey = _tr.ReadKey();
+      var top = _tr.CursorTop;
       switch (readkey)
       {
         case var q when q.Key is ConsoleKey.UpArrow:
           if (top <= table.StartLineIdx) break;
           _tr.Write(' ');
-          --Console.CursorTop;
+          --_tr.CursorTop;
           _tr.Write('>');
           break;
         case var q when q.Key is ConsoleKey.DownArrow:
           if (top >= table.EndLineIdx) break;
           _tr.Write(' ');
-          ++Console.CursorTop;
+          ++_tr.CursorTop;
           _tr.Write('>');
           break;
         case var q when !char.IsControl(q.KeyChar):
@@ -82,7 +82,7 @@ internal class MappingCommands(ITextRenderer tr) : IMappingCommands
           table.UpdateChoice(item.YourChoice + " ");
           if (top >= table.EndLineIdx) break;
           _tr.Write(' ');
-          ++Console.CursorTop;
+          ++_tr.CursorTop;
           _tr.Write('>');
           break;
         case var q when q.Key is ConsoleKey.Backspace:
@@ -94,7 +94,7 @@ internal class MappingCommands(ITextRenderer tr) : IMappingCommands
           break;
       }
     }
-    Console.CursorVisible = true;
+    _tr.CursorVisible = true;
     return _stuff.Select(q =>
     {
       if (q.YourChoice == ' ')

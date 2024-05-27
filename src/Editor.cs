@@ -1,3 +1,4 @@
+using VimRenaissance.Service;
 using VimRenaissance.WordMotion;
 namespace VimRenaissance;
 internal enum NormalCommand
@@ -39,21 +40,23 @@ internal readonly ref struct Editor
   private readonly Buffer1D _buffer;
   private readonly SmallWordMotionPattern _smallWordMotion;
   private readonly BigWordMotionPattern _bigWordMotion;
-  public Editor()
+  private readonly ITextRenderer _tr;
+  public Editor(ITextRenderer tr)
   {
     var tmpl = File.ReadAllLines("./assets/template.txt");
     ReadOnlySpan<char> src = string.Join("", tmpl);
     _buffer = new Buffer1D(src, Cfg.WinWID);
     _smallWordMotion = new SmallWordMotionPattern();
     _bigWordMotion = new BigWordMotionPattern();
-    Console.Write(src.ToString());
-    Console.SetCursorPosition(0, 0);
+    _tr = tr;
+    _tr.Write(src.ToString());
+    _tr.SetCursorPosition(0, 0);
   }
   internal void Run(Dictionary<char, NormalCommand> keymap)
   {
     while (true)
     {
-      var readkey = Console.ReadKey(true);
+      var readkey = _tr.ReadKey();
       var keychar = readkey.KeyChar;
       if (keymap.TryGetValue(keychar, out NormalCommand value))
         ProcessCommand(value);
@@ -87,33 +90,33 @@ internal readonly ref struct Editor
   /// stops at the edge
   /// </summary>
   /// <param name="unit"></param>
-  static void MoveVerticalStop(int unit)
+  void MoveVerticalStop(int unit)
   {
-    var (left, top) = Console.GetCursorPosition();
+    var (left, top) = _tr.GetCursorPosition();
     var newTop = top + unit;
     if (newTop < 0) newTop = 0;
     else if (newTop >= Cfg.WinHEI) newTop = Cfg.WinHEI - 1;
-    Console.SetCursorPosition(left, newTop);
+    _tr.SetCursorPosition(left, newTop);
   }
   /// <summary>
   /// stops at the edge
   /// </summary>
   /// <param name="unit"></param>
-  static void MoveHorizontalStop(int unit)
+  void MoveHorizontalStop(int unit)
   {
-    var (left, top) = Console.GetCursorPosition();
+    var (left, top) = _tr.GetCursorPosition();
     var newLeft = left + unit;
     if (newLeft < 0) newLeft = 0;
     else if (newLeft >= Cfg.WinWID) newLeft = Cfg.WinWID - 1;
-    Console.SetCursorPosition(newLeft, top);
+    _tr.SetCursorPosition(newLeft, top);
   }
   /// <summary>
   /// move vertically if exceess the edge
   /// </summary>
   /// <param name="unit"></param>
-  static void MoveHorizontal(int unit)
+  void MoveHorizontal(int unit)
   {
-    var (left, top) = Console.GetCursorPosition();
+    var (left, top) = _tr.GetCursorPosition();
     var newLeft = left + unit;
     if (newLeft < 0)
     {
@@ -133,11 +136,11 @@ internal readonly ref struct Editor
         newLeft = Cfg.WinWID - 1;
       }
     }
-    Console.SetCursorPosition(newLeft, top);
+    _tr.SetCursorPosition(newLeft, top);
   }
   void MoveHorizontalByPattern(TextPattern textPattern, Direction direction)
   {
-    var cursor = new Cursor2D(Console.GetCursorPosition());
+    var cursor = new Cursor2D(_tr.GetCursorPosition());
     var (newLeft, newTop) = (textPattern, direction) switch
     {
       (TextPattern.SmallWordStart, Direction.Backward) => _smallWordMotion.ChargeUntilBlankExclusive(cursor, _buffer, Direction.Backward),
@@ -150,6 +153,6 @@ internal readonly ref struct Editor
       (TextPattern.BigWordEnd, Direction.Forward) => _bigWordMotion.ChargeUntilBlankExclusive(cursor, _buffer, Direction.Forward),
       _ => throw new NotImplementedException(),
     };
-    Console.SetCursorPosition(newLeft, newTop);
+    _tr.SetCursorPosition(newLeft, newTop);
   }
 }

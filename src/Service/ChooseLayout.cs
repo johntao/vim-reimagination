@@ -20,29 +20,29 @@ internal class ChooseLayout(ITextRenderer tr) : IChooseLayout
   public ChooseLayoutResult Run()
   {
     var isChoosing = true;
-    Console.CursorVisible = !isChoosing;
+    _tr.CursorVisible = !isChoosing;
     _tr.WriteLine("Choose your keyboard layout:");
     _tr.WriteLine("> QWERTY");
     _tr.WriteLine("  Dvorak");
     _tr.WriteLine("  Map commands by user");
-    Console.SetCursorPosition(0, 1);
+    _tr.SetCursorPosition(0, 1);
     ChooseLayoutResult result = ChooseLayoutResult.None;
     while (isChoosing)
     {
-      var readkey = Console.ReadKey(true);
-      var top = Console.CursorTop;
+      var readkey = _tr.ReadKey();
+      var top = _tr.CursorTop;
       switch (readkey.Key)
       {
         case ConsoleKey.UpArrow:
           if (top <= 1) break;
           _tr.Write(' ');
-          --Console.CursorTop;
+          --_tr.CursorTop;
           _tr.Write('>');
           break;
         case ConsoleKey.DownArrow:
           if (top >= 3) break;
           _tr.Write(' ');
-          ++Console.CursorTop;
+          ++_tr.CursorTop;
           _tr.Write('>');
           break;
         case ConsoleKey.Enter:
@@ -57,9 +57,9 @@ internal class ChooseLayout(ITextRenderer tr) : IChooseLayout
           break;
       }
     }
-    Console.Clear();
+    _tr.Clear();
     _tr.WriteLine(result);
-    Console.CursorVisible = !isChoosing;
+    _tr.CursorVisible = !isChoosing;
     return result;
   }
 }
