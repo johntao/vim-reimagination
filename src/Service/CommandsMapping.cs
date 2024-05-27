@@ -1,9 +1,6 @@
 using Cmd = VimRenaissance.NormalCommand;
-using VimRenaissance.Helper;
-using VimRenaissance.Service;
-// using VimRenaissance.Service;
-namespace VimRenaissance;
-internal class MappingCommands(ITextRenderer tr) : IMappingCommands
+namespace VimRenaissance.Service;
+internal class MappingCommands(ITextRenderer tr, ITableRenderer tbl) : IMappingCommands
 {
   private static readonly CommandInfo[] _stuff =
   [
@@ -28,6 +25,9 @@ internal class MappingCommands(ITextRenderer tr) : IMappingCommands
   ];
   static readonly char[] _dvorakKeys = _stuff.Select(q => q.DvorakKey).ToArray();
   static readonly char[] _qwertyKeys = _stuff.Select(q => q.QwertyKey).ToArray();
+  private readonly ITextRenderer _tr = tr;
+  private readonly ITableRenderer _tbl = tbl;
+
   public Dictionary<char, Cmd> Run(ChooseLayoutResult result)
   {
     var normalCommands = _stuff.Select(q => q.Command).ToArray();
@@ -39,7 +39,6 @@ internal class MappingCommands(ITextRenderer tr) : IMappingCommands
       _ => throw new InvalidOperationException(),
     };
   }
-  private readonly ITextRenderer _tr = tr;
   private char[] MapByUser()
   {
     _tr.CursorVisible = false;
@@ -47,8 +46,7 @@ internal class MappingCommands(ITextRenderer tr) : IMappingCommands
     _tr.WriteLine("Press Enter to cancel mapping and map the rest using QWERTY");
     _tr.WriteLine("Press Backspace to cancel mapping and map the rest using Dvorak");
     _tr.WriteLine("Press arrow keys to navigate");
-    var table = new TableHelper(To5ColTable(_stuff));
-    table.WriteToConsole(_tr);
+    _tbl.Initialize(To5ColTable(_stuff));
     var isLooping = true;
     var useQwerty = false;
     while (isLooping)
@@ -58,29 +56,29 @@ internal class MappingCommands(ITextRenderer tr) : IMappingCommands
       switch (readkey)
       {
         case var q when q.Key is ConsoleKey.UpArrow:
-          if (top <= table.StartLineIdx) break;
+          if (top <= _tbl.StartLineIdx) break;
           _tr.Write(' ');
           --_tr.CursorTop;
           _tr.Write('>');
           break;
         case var q when q.Key is ConsoleKey.DownArrow:
-          if (top >= table.EndLineIdx) break;
+          if (top >= _tbl.EndLineIdx) break;
           _tr.Write(' ');
           ++_tr.CursorTop;
           _tr.Write('>');
           break;
         case var q when !char.IsControl(q.KeyChar):
-          var currentIdx = top - table.StartLineIdx;
+          var currentIdx = top - _tbl.StartLineIdx;
           var hasConflict = _stuff.Any((item, idx) => item.YourChoice == readkey.KeyChar && idx != currentIdx);
           if (hasConflict)
           {
-            table.UpdateChoice("!!");
+            _tbl.UpdateChoice("!!");
             break;
           }
           var item = _stuff[currentIdx];
           item.YourChoice = readkey.KeyChar;
-          table.UpdateChoice(item.YourChoice + " ");
-          if (top >= table.EndLineIdx) break;
+          _tbl.UpdateChoice(item.YourChoice + " ");
+          if (top >= _tbl.EndLineIdx) break;
           _tr.Write(' ');
           ++_tr.CursorTop;
           _tr.Write('>');

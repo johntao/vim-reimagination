@@ -14,7 +14,7 @@ internal class EditorHost(IMappingCommands mappingCommands, IChooseLayout choose
       _tr.Clear();
       var result = _chooseLayout.Run();
       var layout = _mappingCommands.Run(result);
-      new Editor().Run(layout);
+      new Editor(_tr).Run(layout);
     }, cancellationToken);
     return Task.CompletedTask;
   }

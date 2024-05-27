@@ -28,12 +28,16 @@ internal class ConsoleRenderer : ITextRenderer
     get => Console.CursorTop;
     set => Console.CursorTop = value;
   }
+  public int CursorLeft
+  {
+    get => Console.CursorLeft;
+    set => Console.CursorLeft = value;
+  }
   public ConsoleKeyInfo ReadKey() => Console.ReadKey(true);
   public void SetCursorPosition(int left, int top) => Console.SetCursorPosition(left, top);
   public void Write(string c) => Console.Write(c);
   public (int Left, int Top) GetCursorPosition() => Console.GetCursorPosition();
 }
-
 internal interface ITextRenderer
 {
   void Write(char c);
@@ -43,6 +47,7 @@ internal interface ITextRenderer
   void Clear();
   bool CursorVisible { set; }
   int CursorTop { get; set; }
+  int CursorLeft { get; set; }
   ConsoleKeyInfo ReadKey();
   (int Left, int Top) GetCursorPosition();
   void SetCursorPosition(int left, int top);

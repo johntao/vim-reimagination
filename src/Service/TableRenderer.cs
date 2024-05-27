@@ -1,12 +1,12 @@
-using VimRenaissance.Service;
+using VimRenaissance.Helper;
 
-namespace VimRenaissance.Helper;
+namespace VimRenaissance.Service;
 /*
 future enhancement:
 - column style
 - row style
 */
-class TableHelper
+internal class TableRenderer(ITextRenderer tr) : ITableRenderer
 {
   enum RowStyle
   {
@@ -15,16 +15,18 @@ class TableHelper
     Separator,
     Normal,
   }
+  private readonly ITextRenderer _tr = tr;
+  #region state that required initialization
   private int[] _widths = null!;
-  private readonly string[][] _rows = null!;
-  internal readonly int StartLineIdx;
-  private readonly int _choiceColIdx;
-  internal int EndLineIdx { get; private set; }
-  private readonly int _hOffset;
-  public TableHelper(IEnumerable<string[]> rows, int hOffset = 1)
+  private string[][] _rows = null!;
+  private int _choiceColIdx;
+  public int StartLineIdx { get; private set; }
+  public int EndLineIdx { get; private set; }
+  private int _hOffset;
+  public void Initialize(IEnumerable<string[]> rows, int hOffset = 1)
   {
     _hOffset = hOffset;
-    StartLineIdx = Console.CursorTop + 2;
+    StartLineIdx = _tr.CursorTop + 2;
     _rows = rows.Select(row =>
     {
       var cells = row;
@@ -37,21 +39,23 @@ class TableHelper
     }).ToArray();
     const int ChoiceDistance = 4;
     _choiceColIdx = hOffset + Delimiter.Length * ChoiceDistance + _widths.Take(ChoiceDistance).Sum();
+    WriteToConsole();
   }
-  const string Delimiter = " | ";
-  internal void WriteToConsole(ITextRenderer tr)
+  private void WriteToConsole()
   {
-    WriteRow(tr, _rows[0], RowStyle.Header);
-    WriteRow(tr, _rows[0], RowStyle.Separator);
-    _rows.Skip(1).ForEach((cells, _) => WriteRow(tr, cells));
-    EndLineIdx = --Console.CursorTop;
-    Console.SetCursorPosition(0, StartLineIdx);
-    tr.Write('>');
+    WriteRow(_rows[0], RowStyle.Header);
+    WriteRow(_rows[0], RowStyle.Separator);
+    _rows.Skip(1).ForEach((cells, _) => WriteRow(cells));
+    EndLineIdx = --_tr.CursorTop;
+    _tr.SetCursorPosition(0, StartLineIdx);
+    _tr.Write('>');
   }
+  #endregion
+  const string Delimiter = " | ";
   string PadMiddle(string q, int idx) => q.PadMiddle(_widths[idx]);
   string PadRight(string q, int idx) => q.PadRight(_widths[idx]);
   string Separator(string _, int idx) => new('-', _widths[idx]);
-  private void WriteRow(ITextRenderer tr, string[] cells, RowStyle style = RowStyle.Normal)
+  private void WriteRow(string[] cells, RowStyle style = RowStyle.Normal)
   {
     var formattedCells = style switch
     {
@@ -60,12 +64,19 @@ class TableHelper
       RowStyle.Normal => cells.Select(PadRight),
       _ => throw new NotImplementedException(),
     };
-    tr.WriteLine($"{new string(' ', _hOffset)}{string.Join(Delimiter, formattedCells)}");
+    _tr.WriteLine($"{new string(' ', _hOffset)}{string.Join(Delimiter, formattedCells)}");
   }
-  internal void UpdateChoice(string yourChoice)
+  public void UpdateChoice(string yourChoice)
   {
-    Console.CursorLeft = _choiceColIdx;
-    Console.Write(yourChoice);
-    Console.CursorLeft = 0;
+    _tr.CursorLeft = _choiceColIdx;
+    _tr.Write(yourChoice);
+    _tr.CursorLeft = 0;
   }
+}
+internal interface ITableRenderer
+{
+  void Initialize(IEnumerable<string[]> rows, int hOffset = 1);
+  void UpdateChoice(string yourChoice);
+  int StartLineIdx { get; }
+  int EndLineIdx { get; }
 }

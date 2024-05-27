@@ -41,6 +41,7 @@ internal readonly ref struct Editor
   private readonly SmallWordMotionPattern _smallWordMotion;
   private readonly BigWordMotionPattern _bigWordMotion;
   private readonly ITextRenderer _tr;
+  public Editor() => throw new NotSupportedException();
   public Editor(ITextRenderer tr)
   {
     var tmpl = File.ReadAllLines("./assets/template.txt");
