@@ -39,19 +39,19 @@ class TableHelper
     _choiceColIdx = hOffset + Delimiter.Length * ChoiceDistance + _widths.Take(ChoiceDistance).Sum();
   }
   const string Delimiter = " | ";
-  internal void WriteToConsole()
+  internal void WriteToConsole(ITextRenderer tr)
   {
-    WriteRow(_rows[0], RowStyle.Header);
-    WriteRow(_rows[0], RowStyle.Separator);
-    _rows.Skip(1).ForEach((cells, _) => WriteRow(cells));
+    WriteRow(tr, _rows[0], RowStyle.Header);
+    WriteRow(tr, _rows[0], RowStyle.Separator);
+    _rows.Skip(1).ForEach((cells, _) => WriteRow(tr, cells));
     EndLineIdx = --Console.CursorTop;
     Console.SetCursorPosition(0, StartLineIdx);
-    ConsoleRenderer.Write('>');
+    tr.Write('>');
   }
   string PadMiddle(string q, int idx) => q.PadMiddle(_widths[idx]);
   string PadRight(string q, int idx) => q.PadRight(_widths[idx]);
   string Separator(string _, int idx) => new('-', _widths[idx]);
-  private void WriteRow(string[] cells, RowStyle style = RowStyle.Normal)
+  private void WriteRow(ITextRenderer tr, string[] cells, RowStyle style = RowStyle.Normal)
   {
     var formattedCells = style switch
     {
@@ -60,7 +60,7 @@ class TableHelper
       RowStyle.Normal => cells.Select(PadRight),
       _ => throw new NotImplementedException(),
     };
-    ConsoleRenderer.WriteLine($"{new string(' ', _hOffset)}{string.Join(Delimiter, formattedCells)}");
+    tr.WriteLine($"{new string(' ', _hOffset)}{string.Join(Delimiter, formattedCells)}");
   }
   internal void UpdateChoice(string yourChoice)
   {

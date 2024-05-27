@@ -1,10 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using VimRenaissance;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
-var services = builder.Services;
-services.AddHostedService<EditorHost>();
+builder.Services
+  .AddHostedService<EditorHost>()
+  .AddSingleton<IMappingCommands, MappingCommands>()
+  .AddSingleton<IChooseLayout, ChooseLayout>()
+  ;
 
 using IHost host = builder.Build();
 await host.RunAsync();

@@ -1,11 +1,11 @@
 using Cmd = VimRenaissance.NormalCommand;
-using Ch = VimRenaissance.Service.ConsoleRenderer;
 using VimRenaissance.Helper;
+using VimRenaissance.Service;
 // using VimRenaissance.Service;
 namespace VimRenaissance;
-internal static class MappingCommands
+internal class MappingCommands(ITextRenderer tr) : IMappingCommands
 {
-  internal static readonly CommandInfo[] _stuff =
+  private static readonly CommandInfo[] _stuff =
   [
     new(Cmd.MoveHorizontalByPatternBigWordStartBackward, "Move horizontally by pattern 'Start of Big Word' backward", 'q', '"'),
     new(Cmd.MoveHorizontalByPatternBigWordEndBackward, "Move horizontally by pattern 'End of Big Word' backward", 'w', '<'),
@@ -28,7 +28,7 @@ internal static class MappingCommands
   ];
   static readonly char[] _dvorakKeys = _stuff.Select(q => q.DvorakKey).ToArray();
   static readonly char[] _qwertyKeys = _stuff.Select(q => q.QwertyKey).ToArray();
-  internal static Dictionary<char, Cmd> Run(ChooseLayoutResult result)
+  public Dictionary<char, Cmd> Run(ChooseLayoutResult result)
   {
     var normalCommands = _stuff.Select(q => q.Command).ToArray();
     return result switch
@@ -39,15 +39,16 @@ internal static class MappingCommands
       _ => throw new InvalidOperationException(),
     };
   }
-  private static char[] MapByUser()
+  private readonly ITextRenderer _tr = tr;
+  private char[] MapByUser()
   {
     Console.CursorVisible = false;
-    Ch.WriteLine("Press any key to map the following command to that key");
-    Ch.WriteLine("Press Enter to cancel mapping and map the rest using QWERTY");
-    Ch.WriteLine("Press Backspace to cancel mapping and map the rest using Dvorak");
-    Ch.WriteLine("Press arrow keys to navigate");
-    var table = new TableHelper(_stuff.To5ColTable());
-    table.WriteToConsole();
+    _tr.WriteLine("Press any key to map the following command to that key");
+    _tr.WriteLine("Press Enter to cancel mapping and map the rest using QWERTY");
+    _tr.WriteLine("Press Backspace to cancel mapping and map the rest using Dvorak");
+    _tr.WriteLine("Press arrow keys to navigate");
+    var table = new TableHelper(To5ColTable(_stuff));
+    table.WriteToConsole(_tr);
     var isLooping = true;
     var useQwerty = false;
     while (isLooping)
@@ -58,15 +59,15 @@ internal static class MappingCommands
       {
         case var q when q.Key is ConsoleKey.UpArrow:
           if (top <= table.StartLineIdx) break;
-          Ch.Write(' ');
+          _tr.Write(' ');
           --Console.CursorTop;
-          Ch.Write('>');
+          _tr.Write('>');
           break;
         case var q when q.Key is ConsoleKey.DownArrow:
           if (top >= table.EndLineIdx) break;
-          Ch.Write(' ');
+          _tr.Write(' ');
           ++Console.CursorTop;
-          Ch.Write('>');
+          _tr.Write('>');
           break;
         case var q when !char.IsControl(q.KeyChar):
           var currentIdx = top - table.StartLineIdx;
@@ -80,9 +81,9 @@ internal static class MappingCommands
           item.YourChoice = readkey.KeyChar;
           table.UpdateChoice(item.YourChoice + " ");
           if (top >= table.EndLineIdx) break;
-          Ch.Write(' ');
+          _tr.Write(' ');
           ++Console.CursorTop;
-          Ch.Write('>');
+          _tr.Write('>');
           break;
         case var q when q.Key is ConsoleKey.Backspace:
           isLooping = false;
@@ -101,7 +102,7 @@ internal static class MappingCommands
       return q.YourChoice;
     }).ToArray(); ;
   }
-  internal static IEnumerable<string[]> To5ColTable(this CommandInfo[] stuffs)
+  internal static IEnumerable<string[]> To5ColTable(CommandInfo[] stuffs)
   {
     yield return new[] { "NormalCommand", "Description", "Qwerty", "Dvorak", "YourChoice" };
     foreach (var item in stuffs)
@@ -124,4 +125,8 @@ internal static class MappingCommands
     public char DvorakKey { get; } = dvorakKey;
     public char YourChoice { get; internal set; } = ' ';
   }
+}
+internal interface IMappingCommands
+{
+  Dictionary<char, Cmd> Run(ChooseLayoutResult result);
 }
