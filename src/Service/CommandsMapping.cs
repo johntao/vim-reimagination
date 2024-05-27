@@ -1,5 +1,5 @@
 using Cmd = VimRenaissance.NormalCommand;
-using Ch = VimRenaissance.Service.ConsoleHelper;
+using Ch = VimRenaissance.Service.ConsoleRenderer;
 using VimRenaissance.Helper;
 // using VimRenaissance.Service;
 namespace VimRenaissance;

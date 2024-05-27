@@ -1,6 +1,6 @@
 namespace VimRenaissance.Service;
 
-internal static class ConsoleHelper // : ITextRenderer
+internal static class ConsoleRenderer // : ITextRenderer
 {
   // internal static int CursorTop { get; private set; } = 0;
   internal static void Write(char c)

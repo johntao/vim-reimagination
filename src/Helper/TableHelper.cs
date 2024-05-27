@@ -46,7 +46,7 @@ class TableHelper
     _rows.Skip(1).ForEach((cells, _) => WriteRow(cells));
     EndLineIdx = --Console.CursorTop;
     Console.SetCursorPosition(0, StartLineIdx);
-    ConsoleHelper.Write('>');
+    ConsoleRenderer.Write('>');
   }
   string PadMiddle(string q, int idx) => q.PadMiddle(_widths[idx]);
   string PadRight(string q, int idx) => q.PadRight(_widths[idx]);
@@ -60,7 +60,7 @@ class TableHelper
       RowStyle.Normal => cells.Select(PadRight),
       _ => throw new NotImplementedException(),
     };
-    ConsoleHelper.WriteLine($"{new string(' ', _hOffset)}{string.Join(Delimiter, formattedCells)}");
+    ConsoleRenderer.WriteLine($"{new string(' ', _hOffset)}{string.Join(Delimiter, formattedCells)}");
   }
   internal void UpdateChoice(string yourChoice)
   {
