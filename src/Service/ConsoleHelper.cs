@@ -1,6 +1,6 @@
-namespace VimRenaissance.Helper;
+namespace VimRenaissance.Service;
 
-internal static class ConsoleHelper
+internal static class ConsoleHelper // : ITextRenderer
 {
   // internal static int CursorTop { get; private set; } = 0;
   internal static void Write(char c)
@@ -19,3 +19,10 @@ internal static class ConsoleHelper
     Console.WriteLine(message);
   }
 }
+
+// internal interface ITextRenderer
+// {
+//   void Write(char c);
+//   void WriteLine(string message);
+//   void WriteLine(Enum message);
+// }

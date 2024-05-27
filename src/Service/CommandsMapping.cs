@@ -1,6 +1,7 @@
-using VimRenaissance.Helper;
 using Cmd = VimRenaissance.NormalCommand;
-using Ch = VimRenaissance.Helper.ConsoleHelper;
+using Ch = VimRenaissance.Service.ConsoleHelper;
+using VimRenaissance.Helper;
+// using VimRenaissance.Service;
 namespace VimRenaissance;
 internal static class MappingCommands
 {

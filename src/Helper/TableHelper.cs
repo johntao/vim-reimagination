@@ -1,3 +1,5 @@
+using VimRenaissance.Service;
+
 namespace VimRenaissance.Helper;
 /*
 future enhancement:
