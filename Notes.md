@@ -1,3 +1,7 @@
+## buffer and window
+
+  - in dotnet Console, buffer >= window
+
 ## Word Motion Algorithm v2 and v3
 
   no time to document the produce or design of the algorithm
@@ -143,6 +147,9 @@
 
   - mark everything sealed if it's not meant to be inherited
   - hide every POCO inside a class if it's not used elsewhere
+  - including interfaces that doesn't have multiple implementations
+  - including private methods that doesn't have another method to call it
+  - including POCOs only accessible to another type
 
 ## ReadOnlySpan
 
@@ -205,3 +212,17 @@
     - I think it is fine, since the class is just simple Task and expose a single method `Run()`
     - after postfixing the class with Task, it is clear that the class is a simple task
     - this is a good way to name the class when the class is simple and procedural without violating the naming convention
+
+## about the Console API
+
+  - [Windows Console API](https://docs.microsoft.com/en-us/windows/console/console-functions)
+  - we found out that dotnet only support very limited console API...
+  - the full API is only available in Windows using clang
+  - which contradicts to our initial goal to avoid using clang
+
+## about implementing the buffer
+
+  - we need to understand stackalloc before implementing the buffer
+  - probably a few tests required to ensure the buffer is working properly
+  - we could implement a version without using stackalloc first, then implement the stackalloc version
+  - we should probably separate the two implementations into two different classes

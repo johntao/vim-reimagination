@@ -33,7 +33,7 @@ Lastly, I would like to implement some features that are not available in VIM, a
 
 To run the project, execute `dotnet run` in the project directory.  
 
-### IMPORTANT
+### !!IMPORTANT!!
 
 Since the editor haven't fully implemented buffer and rendering, the editor load text from `assets/template.txt` and render it to the console.  
 For now, the editor only support moving the cursor around the text, and editor cannot resolve newlines, so all the newlines are replaced with `|` character.  

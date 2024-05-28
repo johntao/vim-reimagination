@@ -8,9 +8,9 @@
     - [x] add text in the background. text aware cursor motion
     - [x] buffer should not mix with motion algorithm, buffer should not store Cursor2D
     - [x] buffer boundary
+    - [ ] !!algorithm to fill in empty spaces...
     - [ ] remove text in the background
     - [ ] resolve newlines
-    - [ ] algorithm to fill in empty spaces...
     - [ ] resolve different buffer types
   - Motion
     - word-based motions
@@ -21,6 +21,8 @@
       - [x] move cursor one unit up or down when hitting the edge
       - [x] big word motion
     - text-object algorithm
+    - ternary IRepeatable
+      - [ ] !!implement IRepeatable for a,s,d,f,q,w,e,r
   - Configurable
     - [ ] add config to decide whether to move cursor to nextline on hitting the edge
       - since this is SUPER trivial, no need to waste extra keystrokes for this feature
@@ -35,7 +37,9 @@
     - [x] I wonder if it would be better to use raw literal string for Console.WriteLine
   - Editable
     - [ ] yank, putReplace
-    - [ ] editable: replace, delete, change
+    - [ ] !!editable: replace, delete, change
+  - Other Core Stuff
+    - [ ] Save/ Load file
 - Medium tasks (can be done in a few days)
   - Console/ Buffer data binding and rendering
     - [ ] should be able to scroll
