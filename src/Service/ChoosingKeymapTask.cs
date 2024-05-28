@@ -1,4 +1,4 @@
-namespace VimRenaissance.Service;
+namespace VimReimagination.Service;
 
 /// <summary>
 /// enum is something like a indicator or middle product or smnall product

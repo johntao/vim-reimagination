@@ -1,4 +1,4 @@
-namespace VimRenaissance.Helper;
+namespace VimReimagination.Helper;
 internal static class StringHelper
 {
   internal static string PadMiddle(this string input, int totalWidth, bool isLeanToRight = false, char paddingChar = ' ')

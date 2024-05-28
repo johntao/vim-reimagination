@@ -1,4 +1,4 @@
-namespace VimRenaissance;
+namespace VimReimagination;
 /// <summary>
 /// Can't tell the advantage of using ref struct, but it's required to use ref struct for `ReadOnlySpan<char> Content`
 /// </summary>

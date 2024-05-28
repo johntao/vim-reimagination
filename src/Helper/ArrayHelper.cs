@@ -1,4 +1,4 @@
-namespace VimRenaissance.Helper;
+namespace VimReimagination.Helper;
 internal static class ArrayHelper
 {
   internal static void ForEach<T>(this IEnumerable<T> seq, Action<T, int> action)

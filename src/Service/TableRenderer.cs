@@ -1,6 +1,6 @@
-using VimRenaissance.Helper;
+using VimReimagination.Helper;
 
-namespace VimRenaissance.Service;
+namespace VimReimagination.Service;
 /*
 future enhancement:
 - column style

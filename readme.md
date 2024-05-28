@@ -1,4 +1,4 @@
-# Vim Renaissance
+# Vim Reimagination
 
 ## Description
 
@@ -10,14 +10,14 @@ Meanwhile, it aims to be as simple as possible, so that it can be easily underst
 
 Choosing C# as the programming language, was because it is the most familiar programming language for me at the time, and I was too lazy to learn C from the VIM source code.  
 I also use this project to explore the performance improvement features of C# and .NET in the recent updates.  
-Lastly, I would like to implement some features that are not available in VIM, and also building such a project is a good way to re-imagine how VIM should be like in the future. (I'm a advactor of VIM, and I want extend its spirit)
+Lastly, I would like to implement some features that are not available in VIM, and also building such a project is a good way to re-imagine how VIM should be like in the future. (I'm an advocate of VIM. I hope this project may help extend its spirit)
 
 ## Features (In Progress)
 
 - [x] Rendor dummy text
 - [x] Move cursor around the file
 - [x] Move cursor by small word and big word
-- [x] Choose QWERTY, Dvorak, or custom command mapping
+- [x] Choose QWERTY, Dvorak, or custom keymap
 - [ ] Resolve newlines in the buffer and terminal
 - [ ] Save and load file
 - [ ] Resize window and re-render text

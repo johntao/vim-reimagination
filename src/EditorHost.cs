@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Hosting;
-using VimRenaissance;
-using VimRenaissance.Service;
+using VimReimagination;
+using VimReimagination.Service;
 
 internal class EditorHost(ICustomizingKeymapTask mappingCommands, IChoosingKeymapTask chooseLayout, ITextRenderer tr) : IHostedService
 {

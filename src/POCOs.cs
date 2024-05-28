@@ -1,4 +1,4 @@
-namespace VimRenaissance;
+namespace VimReimagination;
 internal static class Cfg
 {
   /// <summary>

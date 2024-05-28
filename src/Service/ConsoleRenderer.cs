@@ -1,4 +1,4 @@
-namespace VimRenaissance.Service;
+namespace VimReimagination.Service;
 
 internal class ConsoleRenderer : ITextRenderer
 {

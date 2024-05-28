@@ -1,5 +1,5 @@
 using System.Buffers;
-namespace VimRenaissance.WordMotion;
+namespace VimReimagination.WordMotion;
 /// <summary>
 /// this implementation fully comply with vim word motion
 /// </summary>

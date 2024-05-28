@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using VimRenaissance.Service;
+using VimReimagination.Service;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 

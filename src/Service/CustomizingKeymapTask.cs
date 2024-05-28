@@ -1,5 +1,5 @@
-using Cmd = VimRenaissance.NormalCommand;
-namespace VimRenaissance.Service;
+using Cmd = VimReimagination.NormalCommand;
+namespace VimReimagination.Service;
 internal class CustomizingKeymapTask(ITextRenderer tr, ITableRenderer tbl) : ICustomizingKeymapTask
 {
   private static readonly CommandInfo[] _stuff =

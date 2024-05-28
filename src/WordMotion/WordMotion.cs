@@ -1,6 +1,6 @@
 using System.Buffers;
 
-namespace VimRenaissance.WordMotion;
+namespace VimReimagination.WordMotion;
 
 internal abstract class WordMotion : IWordMotionV3
 {

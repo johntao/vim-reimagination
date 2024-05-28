@@ -1,6 +1,6 @@
-using VimRenaissance.Service;
-using VimRenaissance.WordMotion;
-namespace VimRenaissance;
+using VimReimagination.Service;
+using VimReimagination.WordMotion;
+namespace VimReimagination;
 internal enum NormalCommand
 {
   None,
