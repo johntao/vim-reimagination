@@ -5,17 +5,23 @@ namespace VimReimagination.Service;
 /// we could return the whole product directly if possible, then, there's no need for enum (at least in the interface level)
 /// however, if we make it in one blow, we probably disobey the single responsibility principle
 /// </summary>
-enum ChoosingKeymapTaskResult
+internal class ChoosingKeymapTask(ITextRenderer tr) : ChoosingKeymapTask.IRun
 {
-  None,
-  UseDefaultQwerty,
-  MapQwertyToDvorak,
-  MapByUser,
-}
-internal class ChoosingKeymapTask(ITextRenderer tr) : IChoosingKeymapTask
-{
+  #region types
+  internal interface IRun
+  {
+    Result Run();
+  }
+  internal enum Result
+  {
+    None,
+    UseDefaultQwerty,
+    MapQwertyToDvorak,
+    MapByUser,
+  }
+  #endregion
   private readonly ITextRenderer _tr = tr;
-  public ChoosingKeymapTaskResult Run()
+  public Result Run()
   {
     var isChoosing = true;
     _tr.CursorVisible = !isChoosing;
@@ -27,7 +33,7 @@ Choose your keyboard layout:
 """;
     _tr.WriteLine(Message);
     _tr.SetCursorPosition(0, 1);
-    ChoosingKeymapTaskResult result = ChoosingKeymapTaskResult.None;
+    Result result = Result.None;
     while (isChoosing)
     {
       var readkey = _tr.ReadKey();
@@ -50,10 +56,10 @@ Choose your keyboard layout:
           isChoosing = false;
           result = top switch
           {
-            1 => ChoosingKeymapTaskResult.UseDefaultQwerty,
-            2 => ChoosingKeymapTaskResult.MapQwertyToDvorak,
-            3 => ChoosingKeymapTaskResult.MapByUser,
-            _ => ChoosingKeymapTaskResult.None,
+            1 => Result.UseDefaultQwerty,
+            2 => Result.MapQwertyToDvorak,
+            3 => Result.MapByUser,
+            _ => Result.None,
           };
           break;
       }
@@ -63,9 +69,4 @@ Choose your keyboard layout:
     _tr.CursorVisible = !isChoosing;
     return result;
   }
-}
-
-internal interface IChoosingKeymapTask
-{
-  ChoosingKeymapTaskResult Run();
 }

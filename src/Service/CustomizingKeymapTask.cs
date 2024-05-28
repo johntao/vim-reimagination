@@ -1,7 +1,37 @@
 using Cmd = VimReimagination.NormalCommand;
 namespace VimReimagination.Service;
-internal class CustomizingKeymapTask(ITextRenderer tr, ITableRenderer tbl) : ICustomizingKeymapTask
+internal class CustomizingKeymapTask(ITextRenderer tr, TableRenderer.IPublic tbl) : CustomizingKeymapTask.IRun
 {
+  #region types
+  internal interface IRun
+  {
+    Dictionary<char, Cmd> Run(ChoosingKeymapTask.Result result);
+  }
+  internal class CommandInfo(Cmd command, string description, char qwertyKey, char dvorakKey)
+  {
+    public Cmd Command { get; } = command;
+    public string Description { get; } = description;
+    public char QwertyKey { get; } = qwertyKey;
+    public char DvorakKey { get; } = dvorakKey;
+    public char YourChoice { get; internal set; } = ' ';
+  }
+  #endregion
+  #region static
+  internal static IEnumerable<string[]> To5ColTable(CommandInfo[] stuffs)
+  {
+    yield return new[] { "NormalCommand", "Description", "Qwerty", "Dvorak", "YourChoice" };
+    foreach (var item in stuffs)
+    {
+      yield return new[]
+      {
+        item.Command.ToString(),
+        item.Description,
+        item.QwertyKey.ToString(),
+        item.DvorakKey.ToString(),
+        item.YourChoice.ToString(),
+      };
+    }
+  }
   private static readonly CommandInfo[] _stuff =
   [
     new(Cmd.MoveHorizontalByPatternBigWordStartBackward, "Move horizontally by pattern 'Start of Big Word' backward", 'q', '"'),
@@ -20,22 +50,22 @@ internal class CustomizingKeymapTask(ITextRenderer tr, ITableRenderer tbl) : ICu
     new(Cmd.MoveVerticalFullScreenForwardStop, "Move vertically by full screen height forward, stop at the edge", 'J', 'H'),
     new(Cmd.MoveVerticalFullScreenBackwardStop, "Move vertically by full screen height backward, stop at the edge", 'K', 'T'),
     new(Cmd.MoveHorizontalFullScreenForwardStop, "Move horizontally by full screen width forward, stop at the edge", 'L', 'N'),
-    new(Cmd.MoveHorizontal45uBackward, "Experimental, move horizontally by 45 units backward", 'n', 'b'),
-    new(Cmd.MoveHorizontal45uForward, "Experimental, move horizontally by 45 units forward", '.', 'v'),
+    // new(Cmd.MoveHorizontal45uBackward, "Experimental, move horizontally by 45 units backward", 'n', 'b'),
+    // new(Cmd.MoveHorizontal45uForward, "Experimental, move horizontally by 45 units forward", '.', 'v'),
   ];
-  static readonly char[] _dvorakKeys = _stuff.Select(q => q.DvorakKey).ToArray();
-  static readonly char[] _qwertyKeys = _stuff.Select(q => q.QwertyKey).ToArray();
+  private static readonly char[] _dvorakKeys = _stuff.Select(q => q.DvorakKey).ToArray();
+  private static readonly char[] _qwertyKeys = _stuff.Select(q => q.QwertyKey).ToArray();
+  #endregion
   private readonly ITextRenderer _tr = tr;
-  private readonly ITableRenderer _tbl = tbl;
-
-  public Dictionary<char, Cmd> Run(ChoosingKeymapTaskResult result)
+  private readonly TableRenderer.IPublic _tbl = tbl;
+  public Dictionary<char, Cmd> Run(ChoosingKeymapTask.Result result)
   {
     var normalCommands = _stuff.Select(q => q.Command).ToArray();
     return result switch
     {
-      ChoosingKeymapTaskResult.UseDefaultQwerty => _qwertyKeys.Zip(normalCommands).ToDictionary(),
-      ChoosingKeymapTaskResult.MapQwertyToDvorak => _dvorakKeys.Zip(normalCommands).ToDictionary(),
-      ChoosingKeymapTaskResult.MapByUser => MapByUser().Zip(normalCommands).ToDictionary(),
+      ChoosingKeymapTask.Result.UseDefaultQwerty => _qwertyKeys.Zip(normalCommands).ToDictionary(),
+      ChoosingKeymapTask.Result.MapQwertyToDvorak => _dvorakKeys.Zip(normalCommands).ToDictionary(),
+      ChoosingKeymapTask.Result.MapByUser => MapByUser().Zip(normalCommands).ToDictionary(),
       _ => throw new InvalidOperationException(),
     };
   }
@@ -103,31 +133,4 @@ Press arrow keys to navigate
       return q.YourChoice;
     }).ToArray(); ;
   }
-  internal static IEnumerable<string[]> To5ColTable(CommandInfo[] stuffs)
-  {
-    yield return new[] { "NormalCommand", "Description", "Qwerty", "Dvorak", "YourChoice" };
-    foreach (var item in stuffs)
-    {
-      yield return new[]
-      {
-        item.Command.ToString(),
-        item.Description,
-        item.QwertyKey.ToString(),
-        item.DvorakKey.ToString(),
-        item.YourChoice.ToString(),
-      };
-    }
-  }
-  internal class CommandInfo(Cmd command, string description, char qwertyKey, char dvorakKey)
-  {
-    public Cmd Command { get; } = command;
-    public string Description { get; } = description;
-    public char QwertyKey { get; } = qwertyKey;
-    public char DvorakKey { get; } = dvorakKey;
-    public char YourChoice { get; internal set; } = ' ';
-  }
-}
-internal interface ICustomizingKeymapTask
-{
-  Dictionary<char, Cmd> Run(ChoosingKeymapTaskResult result);
 }

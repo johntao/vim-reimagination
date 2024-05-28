@@ -20,14 +20,6 @@ internal enum NormalCommand
   MoveVerticalFullScreenForwardStop,
   MoveVerticalFullScreenBackwardStop,
   MoveHorizontalFullScreenForwardStop,
-  /// <summary>
-  /// experimental
-  /// </summary>
-  MoveHorizontal45uBackward,
-  /// <summary>
-  /// Experimental
-  /// </summary>
-  MoveHorizontal45uForward,
 }
 /// <summary>
 /// Can't tell the advantage of using ref struct, but it's required to use ref struct for `Buffer1D _buffer`
@@ -83,8 +75,6 @@ internal readonly ref struct Editor
       case NormalCommand.MoveVerticalFullScreenForwardStop: MoveVerticalStop(Cfg.WinHEI); break;
       case NormalCommand.MoveVerticalFullScreenBackwardStop: MoveVerticalStop(-Cfg.WinHEI); break;
       case NormalCommand.MoveHorizontalFullScreenForwardStop: MoveHorizontalStop(Cfg.WinWID); break;
-      case NormalCommand.MoveHorizontal45uBackward: MoveHorizontal(-45); break;
-      case NormalCommand.MoveHorizontal45uForward: MoveHorizontal(45); break;
     }
   }
   /// <summary>
