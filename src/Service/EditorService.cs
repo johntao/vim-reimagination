@@ -26,15 +26,15 @@ internal enum NormalCommand
 /// I wonder the perf difference between ref struct and static class
 /// should benchmark it someday
 /// </summary>
-internal readonly ref struct Editor
+internal readonly ref struct EditorService
 {
-  static Editor() { }
+  static EditorService() { }
   private readonly Buffer1D _buffer;
   private readonly SmallWordMotionPattern _smallWordMotion;
   private readonly BigWordMotionPattern _bigWordMotion;
   private readonly ITextRenderer _tr;
-  public Editor() => throw new NotSupportedException();
-  public Editor(ITextRenderer tr)
+  public EditorService() => throw new NotSupportedException();
+  public EditorService(ITextRenderer tr)
   {
     var tmpl = File.ReadAllLines("./assets/template.txt");
     ReadOnlySpan<char> src = string.Join("", tmpl);

@@ -226,3 +226,9 @@
   - probably a few tests required to ensure the buffer is working properly
   - we could implement a version without using stackalloc first, then implement the stackalloc version
   - we should probably separate the two implementations into two different classes
+  - best practice
+    - use ref struct only in mutation heavy code
+    - use ref struct only in the innermost layer of the code
+    - store mutation result in non-ref struct (since the max size of stack is less than 2 MB)
+    - make sure after the computation, the ref struct is no longer used (the stack is poped)
+    - should initialize the buffer with window size first, then, do the mutation
