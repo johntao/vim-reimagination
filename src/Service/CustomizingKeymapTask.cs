@@ -1,4 +1,4 @@
-using Cmd = VimReimagination.NormalCommand;
+using Cmd = VimReimagination.Service.NormalCommand;
 namespace VimReimagination.Service;
 internal class CustomizingKeymapTask(ITextRenderer tr, TableRenderer.IPublic tbl) : CustomizingKeymapTask.IRun
 {

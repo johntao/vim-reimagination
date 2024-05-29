@@ -1,6 +1,6 @@
-using VimReimagination.Service;
+using System.Text;
 using VimReimagination.WordMotion;
-namespace VimReimagination;
+namespace VimReimagination.Service;
 internal enum NormalCommand
 {
   None,
@@ -26,29 +26,37 @@ internal enum NormalCommand
 /// I wonder the perf difference between ref struct and static class
 /// should benchmark it someday
 /// </summary>
-internal readonly ref struct EditorService
+internal class EditorService(ITextRenderer tr) : EditorService.IRun
 {
-  static EditorService() { }
-  private readonly Buffer1D _buffer;
-  private readonly SmallWordMotionPattern _smallWordMotion;
-  private readonly BigWordMotionPattern _bigWordMotion;
-  private readonly ITextRenderer _tr;
-  public EditorService() => throw new NotSupportedException();
-  public EditorService(ITextRenderer tr)
+  internal interface IRun
   {
-    var tmpl = File.ReadAllLines("./assets/template.txt");
-    ReadOnlySpan<char> src = string.Join("", tmpl);
-    _buffer = new Buffer1D(src, Cfg.WinWID);
-    _smallWordMotion = new SmallWordMotionPattern();
-    _bigWordMotion = new BigWordMotionPattern();
-    _tr = tr;
-    _tr.Write(src.ToString());
-    _tr.SetCursorPosition(0, 0);
+    void Run(Dictionary<char, NormalCommand> keymap);
   }
-  internal void Run(Dictionary<char, NormalCommand> keymap)
+  private static readonly SmallWordMotionPattern _smallWordMotion = new();
+  private static readonly BigWordMotionPattern _bigWordMotion = new();
+  static EditorService() { }
+  private Buffer1D _buffer;
+  private readonly ITextRenderer _tr = tr;
+  // public EditorService() => throw new NotSupportedException();
+  private int PreviousWindowWidth { get; set; }
+  public void Run(Dictionary<char, NormalCommand> keymap)
   {
+    var rrr = new StringBuilder();
+    // rrr.
     while (true)
     {
+      if (PreviousWindowWidth != Console.WindowWidth)
+      {
+        // var tmpl = File.ReadAllLines("./assets/template.txt");
+        // ReadOnlySpan<char> src = string.Join("", tmpl);
+        // _buffer = new Buffer1D(src, Cfg.WinWID);
+        // _tr.Write(src.ToString());
+        // _tr.SetCursorPosition(0, 0);
+        PreviousWindowWidth = Console.WindowWidth;
+        // _tr.Clear();
+        // _tr.Write(_buffer.ToString());
+        // _tr.SetCursorPosition(0, 0);
+      }
       var readkey = _tr.ReadKey();
       var keychar = readkey.KeyChar;
       if (keymap.TryGetValue(keychar, out NormalCommand value))
