@@ -23,6 +23,7 @@ internal class ChoosingKeymapTask(ITextRenderer tr) : ChoosingKeymapTask.IRun
   private readonly ITextRenderer _tr = tr;
   public Result Run()
   {
+    _tr.Clear();
     var isChoosing = true;
     _tr.CursorVisible = !isChoosing;
     const string Message = """
@@ -64,8 +65,6 @@ Choose your keyboard layout:
           break;
       }
     }
-    _tr.Clear();
-    _tr.WriteLine(result);
     _tr.CursorVisible = !isChoosing;
     return result;
   }

@@ -71,6 +71,7 @@ internal class CustomizingKeymapTask(ITextRenderer tr, TableRenderer.IPublic tbl
   }
   private char[] MapByUser()
   {
+    _tr.Clear();
     _tr.CursorVisible = false;
     const string Message = """
 Press any key to map the following command to that key

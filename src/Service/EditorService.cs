@@ -1,4 +1,3 @@
-using System.Text;
 using VimReimagination.WordMotion;
 namespace VimReimagination.Service;
 internal enum NormalCommand
@@ -26,7 +25,7 @@ internal enum NormalCommand
 /// I wonder the perf difference between ref struct and static class
 /// should benchmark it someday
 /// </summary>
-internal class EditorService(ITextRenderer tr) : EditorService.IRun
+internal class EditorService(ITextRenderer tr, IBufferService buffer) : EditorService.IRun
 {
   internal interface IRun
   {
@@ -35,28 +34,13 @@ internal class EditorService(ITextRenderer tr) : EditorService.IRun
   private static readonly SmallWordMotionPattern _smallWordMotion = new();
   private static readonly BigWordMotionPattern _bigWordMotion = new();
   static EditorService() { }
-  private BufferService _buffer;
+  private readonly IBufferService _buffer = buffer;
   private readonly ITextRenderer _tr = tr;
-  // public EditorService() => throw new NotSupportedException();
-  private int PreviousWindowWidth { get; set; }
   public void Run(Dictionary<char, NormalCommand> keymap)
   {
-    var rrr = new StringBuilder();
-    // rrr.
     while (true)
     {
-      if (PreviousWindowWidth != Console.WindowWidth)
-      {
-        // var tmpl = File.ReadAllLines("./assets/template.txt");
-        // ReadOnlySpan<char> src = string.Join("", tmpl);
-        // _buffer = new Buffer1D(src, Cfg.WinWID);
-        // _tr.Write(src.ToString());
-        // _tr.SetCursorPosition(0, 0);
-        PreviousWindowWidth = Console.WindowWidth;
-        // _tr.Clear();
-        // _tr.Write(_buffer.ToString());
-        // _tr.SetCursorPosition(0, 0);
-      }
+      _buffer.IfWindowResizedThenReloadBuffer();
       var readkey = _tr.ReadKey();
       var keychar = readkey.KeyChar;
       if (keymap.TryGetValue(keychar, out NormalCommand value))

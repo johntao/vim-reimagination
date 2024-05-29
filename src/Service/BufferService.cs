@@ -1,36 +1,31 @@
-namespace VimReimagination;
+namespace VimReimagination.Service;
 /// <summary>
 /// Can't tell the advantage of using ref struct, but it's required to use ref struct for `ReadOnlySpan<char> Text`
 /// </summary>
-internal class BufferService
+internal class BufferService(ITextRenderer tr) : IBufferService
 {
-  internal Cursor2D Cursor2D { get; private set; }
+  private readonly ITextRenderer _tr = tr;
   private int _cursor1D;
   private Direction _direction;
-  internal BufferService(string Text, int Width)
-  {
-    this.Text = Text;
-    this.Width = Width;
-    // string.Create()
-  }
-  internal readonly string Text;
-  internal readonly int Width;
-  internal char Previous { get; private set; }
-  internal char Current => Text[_cursor1D];
-  internal void Reset(Cursor2D cursor2D, Direction direction)
+  private char[] _buffer = null!;
+  private int _winWidth;
+  public Cursor2D Cursor2D { get; private set; }
+  public char Previous { get; private set; }
+  public char Current => _buffer[_cursor1D];
+  public void Reset(Cursor2D cursor2D, Direction direction)
   {
     Cursor2D = cursor2D;
-    _cursor1D = cursor2D.Top * Width + cursor2D.Left;
+    _cursor1D = cursor2D.Top * _winWidth + cursor2D.Left;
     Previous = Current;
     _direction = direction;
   }
-  internal bool HasNext() => _direction switch
+  public bool HasNext() => _direction switch
   {
-    Direction.Forward => _cursor1D + 1 < Text.Length,
+    Direction.Forward => _cursor1D + 1 < _buffer.Length,
     Direction.Backward => _cursor1D - 1 >= 0,
     _ => throw new NotImplementedException(),
   };
-  internal bool HasNext_Move()
+  public bool HasNext_Move()
   {
     var hasNext = HasNext();
     Previous = Current;
@@ -54,4 +49,55 @@ internal class BufferService
         throw new NotImplementedException();
     }
   }
+  public void IfWindowResizedThenReloadBuffer()
+  {
+    if (_winWidth == _tr.WindowWidth) return;
+    _winWidth = _tr.WindowWidth;
+    var originalLines = File.ReadLines("./assets/template.txt");
+    var modifiedLines = FillLinesWithEmptySpaceToMatchWindowWidth(originalLines, _tr);
+    var height = _tr.WindowHeight;
+    var bufferSize = _winWidth * height;
+    _buffer = new char[bufferSize];
+    var range = 0.._winWidth;
+    foreach (var line in modifiedLines)
+    {
+      line.AsSpan().CopyTo(_buffer[range]);
+      range = range.End..(range.End.Value + _winWidth);
+    }
+    _tr.Clear();
+    _tr.Write(_buffer);
+    Console.Write(_buffer);
+    _tr.SetCursorPosition(0, 0);
+    static IEnumerable<string> FillLinesWithEmptySpaceToMatchWindowWidth(IEnumerable<string> lines, ITextRenderer tr)
+    {
+      var width = tr.WindowWidth;
+      List<int> widths = [width];
+      foreach (var line in lines)
+      {
+        int idx = 0;
+        while (line.Length > widths[idx++])
+        {
+          if (idx < widths.Count) continue;
+          var newWidth = width * (widths.Count + 1);
+          widths.Add(newWidth);
+        }
+        yield return string.Create(widths[idx - 1], line, (span, state) =>
+        {
+          span.Fill(' ');
+          state.AsSpan().CopyTo(span);
+        });
+      }
+    }
+  }
+}
+
+internal interface IBufferService
+{
+  char Previous { get; }
+  char Current { get; }
+  Cursor2D Cursor2D { get; }
+  void Reset(Cursor2D cursor2D, Direction direction);
+  bool HasNext();
+  bool HasNext_Move();
+  void IfWindowResizedThenReloadBuffer();
 }

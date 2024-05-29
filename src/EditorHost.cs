@@ -1,24 +1,24 @@
 using Microsoft.Extensions.Hosting;
-using VimReimagination;
 using VimReimagination.Service;
 
 internal class EditorHost(
   CustomizingKeymapTask.IRun mappingCommands,
   ChoosingKeymapTask.IRun chooseLayout,
-  ITextRenderer tr
+  ITextRenderer tr,
+  EditorService.IRun editor
   ) : IHostedService
 {
   private readonly ITextRenderer _tr = tr;
   private readonly CustomizingKeymapTask.IRun _mappingCommands = mappingCommands;
   private readonly ChoosingKeymapTask.IRun _chooseLayout = chooseLayout;
+  private readonly EditorService.IRun _editor = editor;
   public Task StartAsync(CancellationToken cancellationToken)
   {
     Task.Delay(1000, cancellationToken).ContinueWith((_) =>
     {
-      _tr.Clear();
       var result = _chooseLayout.Run();
       var layout = _mappingCommands.Run(result);
-      new EditorService(_tr).Run(layout);
+      _editor.Run(layout);
     }, cancellationToken);
     return Task.CompletedTask;
   }

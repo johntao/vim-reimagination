@@ -3,6 +3,7 @@ namespace VimReimagination.Service;
 internal class ConsoleRenderer : ITextRenderer
 {
   // internal static int CursorTop { get; private set; } = 0;
+  public void Write(char[] buffer) => Console.Write(buffer);
   public void Write(char c)
   {
     Console.Write(c);
@@ -33,6 +34,8 @@ internal class ConsoleRenderer : ITextRenderer
     get => Console.CursorLeft;
     set => Console.CursorLeft = value;
   }
+  public int WindowWidth => Console.WindowWidth;
+  public int WindowHeight => Console.WindowHeight;
   public ConsoleKeyInfo ReadKey() => Console.ReadKey(true);
   public void SetCursorPosition(int left, int top) => Console.SetCursorPosition(left, top);
   public void Write(string c) => Console.Write(c);
@@ -40,6 +43,7 @@ internal class ConsoleRenderer : ITextRenderer
 }
 internal interface ITextRenderer
 {
+  void Write(char[] buffer);
   void Write(char c);
   void WriteLine(string message);
   void WriteLine(Enum message);
@@ -50,5 +54,7 @@ internal interface ITextRenderer
   int CursorLeft { get; set; }
   ConsoleKeyInfo ReadKey();
   (int Left, int Top) GetCursorPosition();
+  int WindowWidth { get; }
+  int WindowHeight { get; }
   void SetCursorPosition(int left, int top);
 }

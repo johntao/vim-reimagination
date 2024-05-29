@@ -1,4 +1,5 @@
 using System.Buffers;
+using VimReimagination.Service;
 
 namespace VimReimagination.WordMotion;
 
@@ -14,13 +15,13 @@ internal abstract class WordMotion : IWordMotionV3
   private static bool IsSpace(char prev) => _searchSpace.Contains(prev);
   #endregion
   protected abstract CharKind GetCharKind(char ch);
-  private bool IsSameKind(BufferService buffer)
+  private bool IsSameKind(IBufferService buffer)
   {
     var prev = GetCharKind(buffer.Previous);
     var current = GetCharKind(buffer.Current);
     return prev == current;
   }
-  public Cursor2D ChargeUntilBlankExclusive(Cursor2D cursor, BufferService buffer, Direction direction)
+  public Cursor2D ChargeUntilBlankExclusive(Cursor2D cursor, IBufferService buffer, Direction direction)
   {
     buffer.Reset(cursor, direction);
     if (!buffer.HasNext_Move()) return cursor;
@@ -35,7 +36,7 @@ internal abstract class WordMotion : IWordMotionV3
       return buffer.Cursor2D.Offset(direction);
     }
   }
-  public Cursor2D ChargeUntilMatterInclusive(Cursor2D cursor2D, BufferService buffer, Direction direction)
+  public Cursor2D ChargeUntilMatterInclusive(Cursor2D cursor2D, IBufferService buffer, Direction direction)
   {
     buffer.Reset(cursor2D, direction);
     if (!buffer.HasNext()) return cursor2D;
