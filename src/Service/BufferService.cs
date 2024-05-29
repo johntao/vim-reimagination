@@ -39,11 +39,11 @@ internal class BufferService(ITextRenderer tr) : IBufferService
     {
       case Direction.Forward:
         ++_cursor1D;
-        ++Cursor2D;
+        Cursor2D = Cursor2D.Inc(_tr);
         break;
       case Direction.Backward:
         --_cursor1D;
-        --Cursor2D;
+        Cursor2D = Cursor2D.Dec(_tr);
         break;
       default:
         throw new NotImplementedException();
@@ -58,11 +58,19 @@ internal class BufferService(ITextRenderer tr) : IBufferService
     var height = _tr.WindowHeight;
     var bufferSize = _winWidth * height;
     _buffer = new char[bufferSize];
-    var range = 0.._winWidth;
+    Index start = 0;
     foreach (var line in modifiedLines)
     {
-      line.AsSpan().CopyTo(_buffer[range]);
-      range = range.End..(range.End.Value + _winWidth);
+      var rng = start..(start.Value + line.Length);
+      bool hasHitBoundary = rng.End.Value > bufferSize;
+      if (hasHitBoundary)
+      {
+        rng = start..bufferSize;
+        line.AsSpan()[..(bufferSize - start.Value)].CopyTo(_buffer.AsSpan()[rng]);
+        break;
+      }
+      line.AsSpan().CopyTo(_buffer.AsSpan()[rng]);
+      start = rng.End;
     }
     _tr.Clear();
     _tr.Write(_buffer);
@@ -90,7 +98,6 @@ internal class BufferService(ITextRenderer tr) : IBufferService
     }
   }
 }
-
 internal interface IBufferService
 {
   char Previous { get; }

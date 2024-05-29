@@ -8,7 +8,7 @@
     - [x] add text in the background. text aware cursor motion
     - [x] buffer should not mix with motion algorithm, buffer should not store Cursor2D
     - [x] buffer boundary
-    - [ ] !!algorithm to fill in empty spaces...
+    - [x] algorithm to fill in empty spaces (make the buffer reflect to the window size)
     - [ ] remove text in the background
     - [ ] resolve newlines
     - [ ] resolve different buffer types

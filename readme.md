@@ -18,9 +18,9 @@ Lastly, I would like to implement some features that are not available in VIM, a
 - [x] Move cursor around the file
 - [x] Move cursor by small word and big word
 - [x] Choose QWERTY, Dvorak, or custom keymap
+- [x] Resize window and re-render text
 - [ ] Resolve newlines in the buffer and terminal
 - [ ] Save and load file
-- [ ] Resize window and re-render text
 - [ ] Basic text editing
 
 ## Installation
@@ -32,10 +32,4 @@ Lastly, I would like to implement some features that are not available in VIM, a
 ## Usage
 
 To run the project, execute `dotnet run` in the project directory.  
-
-### !!IMPORTANT!!
-
-Since the editor haven't fully implemented buffer and rendering, the editor load text from `assets/template.txt` and render it to the console.  
-For now, the editor only support moving the cursor around the text, and editor cannot resolve newlines, so all the newlines are replaced with `|` character.  
-In order to work with the editor properly, you need to resize the console window to fit the text so that every `|` character is in the last column of the console window.  
-In short, it is recommended to run the editor in a separate terminal window, and resize the window to fit the text.
+Since the editor haven't fully implemented yet, it will load text from `assets/template.txt` and render it to the console.  

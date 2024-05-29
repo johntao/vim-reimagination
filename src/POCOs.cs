@@ -1,16 +1,5 @@
+using VimReimagination.Service;
 namespace VimReimagination;
-internal static class Cfg
-{
-  /// <summary>
-  /// 204,46 in vscode integrated terminal
-  /// 209,51 in windows terminal (wide)
-  /// 156,41 in windows terminal (narrow)
-  /// </summary>
-  //WideWidth: 210,419,628,837
-  //NarrowWidth: 157,625,781,937
-  internal const int WinWID = 156; //Console.WindowWidth;
-  internal const int WinHEI = 41; //Console.WindowHeight;
-}
 /// <summary>
 /// maybe support upward and downward in the future
 /// </summary>
@@ -46,27 +35,28 @@ internal struct Cursor2D(int Left, int Top)
     Direction.Backward => HasHitBoundary ? this : new Cursor2D(Left + 1, Top),
     _ => throw new NotImplementedException(),
   };
-  public static Cursor2D operator ++(Cursor2D a)
+  internal Cursor2D Inc(ITextRenderer tr)
   {
-    ++a.Left;
-    if (a.Left == Cfg.WinWID)
+    ++Left;
+    if (Left == tr.WindowWidth)
     {
-      a.Left = 0;
-      ++a.Top;
+      Left = 0;
+      ++Top;
     }
-    a.HasHitBoundary = a.Left == Cfg.WinWID - 1 && a.Top == Cfg.WinHEI - 1;
-    return a;
+    HasHitBoundary = Left == tr.WindowWidth - 1 && Top == tr.WindowHeight - 1;
+    return this;
   }
-  public static Cursor2D operator --(Cursor2D a)
+
+  internal Cursor2D Dec(ITextRenderer tr)
   {
-    --a.Left;
-    if (a.Left == -1)
+    --Left;
+    if (Left == -1)
     {
-      a.Left = Cfg.WinWID - 1;
-      --a.Top;
+      Left = tr.WindowWidth - 1;
+      --Top;
     }
-    a.HasHitBoundary = a.Left == 0 && a.Top == 0;
-    return a;
+    HasHitBoundary = Left == 0 && Top == 0;
+    return this;
   }
   public static Cursor2D operator -(Cursor2D a, int b)
   {

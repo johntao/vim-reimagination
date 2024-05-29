@@ -232,3 +232,11 @@
     - store mutation result in non-ref struct (since the max size of stack is less than 2 MB)
     - make sure after the computation, the ref struct is no longer used (the stack is poped)
     - should initialize the buffer with window size first, then, do the mutation
+  - the result
+    - it's okay. but, we still have some space to improve
+    - replace operator overloading with instance method is quite ugly, MUST FIX IT
+    - the template is acting weird, if we omit the last space in the last line, the template will not be rendered properly
+    - we found out the buffer is just a char[]. we could probably simplify the algorithm a bit
+    - I should probably shrink some interface whenever possible
+    - it is so weird that we must use `AsSpan()` to make `CopyTo()` work
+    - I wonder if there's a simpler way to do it

@@ -63,10 +63,10 @@ internal class EditorService(ITextRenderer tr, IBufferService buffer) : EditorSe
       case NormalCommand.MoveVertical1uForward: MoveVerticalStop(1); break;
       case NormalCommand.MoveVertical1uBackward: MoveVerticalStop(-1); break;
       case NormalCommand.MoveHorizontal1uForward: MoveHorizontal(1); break;
-      case NormalCommand.MoveHorizontalFullScreenBackwardStop: MoveHorizontalStop(-Cfg.WinWID); break;
-      case NormalCommand.MoveVerticalFullScreenForwardStop: MoveVerticalStop(Cfg.WinHEI); break;
-      case NormalCommand.MoveVerticalFullScreenBackwardStop: MoveVerticalStop(-Cfg.WinHEI); break;
-      case NormalCommand.MoveHorizontalFullScreenForwardStop: MoveHorizontalStop(Cfg.WinWID); break;
+      case NormalCommand.MoveHorizontalFullScreenBackwardStop: MoveHorizontalStop(-_tr.WindowWidth); break;
+      case NormalCommand.MoveVerticalFullScreenForwardStop: MoveVerticalStop(_tr.WindowHeight); break;
+      case NormalCommand.MoveVerticalFullScreenBackwardStop: MoveVerticalStop(-_tr.WindowHeight); break;
+      case NormalCommand.MoveHorizontalFullScreenForwardStop: MoveHorizontalStop(_tr.WindowWidth); break;
     }
   }
   /// <summary>
@@ -78,7 +78,7 @@ internal class EditorService(ITextRenderer tr, IBufferService buffer) : EditorSe
     var (left, top) = _tr.GetCursorPosition();
     var newTop = top + unit;
     if (newTop < 0) newTop = 0;
-    else if (newTop >= Cfg.WinHEI) newTop = Cfg.WinHEI - 1;
+    else if (newTop >= _tr.WindowHeight) newTop = _tr.WindowHeight - 1;
     _tr.SetCursorPosition(left, newTop);
   }
   /// <summary>
@@ -90,7 +90,7 @@ internal class EditorService(ITextRenderer tr, IBufferService buffer) : EditorSe
     var (left, top) = _tr.GetCursorPosition();
     var newLeft = left + unit;
     if (newLeft < 0) newLeft = 0;
-    else if (newLeft >= Cfg.WinWID) newLeft = Cfg.WinWID - 1;
+    else if (newLeft >= _tr.WindowWidth) newLeft = _tr.WindowWidth - 1;
     _tr.SetCursorPosition(newLeft, top);
   }
   /// <summary>
@@ -103,20 +103,20 @@ internal class EditorService(ITextRenderer tr, IBufferService buffer) : EditorSe
     var newLeft = left + unit;
     if (newLeft < 0)
     {
-      newLeft += Cfg.WinWID;
+      newLeft += _tr.WindowWidth;
       if (--top < 0)
       {
         top = 0;
         newLeft = 0;
       }
     }
-    else if (newLeft >= Cfg.WinWID)
+    else if (newLeft >= _tr.WindowWidth)
     {
-      newLeft -= Cfg.WinWID;
-      if (++top >= Cfg.WinHEI)
+      newLeft -= _tr.WindowWidth;
+      if (++top >= _tr.WindowHeight)
       {
-        top = Cfg.WinHEI - 1;
-        newLeft = Cfg.WinWID - 1;
+        top = _tr.WindowHeight - 1;
+        newLeft = _tr.WindowWidth - 1;
       }
     }
     _tr.SetCursorPosition(newLeft, top);
