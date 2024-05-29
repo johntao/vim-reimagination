@@ -35,7 +35,7 @@ internal class EditorService(ITextRenderer tr) : EditorService.IRun
   private static readonly SmallWordMotionPattern _smallWordMotion = new();
   private static readonly BigWordMotionPattern _bigWordMotion = new();
   static EditorService() { }
-  private Buffer1D _buffer;
+  private BufferService _buffer;
   private readonly ITextRenderer _tr = tr;
   // public EditorService() => throw new NotSupportedException();
   private int PreviousWindowWidth { get; set; }

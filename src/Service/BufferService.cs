@@ -2,12 +2,12 @@ namespace VimReimagination;
 /// <summary>
 /// Can't tell the advantage of using ref struct, but it's required to use ref struct for `ReadOnlySpan<char> Text`
 /// </summary>
-internal class Buffer1D
+internal class BufferService
 {
   internal Cursor2D Cursor2D { get; private set; }
   private int _cursor1D;
   private Direction _direction;
-  internal Buffer1D(string Text, int Width)
+  internal BufferService(string Text, int Width)
   {
     this.Text = Text;
     this.Width = Width;

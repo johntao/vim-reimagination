@@ -4,18 +4,18 @@ using Microsoft.Extensions.Hosting;
 using VimReimagination.Service;
 
 {
-  // HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+  HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
-  // builder.Services
-  //   .AddHostedService<EditorHost>()
-  //   .AddSingleton<CustomizingKeymapTask.IRun, CustomizingKeymapTask>()
-  //   .AddSingleton<ITextRenderer, ConsoleRenderer>()
-  //   .AddSingleton<TableRenderer.IPublic, TableRenderer>()
-  //   .AddSingleton<ChoosingKeymapTask.IRun, ChoosingKeymapTask>()
-  //   ;
+  builder.Services
+    .AddHostedService<EditorHost>()
+    .AddSingleton<CustomizingKeymapTask.IRun, CustomizingKeymapTask>()
+    .AddSingleton<ITextRenderer, ConsoleRenderer>()
+    .AddSingleton<TableRenderer.IPublic, TableRenderer>()
+    .AddSingleton<ChoosingKeymapTask.IRun, ChoosingKeymapTask>()
+    ;
 
-  // using IHost host = builder.Build();
-  // await host.RunAsync();
+  using IHost host = builder.Build();
+  await host.RunAsync();
 }
 
 {
