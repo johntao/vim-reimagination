@@ -34,6 +34,7 @@ internal class ConsoleRenderer : ITextRenderer
     get => Console.CursorLeft;
     set => Console.CursorLeft = value;
   }
+  public (int Width, int Height) Window => (Console.WindowWidth, Console.WindowHeight);
   public int WindowWidth => Console.WindowWidth;
   public int WindowHeight => Console.WindowHeight;
   public ConsoleKeyInfo ReadKey() => Console.ReadKey(true);
@@ -54,6 +55,7 @@ internal interface ITextRenderer
   int CursorLeft { get; set; }
   ConsoleKeyInfo ReadKey();
   (int Left, int Top) GetCursorPosition();
+  (int Width, int Height) Window { get; }
   int WindowWidth { get; }
   int WindowHeight { get; }
   void SetCursorPosition(int left, int top);

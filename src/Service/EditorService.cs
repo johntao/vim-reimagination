@@ -123,7 +123,7 @@ internal class EditorService(ITextRenderer tr, IBufferService buffer) : EditorSe
   }
   void MoveHorizontalByPattern(TextPattern textPattern, Direction direction)
   {
-    var cursor = new Cursor2D(_tr.GetCursorPosition());
+    var cursor = new Cursor2D(_tr);
     var (newLeft, newTop) = (textPattern, direction) switch
     {
       (TextPattern.SmallWordStart, Direction.Backward) => _smallWordMotion.ChargeUntilBlankExclusive(cursor, _buffer, Direction.Backward),

@@ -143,13 +143,15 @@
     - in the end the Motion algorithm is a class and it cannot hold buffer as a static readonly member
     - so the final design pass in buffer as a parameter
 
-## aggressive oo design
+## Aggressive Object-Oriented Programming
 
-  - mark everything sealed if it's not meant to be inherited
-  - hide every POCO inside a class if it's not used elsewhere
-  - including interfaces that doesn't have multiple implementations
-  - including private methods that doesn't have another method to call it
-  - including POCOs only accessible to another type
+- Mark everything as sealed if it's not meant to be inherited.
+- Hide or nest every POCO inside a class or method if it's not used elsewhere.
+  - POCOs only accessible to another type.
+  - Interfaces that don't have multiple implementations.
+  - Private methods that aren't called by other methods.
+- Reduce the number of interface members if possible.
+- Reduce the number of public method parameters if possible.
 
 ## ReadOnlySpan
 
@@ -234,9 +236,9 @@
     - should initialize the buffer with window size first, then, do the mutation
   - the result
     - it's okay. but, we still have some space to improve
-    - replace operator overloading with instance method is quite ugly, MUST FIX IT
-    - the template is acting weird, if we omit the last space in the last line, the template will not be rendered properly
-    - we found out the buffer is just a char[]. we could probably simplify the algorithm a bit
-    - I should probably shrink some interface whenever possible
-    - it is so weird that we must use `AsSpan()` to make `CopyTo()` work
-    - I wonder if there's a simpler way to do it
+    - [x] replace operator overloading with instance method is quite ugly, MUST FIX IT
+    - [x] we found out the buffer is just a char[]. we could probably simplify the algorithm a bit
+      - it is so weird that we must use `AsSpan()` to make `CopyTo()` work
+      - I wonder if there's a simpler way to do it
+    - [ ] the template is acting weird, if we omit the last space in the last line, the template will not be rendered properly
+    - [ ] we should probably shrink some interface whenever possible

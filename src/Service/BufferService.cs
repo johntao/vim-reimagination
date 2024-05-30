@@ -1,3 +1,5 @@
+using VimReimagination.Helper;
+
 namespace VimReimagination.Service;
 /// <summary>
 /// Can't tell the advantage of using ref struct, but it's required to use ref struct for `ReadOnlySpan<char> Text`
@@ -39,11 +41,11 @@ internal class BufferService(ITextRenderer tr) : IBufferService
     {
       case Direction.Forward:
         ++_cursor1D;
-        Cursor2D = Cursor2D.Inc(_tr);
+        ++Cursor2D;
         break;
       case Direction.Backward:
         --_cursor1D;
-        Cursor2D = Cursor2D.Dec(_tr);
+        --Cursor2D;
         break;
       default:
         throw new NotImplementedException();
@@ -53,49 +55,10 @@ internal class BufferService(ITextRenderer tr) : IBufferService
   {
     if (_winWidth == _tr.WindowWidth) return;
     _winWidth = _tr.WindowWidth;
-    var originalLines = File.ReadLines("./assets/template.txt");
-    var modifiedLines = FillLinesWithEmptySpaceToMatchWindowWidth(originalLines, _tr);
-    var height = _tr.WindowHeight;
-    var bufferSize = _winWidth * height;
-    _buffer = new char[bufferSize];
-    Index start = 0;
-    foreach (var line in modifiedLines)
-    {
-      var rng = start..(start.Value + line.Length);
-      bool hasHitBoundary = rng.End.Value > bufferSize;
-      if (hasHitBoundary)
-      {
-        rng = start..bufferSize;
-        line.AsSpan()[..(bufferSize - start.Value)].CopyTo(_buffer.AsSpan()[rng]);
-        break;
-      }
-      line.AsSpan().CopyTo(_buffer.AsSpan()[rng]);
-      start = rng.End;
-    }
+    _buffer = BufferHelper.Get(_winWidth, _tr.WindowHeight);
     _tr.Clear();
     _tr.Write(_buffer);
-    Console.Write(_buffer);
     _tr.SetCursorPosition(0, 0);
-    static IEnumerable<string> FillLinesWithEmptySpaceToMatchWindowWidth(IEnumerable<string> lines, ITextRenderer tr)
-    {
-      var width = tr.WindowWidth;
-      List<int> widths = [width];
-      foreach (var line in lines)
-      {
-        int idx = 0;
-        while (line.Length > widths[idx++])
-        {
-          if (idx < widths.Count) continue;
-          var newWidth = width * (widths.Count + 1);
-          widths.Add(newWidth);
-        }
-        yield return string.Create(widths[idx - 1], line, (span, state) =>
-        {
-          span.Fill(' ');
-          state.AsSpan().CopyTo(span);
-        });
-      }
-    }
   }
 }
 internal interface IBufferService

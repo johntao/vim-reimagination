@@ -23,40 +23,41 @@ internal enum CharKind
   Secondary,
   Space,
 }
-internal struct Cursor2D(int Left, int Top)
+internal struct Cursor2D(int Left, int Top, (int Width, int Height) Window)
 {
+  private readonly (int Width, int Height) Window = Window;
   internal int Left = Left;
   internal int Top = Top;
   internal bool HasHitBoundary = false;
-  public Cursor2D((int Left, int Top) cursor) : this(cursor.Left, cursor.Top) { }
+  public Cursor2D(ITextRenderer tr) : this(tr.GetCursorPosition(), tr) { }
+  private Cursor2D((int Left, int Top) cursor, ITextRenderer tr) : this(cursor.Left, cursor.Top, tr.Window) { }
   internal readonly Cursor2D Offset(Direction direction) => direction switch
   {
-    Direction.Forward => HasHitBoundary ? this : new Cursor2D(Left - 1, Top),
-    Direction.Backward => HasHitBoundary ? this : new Cursor2D(Left + 1, Top),
+    Direction.Forward => HasHitBoundary ? this : new Cursor2D(Left - 1, Top, Window),
+    Direction.Backward => HasHitBoundary ? this : new Cursor2D(Left + 1, Top, Window),
     _ => throw new NotImplementedException(),
   };
-  internal Cursor2D Inc(ITextRenderer tr)
+  public static Cursor2D operator ++(Cursor2D a)
   {
-    ++Left;
-    if (Left == tr.WindowWidth)
+    ++a.Left;
+    if (a.Left == a.Window.Width)
     {
-      Left = 0;
-      ++Top;
+      a.Left = 0;
+      ++a.Top;
     }
-    HasHitBoundary = Left == tr.WindowWidth - 1 && Top == tr.WindowHeight - 1;
-    return this;
+    a.HasHitBoundary = a.Left == a.Window.Width - 1 && a.Top == a.Window.Height - 1;
+    return a;
   }
-
-  internal Cursor2D Dec(ITextRenderer tr)
+  public static Cursor2D operator --(Cursor2D a)
   {
-    --Left;
-    if (Left == -1)
+    --a.Left;
+    if (a.Left == -1)
     {
-      Left = tr.WindowWidth - 1;
-      --Top;
+      a.Left = a.Window.Width - 1;
+      --a.Top;
     }
-    HasHitBoundary = Left == 0 && Top == 0;
-    return this;
+    a.HasHitBoundary = a.Left == 0 && a.Top == 0;
+    return a;
   }
   public static Cursor2D operator -(Cursor2D a, int b)
   {
