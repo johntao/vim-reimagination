@@ -4,7 +4,7 @@
 
 ## Word Motion Algorithm v2 and v3
 
-  no time to document the produce or design of the algorithm
+  TODO...
 
 ## Word Motion Algorithm v1
   use symmetrical algorithm and reduced some of the ad-hoc algorithm
@@ -202,6 +202,7 @@
   - we tried to find a way to simplify these steps, but it seems that we cannot do that
     - the default ApplicationLifetime and HostService does not provide any hook
     - BackgroundService is not suitable for this case, since the editor blocks the thread with Console.ReadKey()
+  - [ ] since the editor starts inside a Task.Run, thrown exception will not be caught by the host service
 
 ## about class naming
 

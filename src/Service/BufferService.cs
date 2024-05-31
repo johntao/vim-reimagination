@@ -55,9 +55,9 @@ internal class BufferService(IReadWrite tr, IWindow win, ICursor cur) : IBufferS
   }
   public void IfWindowResizedThenReloadBuffer()
   {
-    if (_winWidth == _win.WindowWidth) return;
-    _winWidth = _win.WindowWidth;
-    _buffer = BufferHelper.Get(_winWidth, _win.WindowHeight);
+    if (_winWidth == _win.Width) return;
+    _winWidth = _win.Width;
+    _buffer = BufferHelper.Get(_winWidth, _win.Height);
     _tr.Clear();
     _tr.Write(_buffer);
     _cur.SetCursorPosition(0, 0);

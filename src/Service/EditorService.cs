@@ -65,10 +65,10 @@ internal class EditorService(IReadWrite tr, IBufferService buffer, IWindow win, 
       case NormalCommand.MoveVertical1uForward: MoveVerticalStop(1); break;
       case NormalCommand.MoveVertical1uBackward: MoveVerticalStop(-1); break;
       case NormalCommand.MoveHorizontal1uForward: MoveHorizontal(1); break;
-      case NormalCommand.MoveHorizontalFullScreenBackwardStop: MoveHorizontalStop(-_win.WindowWidth); break;
-      case NormalCommand.MoveVerticalFullScreenForwardStop: MoveVerticalStop(_win.WindowHeight); break;
-      case NormalCommand.MoveVerticalFullScreenBackwardStop: MoveVerticalStop(-_win.WindowHeight); break;
-      case NormalCommand.MoveHorizontalFullScreenForwardStop: MoveHorizontalStop(_win.WindowWidth); break;
+      case NormalCommand.MoveHorizontalFullScreenBackwardStop: MoveHorizontalStop(-_win.Width); break;
+      case NormalCommand.MoveVerticalFullScreenForwardStop: MoveVerticalStop(_win.Height); break;
+      case NormalCommand.MoveVerticalFullScreenBackwardStop: MoveVerticalStop(-_win.Height); break;
+      case NormalCommand.MoveHorizontalFullScreenForwardStop: MoveHorizontalStop(_win.Width); break;
     }
   }
   /// <summary>
@@ -80,7 +80,7 @@ internal class EditorService(IReadWrite tr, IBufferService buffer, IWindow win, 
     var (left, top) = _cur.GetCursorPosition();
     var newTop = top + unit;
     if (newTop < 0) newTop = 0;
-    else if (newTop >= _win.WindowHeight) newTop = _win.WindowHeight - 1;
+    else if (newTop >= _win.Height) newTop = _win.Height - 1;
     _cur.SetCursorPosition(left, newTop);
   }
   /// <summary>
@@ -92,7 +92,7 @@ internal class EditorService(IReadWrite tr, IBufferService buffer, IWindow win, 
     var (left, top) = _cur.GetCursorPosition();
     var newLeft = left + unit;
     if (newLeft < 0) newLeft = 0;
-    else if (newLeft >= _win.WindowWidth) newLeft = _win.WindowWidth - 1;
+    else if (newLeft >= _win.Width) newLeft = _win.Width - 1;
     _cur.SetCursorPosition(newLeft, top);
   }
   /// <summary>
@@ -105,20 +105,20 @@ internal class EditorService(IReadWrite tr, IBufferService buffer, IWindow win, 
     var newLeft = left + unit;
     if (newLeft < 0)
     {
-      newLeft += _win.WindowWidth;
+      newLeft += _win.Width;
       if (--top < 0)
       {
         top = 0;
         newLeft = 0;
       }
     }
-    else if (newLeft >= _win.WindowWidth)
+    else if (newLeft >= _win.Width)
     {
-      newLeft -= _win.WindowWidth;
-      if (++top >= _win.WindowHeight)
+      newLeft -= _win.Width;
+      if (++top >= _win.Height)
       {
-        top = _win.WindowHeight - 1;
-        newLeft = _win.WindowWidth - 1;
+        top = _win.Height - 1;
+        newLeft = _win.Width - 1;
       }
     }
     _cur.SetCursorPosition(newLeft, top);

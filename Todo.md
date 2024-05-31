@@ -39,7 +39,7 @@
     - [ ] yank, putReplace
     - [ ] !!editable: replace, delete, change
   - Other Core Stuff
-    - [ ] Save/ Load file
+    - [ ] !!Save/ Load file
 - Medium tasks (can be done in a few days)
   - Console/ Buffer data binding and rendering
     - [ ] should be able to scroll
@@ -63,9 +63,13 @@
   - Refactor (engineering factor)
     - remove ex command while keeping all the capacity
     - support any kinds of keyboard layout
+      - CharaChorder One 3-D switches (5-way tactile)
+    - support non-keyboard input
+      - mouse, touchpad, touch screen, voice, gesture, eye tracking, brainwave
     - should be able to run on any platform
       - hence, the API should be platform agnostic
-      - beaware if platform doesn't support Console.Left, Console.Top
-      - should at least migrate to Terminal.Gui
-      - afterward, we might have better support for migration to other platforms
-      - probably, the best way to do this is to develop with lower level API
+      - beaware if a platform doesn't support Console.Left, Console.Top
+      - after the first migration, we might have better support to migrate more platforms
+      - or, we could delve into lower level API of a specific platform, to gain some experience
+      - [ ] migrate to Terminal.Gui
+      - [ ] use Windows API to leverage advanced Console features

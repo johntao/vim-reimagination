@@ -19,9 +19,9 @@ Lastly, I would like to implement some features that are not available in VIM, a
 - [x] Move cursor by small word and big word
 - [x] Choose QWERTY, Dvorak, or custom keymap
 - [x] Resize window and re-render text
-- [ ] Resolve newlines in the buffer and terminal
-- [ ] Save and load file
 - [ ] Basic text editing
+- [ ] Save and load file
+- [ ] Resolve newlines in the buffer and terminal
 
 ## Installation
 
