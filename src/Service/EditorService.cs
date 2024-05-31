@@ -1,25 +1,5 @@
 using VimReimagination.WordMotion;
 namespace VimReimagination.Service;
-internal enum MotionCommand
-{
-  None,
-  Row_Pattern_BigWordStart_Back,
-  Row_Pattern_BigWordEnd_Back,
-  Row_Pattern_BigWordStart_Forth,
-  Row_Pattern_BigWordEnd_Forth,
-  Row_Pattern_SmallWordStart_Back,
-  Row_Pattern_SmallWordEnd_Back,
-  Row_Pattern_SmallWordStart_Forth,
-  Row_Pattern_SmallWordEnd_Forth,
-  Row_1unit_Back,
-  Col_1unit_Forth,
-  Col_1unit_Back,
-  Row_1unit_Forth,
-  Row_FullScreen_Back_StopOnEdge,
-  Col_FullScreen_Forth_StopOnEdge,
-  Col_FullScreen_Back_StopOnEdge,
-  Row_FullScreen_Forth_StopOnEdge,
-}
 /// <summary>
 /// Can't tell the advantage of using ref struct, but it's required to use ref struct for `Buffer1D _buffer`
 /// I wonder the perf difference between ref struct and static class
@@ -27,6 +7,15 @@ internal enum MotionCommand
 /// </summary>
 internal class EditorService(IReadWrite tr, IBufferService buffer, IWindow win, ICursor cur) : EditorService.IRun
 {
+  #region types and static
+  enum TextPattern
+  {
+    None,
+    SmallWordStart,
+    SmallWordEnd,
+    BigWordStart,
+    BigWordEnd,
+  }
   internal interface IRun
   {
     void Run(Dictionary<char, MotionCommand> keymap);
@@ -34,6 +23,7 @@ internal class EditorService(IReadWrite tr, IBufferService buffer, IWindow win, 
   private static readonly SmallWordMotionPattern _smallWordMotion = new();
   private static readonly BigWordMotionPattern _bigWordMotion = new();
   static EditorService() { }
+  #endregion
   private readonly IBufferService _buffer = buffer;
   private readonly IReadWrite _tr = tr;
   private readonly IWindow _win = win;
