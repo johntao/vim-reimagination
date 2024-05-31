@@ -240,5 +240,5 @@
     - [x] we found out the buffer is just a char[]. we could probably simplify the algorithm a bit
       - it is so weird that we must use `AsSpan()` to make `CopyTo()` work
       - I wonder if there's a simpler way to do it
+    - [x] we should probably shrink some interface whenever possible
     - [ ] the template is acting weird, if we omit the last space in the last line, the template will not be rendered properly
-    - [ ] we should probably shrink some interface whenever possible

@@ -1,6 +1,6 @@
 namespace VimReimagination.Service;
 
-internal class ConsoleRenderer : ITextRenderer
+internal class ConsoleReadWrite : IReadWrite
 {
   public void Write(char[] buffer) => Console.Write(buffer);
   public void Write(string c) => Console.Write(c);
@@ -22,7 +22,7 @@ internal class ConsoleRenderer : ITextRenderer
   public void Clear() => Console.Clear();
   public ConsoleKeyInfo ReadKey() => Console.ReadKey(true);
 }
-internal interface ITextRenderer
+internal interface IReadWrite
 {
   void Write(char[] buffer);
   void Write(char c);

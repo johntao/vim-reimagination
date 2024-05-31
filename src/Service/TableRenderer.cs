@@ -6,7 +6,7 @@ future enhancement:
 - column style
 - row style
 */
-internal class TableRenderer(ITextRenderer tr, ICursor cur) : TableRenderer.IPublic
+internal class TableRenderer(IReadWrite tr, ICursor cur) : TableRenderer.IPublic
 {
   internal interface IPublic
   {
@@ -23,7 +23,7 @@ internal class TableRenderer(ITextRenderer tr, ICursor cur) : TableRenderer.IPub
     Normal,
   }
   private const string Delimiter = " | ";
-  private readonly ITextRenderer _tr = tr;
+  private readonly IReadWrite _tr = tr;
   private readonly ICursor _cur = cur;
   #region state that required initialization
   private int[] _widths = null!;

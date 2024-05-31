@@ -1,6 +1,6 @@
 using Cmd = VimReimagination.Service.NormalCommand;
 namespace VimReimagination.Service;
-internal class CustomizingKeymapTask(ITextRenderer tr, TableRenderer.IPublic tbl, ICursor cur) : CustomizingKeymapTask.IRun
+internal class CustomizingKeymapTask(IReadWrite tr, TableRenderer.IPublic tbl, ICursor cur) : CustomizingKeymapTask.IRun
 {
   #region types
   internal interface IRun
@@ -56,7 +56,7 @@ internal class CustomizingKeymapTask(ITextRenderer tr, TableRenderer.IPublic tbl
   private static readonly char[] _dvorakKeys = _stuff.Select(q => q.DvorakKey).ToArray();
   private static readonly char[] _qwertyKeys = _stuff.Select(q => q.QwertyKey).ToArray();
   #endregion
-  private readonly ITextRenderer _tr = tr;
+  private readonly IReadWrite _tr = tr;
   private readonly TableRenderer.IPublic _tbl = tbl;
   private readonly ICursor _cur = cur;
   public Dictionary<char, Cmd> Run(ChoosingKeymapTask.Result result)

@@ -7,7 +7,7 @@ HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 builder.Services
   .AddHostedService<EditorHost>()
   .AddSingleton<CustomizingKeymapTask.IRun, CustomizingKeymapTask>()
-  .AddSingleton<ITextRenderer, ConsoleRenderer>()
+  .AddSingleton<IReadWrite, ConsoleReadWrite>()
   .AddSingleton<IWindow, ConsoleWindow>()
   .AddSingleton<ICursor, ConsoleCursor>()
   .AddSingleton<TableRenderer.IPublic, TableRenderer>()

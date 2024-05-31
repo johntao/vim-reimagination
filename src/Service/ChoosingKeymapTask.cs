@@ -5,7 +5,7 @@ namespace VimReimagination.Service;
 /// we could return the whole product directly if possible, then, there's no need for enum (at least in the interface level)
 /// however, if we make it in one blow, we probably disobey the single responsibility principle
 /// </summary>
-internal class ChoosingKeymapTask(ITextRenderer tr, ICursor cur) : ChoosingKeymapTask.IRun
+internal class ChoosingKeymapTask(IReadWrite tr, ICursor cur) : ChoosingKeymapTask.IRun
 {
   #region types
   internal interface IRun
@@ -20,7 +20,7 @@ internal class ChoosingKeymapTask(ITextRenderer tr, ICursor cur) : ChoosingKeyma
     MapByUser,
   }
   #endregion
-  private readonly ITextRenderer _tr = tr;
+  private readonly IReadWrite _tr = tr;
   private readonly ICursor _cur = cur;
   public Result Run()
   {

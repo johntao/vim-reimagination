@@ -25,7 +25,7 @@ internal enum NormalCommand
 /// I wonder the perf difference between ref struct and static class
 /// should benchmark it someday
 /// </summary>
-internal class EditorService(ITextRenderer tr, IBufferService buffer, IWindow win, ICursor cur) : EditorService.IRun
+internal class EditorService(IReadWrite tr, IBufferService buffer, IWindow win, ICursor cur) : EditorService.IRun
 {
   internal interface IRun
   {
@@ -35,7 +35,7 @@ internal class EditorService(ITextRenderer tr, IBufferService buffer, IWindow wi
   private static readonly BigWordMotionPattern _bigWordMotion = new();
   static EditorService() { }
   private readonly IBufferService _buffer = buffer;
-  private readonly ITextRenderer _tr = tr;
+  private readonly IReadWrite _tr = tr;
   private readonly IWindow _win = win;
   private readonly ICursor _cur = cur;
   public void Run(Dictionary<char, NormalCommand> keymap)
