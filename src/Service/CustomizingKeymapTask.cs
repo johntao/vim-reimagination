@@ -1,4 +1,4 @@
-using Cmd = VimReimagination.Service.NormalCommand;
+using Cmd = VimReimagination.Service.MotionCommand;
 namespace VimReimagination.Service;
 internal class CustomizingKeymapTask(IReadWrite tr, TableRenderer.IPublic tbl, ICursor cur) : CustomizingKeymapTask.IRun
 {
@@ -34,22 +34,22 @@ internal class CustomizingKeymapTask(IReadWrite tr, TableRenderer.IPublic tbl, I
   }
   private static readonly CommandInfo[] _stuff =
   [
-    new(Cmd.MoveHorizontalByPatternBigWordStartBackward, "Move horizontally by pattern 'Start of Big Word' backward", 'q', '"'),
-    new(Cmd.MoveHorizontalByPatternBigWordEndBackward, "Move horizontally by pattern 'End of Big Word' backward", 'w', '<'),
-    new(Cmd.MoveHorizontalByPatternBigWordStartForward, "Move horizontally by pattern 'Start of Big Word' forward", 'e', '>'),
-    new(Cmd.MoveHorizontalByPatternBigWordEndForward, "Move horizontally by pattern 'End of Big Word' forward", 'r', 'p'),
-    new(Cmd.MoveHorizontalByPatternSmallWordStartBackward, "Move horizontally by pattern 'Start of Small Word' backward", 'a', 'a'),
-    new(Cmd.MoveHorizontalByPatternSmallWordEndBackward, "Move horizontally by pattern 'End of Small Word' backward", 's', 'o'),
-    new(Cmd.MoveHorizontalByPatternSmallWordStartForward, "Move horizontally by pattern 'Start of Small Word' forward", 'd', 'e'),
-    new(Cmd.MoveHorizontalByPatternSmallWordEndForward, "Move horizontally by pattern 'End of Small Word' forward", 'f', 'u'),
-    new(Cmd.MoveHorizontal1uBackward, "Move horizontally by 1 unit backward", 'h', 'd'),
-    new(Cmd.MoveVertical1uForward, "Move vertically by 1 unit forward", 'j', 'h'),
-    new(Cmd.MoveVertical1uBackward, "Move vertically by 1 unit backward", 'k', 't'),
-    new(Cmd.MoveHorizontal1uForward, "Move horizontally by 1 unit forward", 'l', 'n'),
-    new(Cmd.MoveHorizontalFullScreenBackwardStop, "Move horizontally by full screen width backward, stop at the edge", 'H', 'D'),
-    new(Cmd.MoveVerticalFullScreenForwardStop, "Move vertically by full screen height forward, stop at the edge", 'J', 'H'),
-    new(Cmd.MoveVerticalFullScreenBackwardStop, "Move vertically by full screen height backward, stop at the edge", 'K', 'T'),
-    new(Cmd.MoveHorizontalFullScreenForwardStop, "Move horizontally by full screen width forward, stop at the edge", 'L', 'N'),
+    new(Cmd.Row_Pattern_BigWordStart_Back, "Move horizontally by pattern 'Start of Big Word' backward", 'q', '"'),
+    new(Cmd.Row_Pattern_BigWordEnd_Back, "Move horizontally by pattern 'End of Big Word' backward", 'w', '<'),
+    new(Cmd.Row_Pattern_BigWordStart_Forth, "Move horizontally by pattern 'Start of Big Word' forward", 'e', '>'),
+    new(Cmd.Row_Pattern_BigWordEnd_Forth, "Move horizontally by pattern 'End of Big Word' forward", 'r', 'p'),
+    new(Cmd.Row_Pattern_SmallWordStart_Back, "Move horizontally by pattern 'Start of Small Word' backward", 'a', 'a'),
+    new(Cmd.Row_Pattern_SmallWordEnd_Back, "Move horizontally by pattern 'End of Small Word' backward", 's', 'o'),
+    new(Cmd.Row_Pattern_SmallWordStart_Forth, "Move horizontally by pattern 'Start of Small Word' forward", 'd', 'e'),
+    new(Cmd.Row_Pattern_SmallWordEnd_Forth, "Move horizontally by pattern 'End of Small Word' forward", 'f', 'u'),
+    new(Cmd.Row_1unit_Back, "Move horizontally by 1 unit backward", 'h', 'd'),
+    new(Cmd.Col_1unit_Forth, "Move vertically by 1 unit forward", 'j', 'h'),
+    new(Cmd.Col_1unit_Back, "Move vertically by 1 unit backward", 'k', 't'),
+    new(Cmd.Row_1unit_Forth, "Move horizontally by 1 unit forward", 'l', 'n'),
+    new(Cmd.Row_FullScreen_Back_StopOnEdge, "Move horizontally by full screen width backward, stop at the edge", 'H', 'D'),
+    new(Cmd.Col_FullScreen_Forth_StopOnEdge, "Move vertically by full screen height forward, stop at the edge", 'J', 'H'),
+    new(Cmd.Col_FullScreen_Back_StopOnEdge, "Move vertically by full screen height backward, stop at the edge", 'K', 'T'),
+    new(Cmd.Row_FullScreen_Forth_StopOnEdge, "Move horizontally by full screen width forward, stop at the edge", 'L', 'N'),
     // new(Cmd.MoveHorizontal45uBackward, "Experimental, move horizontally by 45 units backward", 'n', 'b'),
     // new(Cmd.MoveHorizontal45uForward, "Experimental, move horizontally by 45 units forward", '.', 'v'),
   ];

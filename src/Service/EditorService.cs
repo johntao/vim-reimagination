@@ -1,24 +1,24 @@
 using VimReimagination.WordMotion;
 namespace VimReimagination.Service;
-internal enum NormalCommand
+internal enum MotionCommand
 {
   None,
-  MoveHorizontalByPatternBigWordStartBackward,
-  MoveHorizontalByPatternBigWordEndBackward,
-  MoveHorizontalByPatternBigWordStartForward,
-  MoveHorizontalByPatternBigWordEndForward,
-  MoveHorizontalByPatternSmallWordStartBackward,
-  MoveHorizontalByPatternSmallWordEndBackward,
-  MoveHorizontalByPatternSmallWordStartForward,
-  MoveHorizontalByPatternSmallWordEndForward,
-  MoveHorizontal1uBackward,
-  MoveVertical1uForward,
-  MoveVertical1uBackward,
-  MoveHorizontal1uForward,
-  MoveHorizontalFullScreenBackwardStop,
-  MoveVerticalFullScreenForwardStop,
-  MoveVerticalFullScreenBackwardStop,
-  MoveHorizontalFullScreenForwardStop,
+  Row_Pattern_BigWordStart_Back,
+  Row_Pattern_BigWordEnd_Back,
+  Row_Pattern_BigWordStart_Forth,
+  Row_Pattern_BigWordEnd_Forth,
+  Row_Pattern_SmallWordStart_Back,
+  Row_Pattern_SmallWordEnd_Back,
+  Row_Pattern_SmallWordStart_Forth,
+  Row_Pattern_SmallWordEnd_Forth,
+  Row_1unit_Back,
+  Col_1unit_Forth,
+  Col_1unit_Back,
+  Row_1unit_Forth,
+  Row_FullScreen_Back_StopOnEdge,
+  Col_FullScreen_Forth_StopOnEdge,
+  Col_FullScreen_Back_StopOnEdge,
+  Row_FullScreen_Forth_StopOnEdge,
 }
 /// <summary>
 /// Can't tell the advantage of using ref struct, but it's required to use ref struct for `Buffer1D _buffer`
@@ -29,7 +29,7 @@ internal class EditorService(IReadWrite tr, IBufferService buffer, IWindow win, 
 {
   internal interface IRun
   {
-    void Run(Dictionary<char, NormalCommand> keymap);
+    void Run(Dictionary<char, MotionCommand> keymap);
   }
   private static readonly SmallWordMotionPattern _smallWordMotion = new();
   private static readonly BigWordMotionPattern _bigWordMotion = new();
@@ -38,37 +38,37 @@ internal class EditorService(IReadWrite tr, IBufferService buffer, IWindow win, 
   private readonly IReadWrite _tr = tr;
   private readonly IWindow _win = win;
   private readonly ICursor _cur = cur;
-  public void Run(Dictionary<char, NormalCommand> keymap)
+  public void Run(Dictionary<char, MotionCommand> keymap)
   {
     while (true)
     {
       _buffer.IfWindowResizedThenReloadBuffer();
       var readkey = _tr.ReadKey();
       var keychar = readkey.KeyChar;
-      if (keymap.TryGetValue(keychar, out NormalCommand value))
+      if (keymap.TryGetValue(keychar, out MotionCommand value))
         ProcessCommand(value);
     }
   }
-  private void ProcessCommand(NormalCommand cmd)
+  private void ProcessCommand(MotionCommand cmd)
   {
     switch (cmd)
     {
-      case NormalCommand.MoveHorizontalByPatternBigWordStartBackward: MoveHorizontalByPattern(TextPattern.BigWordStart, Direction.Backward); break;
-      case NormalCommand.MoveHorizontalByPatternBigWordEndBackward: MoveHorizontalByPattern(TextPattern.BigWordEnd, Direction.Backward); break;
-      case NormalCommand.MoveHorizontalByPatternBigWordStartForward: MoveHorizontalByPattern(TextPattern.BigWordStart, Direction.Forward); break;
-      case NormalCommand.MoveHorizontalByPatternBigWordEndForward: MoveHorizontalByPattern(TextPattern.BigWordEnd, Direction.Forward); break;
-      case NormalCommand.MoveHorizontalByPatternSmallWordStartBackward: MoveHorizontalByPattern(TextPattern.SmallWordStart, Direction.Backward); break;
-      case NormalCommand.MoveHorizontalByPatternSmallWordEndBackward: MoveHorizontalByPattern(TextPattern.SmallWordEnd, Direction.Backward); break;
-      case NormalCommand.MoveHorizontalByPatternSmallWordStartForward: MoveHorizontalByPattern(TextPattern.SmallWordStart, Direction.Forward); break;
-      case NormalCommand.MoveHorizontalByPatternSmallWordEndForward: MoveHorizontalByPattern(TextPattern.SmallWordEnd, Direction.Forward); break;
-      case NormalCommand.MoveHorizontal1uBackward: MoveHorizontal(-1); break;
-      case NormalCommand.MoveVertical1uForward: MoveVerticalStop(1); break;
-      case NormalCommand.MoveVertical1uBackward: MoveVerticalStop(-1); break;
-      case NormalCommand.MoveHorizontal1uForward: MoveHorizontal(1); break;
-      case NormalCommand.MoveHorizontalFullScreenBackwardStop: MoveHorizontalStop(-_win.Width); break;
-      case NormalCommand.MoveVerticalFullScreenForwardStop: MoveVerticalStop(_win.Height); break;
-      case NormalCommand.MoveVerticalFullScreenBackwardStop: MoveVerticalStop(-_win.Height); break;
-      case NormalCommand.MoveHorizontalFullScreenForwardStop: MoveHorizontalStop(_win.Width); break;
+      case MotionCommand.Row_Pattern_BigWordStart_Back: MoveHorizontalByPattern(TextPattern.BigWordStart, Direction.Backward); break;
+      case MotionCommand.Row_Pattern_BigWordEnd_Back: MoveHorizontalByPattern(TextPattern.BigWordEnd, Direction.Backward); break;
+      case MotionCommand.Row_Pattern_BigWordStart_Forth: MoveHorizontalByPattern(TextPattern.BigWordStart, Direction.Forward); break;
+      case MotionCommand.Row_Pattern_BigWordEnd_Forth: MoveHorizontalByPattern(TextPattern.BigWordEnd, Direction.Forward); break;
+      case MotionCommand.Row_Pattern_SmallWordStart_Back: MoveHorizontalByPattern(TextPattern.SmallWordStart, Direction.Backward); break;
+      case MotionCommand.Row_Pattern_SmallWordEnd_Back: MoveHorizontalByPattern(TextPattern.SmallWordEnd, Direction.Backward); break;
+      case MotionCommand.Row_Pattern_SmallWordStart_Forth: MoveHorizontalByPattern(TextPattern.SmallWordStart, Direction.Forward); break;
+      case MotionCommand.Row_Pattern_SmallWordEnd_Forth: MoveHorizontalByPattern(TextPattern.SmallWordEnd, Direction.Forward); break;
+      case MotionCommand.Row_1unit_Back: MoveHorizontal(-1); break;
+      case MotionCommand.Col_1unit_Forth: MoveVerticalStop(1); break;
+      case MotionCommand.Col_1unit_Back: MoveVerticalStop(-1); break;
+      case MotionCommand.Row_1unit_Forth: MoveHorizontal(1); break;
+      case MotionCommand.Row_FullScreen_Back_StopOnEdge: MoveHorizontalStop(-_win.Width); break;
+      case MotionCommand.Col_FullScreen_Forth_StopOnEdge: MoveVerticalStop(_win.Height); break;
+      case MotionCommand.Col_FullScreen_Back_StopOnEdge: MoveVerticalStop(-_win.Height); break;
+      case MotionCommand.Row_FullScreen_Forth_StopOnEdge: MoveHorizontalStop(_win.Width); break;
     }
   }
   /// <summary>

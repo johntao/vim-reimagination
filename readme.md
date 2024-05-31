@@ -20,6 +20,7 @@ Lastly, I would like to implement some features that are not available in VIM, a
 - [x] Choose QWERTY, Dvorak, or custom keymap
 - [x] Resize window and re-render text
 - [ ] Basic text editing
+- [ ] Status bar
 - [ ] Save and load file
 - [ ] Resolve newlines in the buffer and terminal
 
