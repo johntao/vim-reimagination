@@ -25,7 +25,7 @@ internal enum NormalCommand
 /// I wonder the perf difference between ref struct and static class
 /// should benchmark it someday
 /// </summary>
-internal class EditorService(ITextRenderer tr, IBufferService buffer) : EditorService.IRun
+internal class EditorService(ITextRenderer tr, IBufferService buffer, IWindow win, ICursor cur) : EditorService.IRun
 {
   internal interface IRun
   {
@@ -36,6 +36,8 @@ internal class EditorService(ITextRenderer tr, IBufferService buffer) : EditorSe
   static EditorService() { }
   private readonly IBufferService _buffer = buffer;
   private readonly ITextRenderer _tr = tr;
+  private readonly IWindow _win = win;
+  private readonly ICursor _cur = cur;
   public void Run(Dictionary<char, NormalCommand> keymap)
   {
     while (true)
@@ -63,10 +65,10 @@ internal class EditorService(ITextRenderer tr, IBufferService buffer) : EditorSe
       case NormalCommand.MoveVertical1uForward: MoveVerticalStop(1); break;
       case NormalCommand.MoveVertical1uBackward: MoveVerticalStop(-1); break;
       case NormalCommand.MoveHorizontal1uForward: MoveHorizontal(1); break;
-      case NormalCommand.MoveHorizontalFullScreenBackwardStop: MoveHorizontalStop(-_tr.WindowWidth); break;
-      case NormalCommand.MoveVerticalFullScreenForwardStop: MoveVerticalStop(_tr.WindowHeight); break;
-      case NormalCommand.MoveVerticalFullScreenBackwardStop: MoveVerticalStop(-_tr.WindowHeight); break;
-      case NormalCommand.MoveHorizontalFullScreenForwardStop: MoveHorizontalStop(_tr.WindowWidth); break;
+      case NormalCommand.MoveHorizontalFullScreenBackwardStop: MoveHorizontalStop(-_win.WindowWidth); break;
+      case NormalCommand.MoveVerticalFullScreenForwardStop: MoveVerticalStop(_win.WindowHeight); break;
+      case NormalCommand.MoveVerticalFullScreenBackwardStop: MoveVerticalStop(-_win.WindowHeight); break;
+      case NormalCommand.MoveHorizontalFullScreenForwardStop: MoveHorizontalStop(_win.WindowWidth); break;
     }
   }
   /// <summary>
@@ -75,11 +77,11 @@ internal class EditorService(ITextRenderer tr, IBufferService buffer) : EditorSe
   /// <param name="unit"></param>
   void MoveVerticalStop(int unit)
   {
-    var (left, top) = _tr.GetCursorPosition();
+    var (left, top) = _cur.GetCursorPosition();
     var newTop = top + unit;
     if (newTop < 0) newTop = 0;
-    else if (newTop >= _tr.WindowHeight) newTop = _tr.WindowHeight - 1;
-    _tr.SetCursorPosition(left, newTop);
+    else if (newTop >= _win.WindowHeight) newTop = _win.WindowHeight - 1;
+    _cur.SetCursorPosition(left, newTop);
   }
   /// <summary>
   /// stops at the edge
@@ -87,11 +89,11 @@ internal class EditorService(ITextRenderer tr, IBufferService buffer) : EditorSe
   /// <param name="unit"></param>
   void MoveHorizontalStop(int unit)
   {
-    var (left, top) = _tr.GetCursorPosition();
+    var (left, top) = _cur.GetCursorPosition();
     var newLeft = left + unit;
     if (newLeft < 0) newLeft = 0;
-    else if (newLeft >= _tr.WindowWidth) newLeft = _tr.WindowWidth - 1;
-    _tr.SetCursorPosition(newLeft, top);
+    else if (newLeft >= _win.WindowWidth) newLeft = _win.WindowWidth - 1;
+    _cur.SetCursorPosition(newLeft, top);
   }
   /// <summary>
   /// move vertically if exceess the edge
@@ -99,31 +101,31 @@ internal class EditorService(ITextRenderer tr, IBufferService buffer) : EditorSe
   /// <param name="unit"></param>
   void MoveHorizontal(int unit)
   {
-    var (left, top) = _tr.GetCursorPosition();
+    var (left, top) = _cur.GetCursorPosition();
     var newLeft = left + unit;
     if (newLeft < 0)
     {
-      newLeft += _tr.WindowWidth;
+      newLeft += _win.WindowWidth;
       if (--top < 0)
       {
         top = 0;
         newLeft = 0;
       }
     }
-    else if (newLeft >= _tr.WindowWidth)
+    else if (newLeft >= _win.WindowWidth)
     {
-      newLeft -= _tr.WindowWidth;
-      if (++top >= _tr.WindowHeight)
+      newLeft -= _win.WindowWidth;
+      if (++top >= _win.WindowHeight)
       {
-        top = _tr.WindowHeight - 1;
-        newLeft = _tr.WindowWidth - 1;
+        top = _win.WindowHeight - 1;
+        newLeft = _win.WindowWidth - 1;
       }
     }
-    _tr.SetCursorPosition(newLeft, top);
+    _cur.SetCursorPosition(newLeft, top);
   }
   void MoveHorizontalByPattern(TextPattern textPattern, Direction direction)
   {
-    var cursor = new Cursor2D(_tr);
+    var cursor = new Cursor2D(_win, _cur);
     var (newLeft, newTop) = (textPattern, direction) switch
     {
       (TextPattern.SmallWordStart, Direction.Backward) => _smallWordMotion.ChargeUntilBlankExclusive(cursor, _buffer, Direction.Backward),
@@ -136,6 +138,6 @@ internal class EditorService(ITextRenderer tr, IBufferService buffer) : EditorSe
       (TextPattern.BigWordEnd, Direction.Forward) => _bigWordMotion.ChargeUntilBlankExclusive(cursor, _buffer, Direction.Forward),
       _ => throw new NotImplementedException(),
     };
-    _tr.SetCursorPosition(newLeft, newTop);
+    _cur.SetCursorPosition(newLeft, newTop);
   }
 }

@@ -29,8 +29,8 @@ internal struct Cursor2D(int Left, int Top, (int Width, int Height) Window)
   internal int Left = Left;
   internal int Top = Top;
   internal bool HasHitBoundary = false;
-  public Cursor2D(ITextRenderer tr) : this(tr.GetCursorPosition(), tr) { }
-  private Cursor2D((int Left, int Top) cursor, ITextRenderer tr) : this(cursor.Left, cursor.Top, tr.Window) { }
+  public Cursor2D(IWindow win, ICursor cur) : this(cur.GetCursorPosition(), win) { }
+  private Cursor2D((int Left, int Top) cursor, IWindow win) : this(cursor.Left, cursor.Top, win.Window) { }
   internal readonly Cursor2D Offset(Direction direction) => direction switch
   {
     Direction.Forward => HasHitBoundary ? this : new Cursor2D(Left - 1, Top, Window),

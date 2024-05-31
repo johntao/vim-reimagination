@@ -6,7 +6,7 @@ future enhancement:
 - column style
 - row style
 */
-internal class TableRenderer(ITextRenderer tr) : TableRenderer.IPublic
+internal class TableRenderer(ITextRenderer tr, ICursor cur) : TableRenderer.IPublic
 {
   internal interface IPublic
   {
@@ -24,6 +24,7 @@ internal class TableRenderer(ITextRenderer tr) : TableRenderer.IPublic
   }
   private const string Delimiter = " | ";
   private readonly ITextRenderer _tr = tr;
+  private readonly ICursor _cur = cur;
   #region state that required initialization
   private int[] _widths = null!;
   private string[][] _rows = null!;
@@ -34,7 +35,7 @@ internal class TableRenderer(ITextRenderer tr) : TableRenderer.IPublic
   public void Initialize(IEnumerable<string[]> rows, int hOffset = 1)
   {
     _hOffset = hOffset;
-    StartLineIdx = _tr.CursorTop + 2;
+    StartLineIdx = _cur.CursorTop + 2;
     _rows = rows.Select(row =>
     {
       var cells = row;
@@ -54,8 +55,8 @@ internal class TableRenderer(ITextRenderer tr) : TableRenderer.IPublic
     RenderRow(_rows[0], RowStyle.Header);
     RenderRow(_rows[0], RowStyle.Separator);
     _rows.Skip(1).ForEach((cells, _) => RenderRow(cells));
-    EndLineIdx = --_tr.CursorTop;
-    _tr.SetCursorPosition(0, StartLineIdx);
+    EndLineIdx = --_cur.CursorTop;
+    _cur.SetCursorPosition(0, StartLineIdx);
     _tr.Write('>');
   }
   #endregion
@@ -75,8 +76,8 @@ internal class TableRenderer(ITextRenderer tr) : TableRenderer.IPublic
   }
   public void UpdateChoice(string yourChoice)
   {
-    _tr.CursorLeft = _choiceColIdx;
+    _cur.CursorLeft = _choiceColIdx;
     _tr.Write(yourChoice);
-    _tr.CursorLeft = 0;
+    _cur.CursorLeft = 0;
   }
 }

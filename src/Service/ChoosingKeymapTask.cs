@@ -5,7 +5,7 @@ namespace VimReimagination.Service;
 /// we could return the whole product directly if possible, then, there's no need for enum (at least in the interface level)
 /// however, if we make it in one blow, we probably disobey the single responsibility principle
 /// </summary>
-internal class ChoosingKeymapTask(ITextRenderer tr) : ChoosingKeymapTask.IRun
+internal class ChoosingKeymapTask(ITextRenderer tr, ICursor cur) : ChoosingKeymapTask.IRun
 {
   #region types
   internal interface IRun
@@ -21,11 +21,12 @@ internal class ChoosingKeymapTask(ITextRenderer tr) : ChoosingKeymapTask.IRun
   }
   #endregion
   private readonly ITextRenderer _tr = tr;
+  private readonly ICursor _cur = cur;
   public Result Run()
   {
     _tr.Clear();
     var isChoosing = true;
-    _tr.CursorVisible = !isChoosing;
+    _cur.CursorVisible = !isChoosing;
     const string Message = """
 Choose your keyboard layout:
 > QWERTY
@@ -33,24 +34,24 @@ Choose your keyboard layout:
   Map commands by yourself
 """;
     _tr.WriteLine(Message);
-    _tr.SetCursorPosition(0, 1);
+    _cur.SetCursorPosition(0, 1);
     Result result = Result.None;
     while (isChoosing)
     {
       var readkey = _tr.ReadKey();
-      var top = _tr.CursorTop;
+      var top = _cur.CursorTop;
       switch (readkey.Key)
       {
         case ConsoleKey.UpArrow:
           if (top <= 1) break;
           _tr.Write(' ');
-          --_tr.CursorTop;
+          --_cur.CursorTop;
           _tr.Write('>');
           break;
         case ConsoleKey.DownArrow:
           if (top >= 3) break;
           _tr.Write(' ');
-          ++_tr.CursorTop;
+          ++_cur.CursorTop;
           _tr.Write('>');
           break;
         case ConsoleKey.Enter:
@@ -65,7 +66,7 @@ Choose your keyboard layout:
           break;
       }
     }
-    _tr.CursorVisible = !isChoosing;
+    _cur.CursorVisible = !isChoosing;
     return result;
   }
 }

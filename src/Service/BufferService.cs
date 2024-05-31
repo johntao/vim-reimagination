@@ -4,9 +4,11 @@ namespace VimReimagination.Service;
 /// <summary>
 /// Can't tell the advantage of using ref struct, but it's required to use ref struct for `ReadOnlySpan<char> Text`
 /// </summary>
-internal class BufferService(ITextRenderer tr) : IBufferService
+internal class BufferService(ITextRenderer tr, IWindow win, ICursor cur) : IBufferService
 {
   private readonly ITextRenderer _tr = tr;
+  private readonly IWindow _win = win;
+  private readonly ICursor _cur = cur;
   private int _cursor1D;
   private Direction _direction;
   private char[] _buffer = null!;
@@ -53,12 +55,12 @@ internal class BufferService(ITextRenderer tr) : IBufferService
   }
   public void IfWindowResizedThenReloadBuffer()
   {
-    if (_winWidth == _tr.WindowWidth) return;
-    _winWidth = _tr.WindowWidth;
-    _buffer = BufferHelper.Get(_winWidth, _tr.WindowHeight);
+    if (_winWidth == _win.WindowWidth) return;
+    _winWidth = _win.WindowWidth;
+    _buffer = BufferHelper.Get(_winWidth, _win.WindowHeight);
     _tr.Clear();
     _tr.Write(_buffer);
-    _tr.SetCursorPosition(0, 0);
+    _cur.SetCursorPosition(0, 0);
   }
 }
 internal interface IBufferService

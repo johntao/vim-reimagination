@@ -1,6 +1,6 @@
 using Cmd = VimReimagination.Service.NormalCommand;
 namespace VimReimagination.Service;
-internal class CustomizingKeymapTask(ITextRenderer tr, TableRenderer.IPublic tbl) : CustomizingKeymapTask.IRun
+internal class CustomizingKeymapTask(ITextRenderer tr, TableRenderer.IPublic tbl, ICursor cur) : CustomizingKeymapTask.IRun
 {
   #region types
   internal interface IRun
@@ -58,6 +58,7 @@ internal class CustomizingKeymapTask(ITextRenderer tr, TableRenderer.IPublic tbl
   #endregion
   private readonly ITextRenderer _tr = tr;
   private readonly TableRenderer.IPublic _tbl = tbl;
+  private readonly ICursor _cur = cur;
   public Dictionary<char, Cmd> Run(ChoosingKeymapTask.Result result)
   {
     var normalCommands = _stuff.Select(q => q.Command).ToArray();
@@ -72,7 +73,7 @@ internal class CustomizingKeymapTask(ITextRenderer tr, TableRenderer.IPublic tbl
   private char[] MapByUser()
   {
     _tr.Clear();
-    _tr.CursorVisible = false;
+    _cur.CursorVisible = false;
     const string Message = """
 Press any key to map the following command to that key
 Press Enter to cancel mapping and map the rest using QWERTY
@@ -86,19 +87,19 @@ Press arrow keys to navigate
     while (isLooping)
     {
       var readkey = _tr.ReadKey();
-      var top = _tr.CursorTop;
+      var top = _cur.CursorTop;
       switch (readkey)
       {
         case var q when q.Key is ConsoleKey.UpArrow:
           if (top <= _tbl.StartLineIdx) break;
           _tr.Write(' ');
-          --_tr.CursorTop;
+          --_cur.CursorTop;
           _tr.Write('>');
           break;
         case var q when q.Key is ConsoleKey.DownArrow:
           if (top >= _tbl.EndLineIdx) break;
           _tr.Write(' ');
-          ++_tr.CursorTop;
+          ++_cur.CursorTop;
           _tr.Write('>');
           break;
         case var q when !char.IsControl(q.KeyChar):
@@ -114,7 +115,7 @@ Press arrow keys to navigate
           _tbl.UpdateChoice(item.YourChoice + " ");
           if (top >= _tbl.EndLineIdx) break;
           _tr.Write(' ');
-          ++_tr.CursorTop;
+          ++_cur.CursorTop;
           _tr.Write('>');
           break;
         case var q when q.Key is ConsoleKey.Backspace:
@@ -126,7 +127,7 @@ Press arrow keys to navigate
           break;
       }
     }
-    _tr.CursorVisible = true;
+    _cur.CursorVisible = true;
     return _stuff.Select(q =>
     {
       if (q.YourChoice == ' ')
