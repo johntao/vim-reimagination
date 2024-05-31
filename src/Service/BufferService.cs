@@ -1,3 +1,4 @@
+using VimReimagination.Model;
 using VimReimagination.Helper;
 
 namespace VimReimagination.Service;

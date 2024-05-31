@@ -1,3 +1,4 @@
+using VimReimagination.Model;
 using VimReimagination.WordMotion;
 namespace VimReimagination.Service;
 /// <summary>

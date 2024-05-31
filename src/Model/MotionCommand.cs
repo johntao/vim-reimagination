@@ -1,4 +1,4 @@
-namespace VimReimagination.Service;
+namespace VimReimagination.Model;
 
 internal enum MotionCommand
 {

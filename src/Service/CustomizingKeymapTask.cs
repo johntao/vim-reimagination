@@ -1,4 +1,4 @@
-using Cmd = VimReimagination.Service.MotionCommand;
+using Cmd = VimReimagination.Model.MotionCommand;
 namespace VimReimagination.Service;
 internal class CustomizingKeymapTask(IReadWrite tr, TableRenderer.IPublic tbl, ICursor cur) : CustomizingKeymapTask.IRun
 {

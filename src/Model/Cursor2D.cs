@@ -1,5 +1,5 @@
 using VimReimagination.Service;
-namespace VimReimagination;
+namespace VimReimagination.Model;
 
 internal struct Cursor2D(int Left, int Top, (int Width, int Height) Window)
 {

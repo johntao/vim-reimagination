@@ -1,4 +1,4 @@
-namespace VimReimagination;
+namespace VimReimagination.Model;
 /// <summary>
 /// maybe support upward and downward in the future
 /// </summary>

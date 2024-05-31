@@ -1,3 +1,4 @@
+using VimReimagination.Model;
 using System.Buffers;
 using VimReimagination.Service;
 
