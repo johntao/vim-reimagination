@@ -1,3 +1,4 @@
+using Cmd = VimReimagination.Model.Commands.All;
 using VimReimagination.Model;
 using VimReimagination.WordMotion;
 namespace VimReimagination.Service;
@@ -19,7 +20,7 @@ internal class EditorService(IReadWrite tr, IBufferService buffer, IWindow win, 
   }
   internal interface IRun
   {
-    void Run(Dictionary<char, MotionCommand> keymap);
+    void Run(Dictionary<char, Cmd> keymap);
   }
   private static readonly SmallWordMotionPattern _smallWordMotion = new();
   private static readonly BigWordMotionPattern _bigWordMotion = new();
@@ -29,37 +30,39 @@ internal class EditorService(IReadWrite tr, IBufferService buffer, IWindow win, 
   private readonly IReadWrite _tr = tr;
   private readonly IWindow _win = win;
   private readonly ICursor _cur = cur;
-  public void Run(Dictionary<char, MotionCommand> keymap)
+  public void Run(Dictionary<char, Cmd> keymap)
   {
     while (true)
     {
       _buffer.IfWindowResizedThenReloadBuffer();
       var readkey = _tr.ReadKey();
       var keychar = readkey.KeyChar;
-      if (keymap.TryGetValue(keychar, out MotionCommand value))
+      if (keymap.TryGetValue(keychar, out Cmd value))
         ProcessCommand(value);
     }
   }
-  private void ProcessCommand(MotionCommand cmd)
+  private void ProcessCommand(Cmd cmd)
   {
     switch (cmd)
     {
-      case MotionCommand.Row_Pattern_BigWordStart_Back: MoveHorizontalByPattern(TextPattern.BigWordStart, Direction.Backward); break;
-      case MotionCommand.Row_Pattern_BigWordEnd_Back: MoveHorizontalByPattern(TextPattern.BigWordEnd, Direction.Backward); break;
-      case MotionCommand.Row_Pattern_BigWordStart_Forth: MoveHorizontalByPattern(TextPattern.BigWordStart, Direction.Forward); break;
-      case MotionCommand.Row_Pattern_BigWordEnd_Forth: MoveHorizontalByPattern(TextPattern.BigWordEnd, Direction.Forward); break;
-      case MotionCommand.Row_Pattern_SmallWordStart_Back: MoveHorizontalByPattern(TextPattern.SmallWordStart, Direction.Backward); break;
-      case MotionCommand.Row_Pattern_SmallWordEnd_Back: MoveHorizontalByPattern(TextPattern.SmallWordEnd, Direction.Backward); break;
-      case MotionCommand.Row_Pattern_SmallWordStart_Forth: MoveHorizontalByPattern(TextPattern.SmallWordStart, Direction.Forward); break;
-      case MotionCommand.Row_Pattern_SmallWordEnd_Forth: MoveHorizontalByPattern(TextPattern.SmallWordEnd, Direction.Forward); break;
-      case MotionCommand.Row_1unit_Back: MoveHorizontal(-1); break;
-      case MotionCommand.Col_1unit_Forth: MoveVerticalStop(1); break;
-      case MotionCommand.Col_1unit_Back: MoveVerticalStop(-1); break;
-      case MotionCommand.Row_1unit_Forth: MoveHorizontal(1); break;
-      case MotionCommand.Row_FullScreen_Back_StopOnEdge: MoveHorizontalStop(-_win.Width); break;
-      case MotionCommand.Col_FullScreen_Forth_StopOnEdge: MoveVerticalStop(_win.Height); break;
-      case MotionCommand.Col_FullScreen_Back_StopOnEdge: MoveVerticalStop(-_win.Height); break;
-      case MotionCommand.Row_FullScreen_Forth_StopOnEdge: MoveHorizontalStop(_win.Width); break;
+      case Cmd.Row_Pattern_BigWordStart_Back: MoveHorizontalByPattern(TextPattern.BigWordStart, Direction.Backward); break;
+      case Cmd.Row_Pattern_BigWordEnd_Back: MoveHorizontalByPattern(TextPattern.BigWordEnd, Direction.Backward); break;
+      case Cmd.Row_Pattern_BigWordStart_Forth: MoveHorizontalByPattern(TextPattern.BigWordStart, Direction.Forward); break;
+      case Cmd.Row_Pattern_BigWordEnd_Forth: MoveHorizontalByPattern(TextPattern.BigWordEnd, Direction.Forward); break;
+      case Cmd.Row_Pattern_SmallWordStart_Back: MoveHorizontalByPattern(TextPattern.SmallWordStart, Direction.Backward); break;
+      case Cmd.Row_Pattern_SmallWordEnd_Back: MoveHorizontalByPattern(TextPattern.SmallWordEnd, Direction.Backward); break;
+      case Cmd.Row_Pattern_SmallWordStart_Forth: MoveHorizontalByPattern(TextPattern.SmallWordStart, Direction.Forward); break;
+      case Cmd.Row_Pattern_SmallWordEnd_Forth: MoveHorizontalByPattern(TextPattern.SmallWordEnd, Direction.Forward); break;
+      case Cmd.Row_1unit_Back: MoveHorizontal(-1); break;
+      case Cmd.Col_1unit_Forth: MoveVerticalStop(1); break;
+      case Cmd.Col_1unit_Back: MoveVerticalStop(-1); break;
+      case Cmd.Row_1unit_Forth: MoveHorizontal(1); break;
+      case Cmd.Row_FullScreen_Back_StopOnEdge: MoveHorizontalStop(-_win.Width); break;
+      case Cmd.Col_FullScreen_Forth_StopOnEdge: MoveVerticalStop(_win.Height); break;
+      case Cmd.Col_FullScreen_Back_StopOnEdge: MoveVerticalStop(-_win.Height); break;
+      case Cmd.Row_FullScreen_Forth_StopOnEdge: MoveHorizontalStop(_win.Width); break;
+      case Cmd.SmallDelete: _buffer.SetChar(' '); break;
+      case Cmd.SaveFile: _buffer.SaveFile(); break;
     }
   }
   /// <summary>

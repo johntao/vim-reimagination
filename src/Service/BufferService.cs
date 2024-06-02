@@ -1,5 +1,6 @@
 using VimReimagination.Model;
 using VimReimagination.Helper;
+using System.Text;
 
 namespace VimReimagination.Service;
 /// <summary>
@@ -12,11 +13,12 @@ internal class BufferService(IReadWrite tr, IWindow win, ICursor cur) : IBufferS
   private readonly ICursor _cur = cur;
   private int _cursor1D;
   private Direction _direction;
-  private char[] _buffer = null!;
+  private char[] _buffer1d = null!;
+  private List<Range> _ranges = null!;
   private int _winWidth;
   public Cursor2D Cursor2D { get; private set; }
   public char Previous { get; private set; }
-  public char Current => _buffer[_cursor1D];
+  public char Current => _buffer1d[_cursor1D];
   public void Reset(Cursor2D cursor2D, Direction direction)
   {
     Cursor2D = cursor2D;
@@ -26,7 +28,7 @@ internal class BufferService(IReadWrite tr, IWindow win, ICursor cur) : IBufferS
   }
   public bool HasNext() => _direction switch
   {
-    Direction.Forward => _cursor1D + 1 < _buffer.Length,
+    Direction.Forward => _cursor1D + 1 < _buffer1d.Length,
     Direction.Backward => _cursor1D - 1 >= 0,
     _ => throw new NotImplementedException(),
   };
@@ -58,10 +60,27 @@ internal class BufferService(IReadWrite tr, IWindow win, ICursor cur) : IBufferS
   {
     if (_winWidth == _win.Width) return;
     _winWidth = _win.Width;
-    _buffer = BufferHelper.Get(_winWidth, _win.Height);
+    (_buffer1d, _ranges) = BufferHelper.Get(_winWidth, _win.Height);
     _tr.Clear();
-    _tr.Write(_buffer);
+    _tr.Write(_buffer1d);
     _cur.SetCursorPosition(0, 0);
+  }
+
+  public void SetChar(char v)
+  {
+    _buffer1d[_cursor1D] = v;
+    _tr.Write(v);
+  }
+
+  public void SaveFile()
+  {
+    using FileStream fs = File.Create("./assets/output.txt", _buffer1d.Length + _ranges.Count, FileOptions.WriteThrough);
+    foreach (var rng in _ranges)
+    {
+      string str = new(_buffer1d[rng]);
+      fs.Write(Encoding.UTF8.GetBytes(str.TrimEnd()));
+      fs.Write(Encoding.UTF8.GetBytes(Environment.NewLine));
+    }
   }
 }
 internal interface IBufferService
@@ -73,4 +92,6 @@ internal interface IBufferService
   bool HasNext();
   bool HasNext_Move();
   void IfWindowResizedThenReloadBuffer();
+  void SetChar(char v);
+  void SaveFile();
 }

@@ -1,4 +1,4 @@
-using Cmd = VimReimagination.Model.MotionCommand;
+using Cmd = VimReimagination.Model.Commands.All;
 namespace VimReimagination.Service;
 internal class CustomizingKeymapTask(IReadWrite tr, TableRenderer.IPublic tbl, ICursor cur) : CustomizingKeymapTask.IRun
 {
@@ -34,24 +34,24 @@ internal class CustomizingKeymapTask(IReadWrite tr, TableRenderer.IPublic tbl, I
   }
   private static readonly CommandInfo[] _stuff =
   [
-    new(Cmd.Row_Pattern_BigWordStart_Back, "Move horizontally by pattern 'Start of Big Word' backward", 'q', '"'),
-    new(Cmd.Row_Pattern_BigWordEnd_Back, "Move horizontally by pattern 'End of Big Word' backward", 'w', '<'),
-    new(Cmd.Row_Pattern_BigWordStart_Forth, "Move horizontally by pattern 'Start of Big Word' forward", 'e', '>'),
-    new(Cmd.Row_Pattern_BigWordEnd_Forth, "Move horizontally by pattern 'End of Big Word' forward", 'r', 'p'),
-    new(Cmd.Row_Pattern_SmallWordStart_Back, "Move horizontally by pattern 'Start of Small Word' backward", 'a', 'a'),
-    new(Cmd.Row_Pattern_SmallWordEnd_Back, "Move horizontally by pattern 'End of Small Word' backward", 's', 'o'),
-    new(Cmd.Row_Pattern_SmallWordStart_Forth, "Move horizontally by pattern 'Start of Small Word' forward", 'd', 'e'),
-    new(Cmd.Row_Pattern_SmallWordEnd_Forth, "Move horizontally by pattern 'End of Small Word' forward", 'f', 'u'),
-    new(Cmd.Row_1unit_Back, "Move horizontally by 1 unit backward", 'h', 'd'),
-    new(Cmd.Col_1unit_Forth, "Move vertically by 1 unit forward", 'j', 'h'),
-    new(Cmd.Col_1unit_Back, "Move vertically by 1 unit backward", 'k', 't'),
-    new(Cmd.Row_1unit_Forth, "Move horizontally by 1 unit forward", 'l', 'n'),
-    new(Cmd.Row_FullScreen_Back_StopOnEdge, "Move horizontally by full screen width backward, stop at the edge", 'H', 'D'),
-    new(Cmd.Col_FullScreen_Forth_StopOnEdge, "Move vertically by full screen height forward, stop at the edge", 'J', 'H'),
-    new(Cmd.Col_FullScreen_Back_StopOnEdge, "Move vertically by full screen height backward, stop at the edge", 'K', 'T'),
-    new(Cmd.Row_FullScreen_Forth_StopOnEdge, "Move horizontally by full screen width forward, stop at the edge", 'L', 'N'),
-    // new(Cmd.MoveHorizontal45uBackward, "Experimental, move horizontally by 45 units backward", 'n', 'b'),
-    // new(Cmd.MoveHorizontal45uForward, "Experimental, move horizontally by 45 units forward", '.', 'v'),
+    new(Cmd.Row_Pattern_BigWordStart_Back,    "Move by pattern 'Start of Big Word'  , Back , Row dir", 'q', '"'),
+    new(Cmd.Row_Pattern_BigWordEnd_Back,      "Move by pattern 'End of Big Word'    , Back , Row dir", 'w', '<'),
+    new(Cmd.Row_Pattern_BigWordStart_Forth,   "Move by pattern 'Start of Big Word'  , Forth, Row dir", 'e', '>'),
+    new(Cmd.Row_Pattern_BigWordEnd_Forth,     "Move by pattern 'End of Big Word'    , Forth, Row dir", 'r', 'p'),
+    new(Cmd.Row_Pattern_SmallWordStart_Back,  "Move by pattern 'Start of Small Word', Back , Row dir", 'a', 'a'),
+    new(Cmd.Row_Pattern_SmallWordEnd_Back,    "Move by pattern 'End of Small Word'  , Back , Row dir", 's', 'o'),
+    new(Cmd.Row_Pattern_SmallWordStart_Forth, "Move by pattern 'Start of Small Word', Forth, Row dir", 'd', 'e'),
+    new(Cmd.Row_Pattern_SmallWordEnd_Forth,   "Move by pattern 'End of Small Word'  , Forth, Row dir", 'f', 'u'),
+    new(Cmd.Row_1unit_Back,  "Move 1 unit, Back , Row dir", 'h', 'd'),
+    new(Cmd.Col_1unit_Forth, "Move 1 unit, Forth, Col dir", 'j', 'h'),
+    new(Cmd.Col_1unit_Back,  "Move 1 unit, Back , Col dir", 'k', 't'),
+    new(Cmd.Row_1unit_Forth, "Move 1 unit, Forth, Row dir", 'l', 'n'),
+    new(Cmd.Row_FullScreen_Back_StopOnEdge,  "Move 1 full screen width , Back , Row dir, Stop on edge", 'H', 'D'),
+    new(Cmd.Col_FullScreen_Forth_StopOnEdge, "Move 1 full screen height, Forth, Col dir, Stop on edge", 'J', 'H'),
+    new(Cmd.Col_FullScreen_Back_StopOnEdge,  "Move 1 full screen height, Back , Col dir, Stop on edge", 'K', 'T'),
+    new(Cmd.Row_FullScreen_Forth_StopOnEdge, "Move 1 full screen width , Forth, Row dir, Stop on edge", 'L', 'N'),
+    new(Cmd.SmallDelete,     "Delete the character under the cursor", 'x', 'q'),
+    new(Cmd.SaveFile,        "Dump current buffer to file", 'z', ';'),
   ];
   private static readonly char[] _dvorakKeys = _stuff.Select(q => q.DvorakKey).ToArray();
   private static readonly char[] _qwertyKeys = _stuff.Select(q => q.QwertyKey).ToArray();

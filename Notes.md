@@ -243,3 +243,7 @@
       - I wonder if there's a simpler way to do it
     - [x] we should probably shrink some interface whenever possible
     - [ ] the template is acting weird, if we omit the last space in the last line, the template will not be rendered properly
+
+## about the Editor service
+
+  - [ ] motion details implementation should be hidden from the editor service

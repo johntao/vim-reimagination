@@ -1,13 +1,14 @@
 namespace VimReimagination.Helper;
 internal static class BufferHelper
 {
-  internal static char[] Get(int width, int height)
+  internal static (char[] buffer, List<Range> ranges) Get(int width, int height)
   {
     int size = width * height;
     char[] rtn = new char[size];
     Span<char> buffer = rtn;
     buffer.Fill(' ');
     Index start = 0;
+    List<Range> ranges = [];
     List<int> widths = [width];
     foreach (ReadOnlySpan<char> line in File.ReadLines("./assets/template.txt"))
     {
@@ -17,13 +18,15 @@ internal static class BufferHelper
       if (hasHitBoundary)
       {
         cursor = start..size;
+        ranges.Add(cursor);
         line[..(size - start.Value)].CopyTo(buffer[cursor]);
         break;
       }
+      ranges.Add(cursor);
       line.CopyTo(buffer[cursor]);
       start = cursor.End;
     }
-    return rtn;
+    return (rtn, ranges);
   }
   private static int ExpandLineLengthToWindowWidth(int winWidth, List<int> widths, ReadOnlySpan<char> line)
   {
