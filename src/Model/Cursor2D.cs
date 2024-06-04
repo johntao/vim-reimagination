@@ -7,7 +7,7 @@ internal struct Cursor2D(int Left, int Top, (int Width, int Height) Window)
   internal int Left = Left;
   internal int Top = Top;
   internal bool HasHitBoundary = false;
-  public Cursor2D(IWindow win, ICursor cur) : this(cur.GetCursorPosition(), win) { }
+  public Cursor2D(IWindow win, ICursor cur) : this(cur.GetCursorPosition2D(), win) { }
   private Cursor2D((int Left, int Top) cursor, IWindow win) : this(cursor.Left, cursor.Top, win.Window) { }
   internal readonly Cursor2D Offset(Direction direction) => direction switch
   {

@@ -14,12 +14,13 @@ internal static class BufferHelper
     {
       int lineLen = ExpandLineLengthToWindowWidth(width, widths, line);
       Range cursor = start..(start.Value + lineLen);
-      bool hasHitBoundary = cursor.End.Value > size;
+      bool hasHitBoundary = cursor.End.Value >= size;
       if (hasHitBoundary)
       {
         cursor = start..size;
         ranges.Add(cursor);
-        line[..(size - start.Value)].CopyTo(buffer[cursor]);
+        int rngEnd = Math.Min(line.Length, size - start.Value);
+        line[..rngEnd].CopyTo(buffer[cursor]);
         break;
       }
       ranges.Add(cursor);

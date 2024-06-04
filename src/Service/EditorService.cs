@@ -71,7 +71,7 @@ internal class EditorService(IReadWrite tr, IBufferService buffer, IWindow win, 
   /// <param name="unit"></param>
   void MoveVerticalStop(int unit)
   {
-    var (left, top) = _cur.GetCursorPosition();
+    var (left, top) = _cur.GetCursorPosition2D();
     var newTop = top + unit;
     if (newTop < 0) newTop = 0;
     else if (newTop >= _win.Height) newTop = _win.Height - 1;
@@ -83,7 +83,7 @@ internal class EditorService(IReadWrite tr, IBufferService buffer, IWindow win, 
   /// <param name="unit"></param>
   void MoveHorizontalStop(int unit)
   {
-    var (left, top) = _cur.GetCursorPosition();
+    var (left, top) = _cur.GetCursorPosition2D();
     var newLeft = left + unit;
     if (newLeft < 0) newLeft = 0;
     else if (newLeft >= _win.Width) newLeft = _win.Width - 1;
@@ -95,7 +95,7 @@ internal class EditorService(IReadWrite tr, IBufferService buffer, IWindow win, 
   /// <param name="unit"></param>
   void MoveHorizontal(int unit)
   {
-    var (left, top) = _cur.GetCursorPosition();
+    var (left, top) = _cur.GetCursorPosition2D();
     var newLeft = left + unit;
     if (newLeft < 0)
     {

@@ -17,13 +17,19 @@ internal class ConsoleCursor : ICursor
     set => Console.CursorLeft = value;
   }
   public void SetCursorPosition(int left, int top) => Console.SetCursorPosition(left, top);
-  public (int Left, int Top) GetCursorPosition() => Console.GetCursorPosition();
+  public (int Left, int Top) GetCursorPosition2D() => Console.GetCursorPosition();
+  public int GetCursorPosition1D(IWindow win)
+  {
+    var (left, top) = GetCursorPosition2D();
+    return top * win.Width + left;
+  }
 }
 internal interface ICursor
 {
   bool CursorVisible { set; }
   int CursorTop { get; set; }
   int CursorLeft { get; set; }
-  (int Left, int Top) GetCursorPosition();
+  (int Left, int Top) GetCursorPosition2D();
+  int GetCursorPosition1D(IWindow win);
   void SetCursorPosition(int left, int top);
 }

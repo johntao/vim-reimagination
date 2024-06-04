@@ -68,29 +68,25 @@ internal class BufferService(IReadWrite tr, IWindow win, ICursor cur) : IBufferS
 
   public void SetChar(char v)
   {
-    _buffer1d[_cursor1D] = v;
+    //erroneous code... _cursor1D is not updated. must refetch the cursor
+    //it seems that we couple word motion with buffer service. and we thought that the cursor is always at the right position (which is used by word motion)
+    //in fact, the cursor is only true when the cursor is moved by the word motion, otherwise, the cursor is not updated.
+    var pos = _cur.GetCursorPosition1D(_win);
+    _buffer1d[pos] = v;
     _tr.Write(v);
   }
 
   public void SaveFile()
   {
-    using StreamWriter xx = File.CreateText("./assets/output.txt");
+    using StreamWriter sw = File.CreateText("./assets/output.txt");
     foreach (var rng in _ranges)
     {
       var lastIdx = rng.End.Value - 1;
       while (lastIdx >= rng.Start.Value && (_buffer1d[lastIdx] == '\0' || _buffer1d[lastIdx] == '\n'))
         --lastIdx;
-      xx.WriteLine(_buffer1d[rng.Start..(lastIdx + 1)]);
+      char[] buffer = _buffer1d[rng.Start..(lastIdx + 1)];
+      sw.WriteLine(buffer);
     }
-    // using StreamWriter fs = File.CreateText("./assets/output.txt");
-    // fs.Write(_buffer1d.Where(static q => q != '\0').ToArray());
-    // using FileStream fs = File.Create("./assets/output.txt", _buffer1d.Length, FileOptions.WriteThrough);
-    // foreach (var rng in _ranges)
-    // {
-    //   string str = new(_buffer1d[rng]);
-    //   fs.Write(Encoding.UTF8.GetBytes(str.TrimEnd()));
-    //   fs.Write(Encoding.UTF8.GetBytes(Environment.NewLine));
-    // }
   }
 }
 internal interface IBufferService
