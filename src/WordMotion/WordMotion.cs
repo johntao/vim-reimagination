@@ -10,7 +10,7 @@ internal abstract class WordMotion : IWordMotionV3
   protected static readonly SearchValues<char> _searchSpace;
   static WordMotion()
   {
-    const string Space = " \t\n\r\f\v|";
+    const string Space = " \t\n\r\f\v|\0";
     _searchSpace = SearchValues.Create(Space);
   }
   private static bool IsSpace(char prev) => _searchSpace.Contains(prev);

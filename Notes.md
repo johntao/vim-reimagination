@@ -243,6 +243,17 @@
       - I wonder if there's a simpler way to do it
     - [x] we should probably shrink some interface whenever possible
     - [ ] the template is acting weird, if we omit the last space in the last line, the template will not be rendered properly
+  - editable and save to file
+    - we trim the newline and add space to the buffer
+    - we should reverse this process when saving to file
+    - the ideal way is to use both '\n' and '\0' so that no need to reverse the process when saving to file
+      - should also comply with the existing algorithm
+      - should also comply with virtual cursor position
+    - [ ] we should make some tests to find out how '\n' and '\0' affect the buffer
+    - I wonder what's the best way to dump the buffer to a file
+      - we use FileStream and char[] currently
+      - if we could use File.WriteAllBytes, it would be much simpler
+      - or probably a StreamWriter with Encoding.UTF8
 
 ## about the Editor service
 

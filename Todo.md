@@ -39,7 +39,7 @@
     - [ ] yank, putReplace
     - [ ] !!editable: replace, delete, change
   - Other Core Stuff
-    - [ ] !!Save/ Load file
+    - [x] !!Save/ Load file
 - Medium tasks (can be done in a few days)
   - Console/ Buffer data binding and rendering
     - [ ] should be able to scroll

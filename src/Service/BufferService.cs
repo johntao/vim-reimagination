@@ -74,13 +74,23 @@ internal class BufferService(IReadWrite tr, IWindow win, ICursor cur) : IBufferS
 
   public void SaveFile()
   {
-    using FileStream fs = File.Create("./assets/output.txt", _buffer1d.Length + _ranges.Count, FileOptions.WriteThrough);
+    using StreamWriter xx = File.CreateText("./assets/output.txt");
     foreach (var rng in _ranges)
     {
-      string str = new(_buffer1d[rng]);
-      fs.Write(Encoding.UTF8.GetBytes(str.TrimEnd()));
-      fs.Write(Encoding.UTF8.GetBytes(Environment.NewLine));
+      var lastIdx = rng.End.Value - 1;
+      while (lastIdx >= rng.Start.Value && (_buffer1d[lastIdx] == '\0' || _buffer1d[lastIdx] == '\n'))
+        --lastIdx;
+      xx.WriteLine(_buffer1d[rng.Start..(lastIdx + 1)]);
     }
+    // using StreamWriter fs = File.CreateText("./assets/output.txt");
+    // fs.Write(_buffer1d.Where(static q => q != '\0').ToArray());
+    // using FileStream fs = File.Create("./assets/output.txt", _buffer1d.Length, FileOptions.WriteThrough);
+    // foreach (var rng in _ranges)
+    // {
+    //   string str = new(_buffer1d[rng]);
+    //   fs.Write(Encoding.UTF8.GetBytes(str.TrimEnd()));
+    //   fs.Write(Encoding.UTF8.GetBytes(Environment.NewLine));
+    // }
   }
 }
 internal interface IBufferService

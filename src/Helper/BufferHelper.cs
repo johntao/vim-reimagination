@@ -6,7 +6,7 @@ internal static class BufferHelper
     int size = width * height;
     char[] rtn = new char[size];
     Span<char> buffer = rtn;
-    buffer.Fill(' ');
+    // buffer.Fill(' ');
     Index start = 0;
     List<Range> ranges = [];
     List<int> widths = [width];
@@ -24,6 +24,8 @@ internal static class BufferHelper
       }
       ranges.Add(cursor);
       line.CopyTo(buffer[cursor]);
+      if (line.Length < lineLen)
+        buffer[cursor.End.Value - 1] = '\n';
       start = cursor.End;
     }
     return (rtn, ranges);
