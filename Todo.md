@@ -36,11 +36,14 @@
     - [x] copy template during build process
     - [x] I wonder if it would be better to use raw literal string for Console.WriteLine
     - [ ] decouple motion algorithm from BufferService
-    - [ ] add unit tests
-    - [ ] decouple WordMotion from EditorService
+    - add unit tests
+      - [x] dummy one
+      - [ ] actual one
+    - [x] decouple WordMotion from EditorService
+    - [ ] decouple WordMotion from CommandService
+    - [ ] !!combine action with CommandInfo
     - [ ] simplify BufferHelper.Get()
     - [ ] extract small CursorMotion service
-    - [ ] combine action with CommandInfo
   - ef | Configurable
     - [ ] add config to decide whether to move cursor to nextline on hitting the edge
       - since this is SUPER trivial, no need to waste extra keystrokes for this feature

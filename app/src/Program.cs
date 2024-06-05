@@ -12,6 +12,7 @@ builder.Services
   .AddSingleton<ICursor, ConsoleCursor>()
   .AddSingleton<TableRenderer.IPublic, TableRenderer>()
   .AddSingleton<ChoosingKeymapTask.IRun, ChoosingKeymapTask>()
+  .AddSingleton<CommandService.IProcess, CommandService>()
   .AddSingleton<EditorService.IRun, EditorService>()
   .AddSingleton<IBufferService, BufferService>()
   ;
