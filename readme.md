@@ -14,15 +14,25 @@ Lastly, I would like to implement some features that are not available in VIM, a
 
 ## Features (In Progress)
 
-- [x] Rendor dummy text
-- [x] Move cursor around the file
-- [x] Move cursor by small word and big word
-- [x] Choose QWERTY, Dvorak, or custom keymap
-- [x] Resize window and re-render text
-- [ ] Basic text editing
-- [ ] Status bar
-- [ ] Save and load file
-- [ ] Resolve newlines in the buffer and terminal
+- buffer and render
+  - [x] Rendor dummy text
+  - [x] Resize window and re-render text
+  - Resolve newlines in the buffer and terminal
+    - [x] 1d buffer
+    - [ ] 2d buffer
+- buffer and cursor
+  - [x] Move cursor around the file
+  - [x] Move cursor by small word and big word
+- a11y
+  - [x] Choose QWERTY, Dvorak, or custom keymap
+- a11y HUD
+  - [ ] Status bar
+- basic text editing
+  - [x] delete
+  - [ ] replace
+  - [ ] insert
+  basic editor functions
+  - [x] Save and load file
 
 ## Installation
 

@@ -249,11 +249,17 @@
     - the ideal way is to use both '\n' and '\0' so that no need to reverse the process when saving to file
       - should also comply with the existing algorithm
       - should also comply with virtual cursor position
-    - [ ] we should make some tests to find out how '\n' and '\0' affect the buffer
+    - [x] we should make some tests to find out how '\n' and '\0' affect the buffer
     - I wonder what's the best way to dump the buffer to a file
       - we use FileStream and char[] currently
       - if we could use File.WriteAllBytes, it would be much simpler
       - or probably a StreamWriter with Encoding.UTF8
+  - we FINALLY cope with NUL character. this improvement mainly cover:
+    1. ReadLines from file, then, write to Console
+    2. Dump buffer to file
+    - after all these improvements, we should probably write some tests to ensure the buffer is working properly
+    - also, the algorithm is polluted with edge cases, we should probably refactor the algorithm a bit
+    - we should probably add empty space props to the ranges poped from reading lines
 
 ## about the Editor service
 

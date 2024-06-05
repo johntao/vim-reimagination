@@ -6,7 +6,6 @@ internal static class BufferHelper
     int size = width * height;
     char[] rtn = new char[size];
     Span<char> buffer = rtn;
-    // buffer.Fill(' ');
     Index start = 0;
     List<Range> ranges = [];
     List<int> widths = [width];
@@ -14,6 +13,9 @@ internal static class BufferHelper
     {
       int lineLen = ExpandLineLengthToWindowWidth(width, widths, line);
       Range cursor = start..(start.Value + lineLen);
+      // actually, '>' and '==' are covering different cases
+      // we should use explicit condition to make it clear
+      // and then, we can find the symmetry and simplify the code
       bool hasHitBoundary = cursor.End.Value >= size;
       if (hasHitBoundary)
       {

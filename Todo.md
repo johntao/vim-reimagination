@@ -1,10 +1,15 @@
 - Easy tasks (can be done in a day)
-  - Command key mapping
+  - a11y | Command key mapping
     - [x] useQwerty, useDvorak, useCustom
     - [x] fix a bug where we cannot set YourChoice again
     - [x] fix a bug where double exclaimation mark is not working binding
     - [x] enhance the mapping algorithm so that users NO NEEDS to use arrow keys
-  - Console/ Buffer data binding and rendering
+    - [ ] should have a way to re-bind keys after the program is running
+  - a11y | HUD
+    - [ ] make status bar more informative
+    - [ ] get current line number
+    - [ ] set up boundaries for status bar, motion and rendering
+  - bnr | Console/ Buffer data binding and rendering
     - [x] add text in the background. text aware cursor motion
     - [x] buffer should not mix with motion algorithm, buffer should not store Cursor2D
     - [x] buffer boundary
@@ -12,7 +17,7 @@
     - [ ] remove text in the background
     - [ ] resolve newlines
     - [ ] resolve different buffer types
-  - Motion
+  - bnc | Motion
     - word-based motions
       - [x] d, f first implementation
       - [x] a, s, d, f first implementation
@@ -23,44 +28,44 @@
     - text-object algorithm
     - ternary IRepeatable
       - [ ] !!implement IRepeatable for a,s,d,f,q,w,e,r
-  - Configurable
-    - [ ] add config to decide whether to move cursor to nextline on hitting the edge
-      - since this is SUPER trivial, no need to waste extra keystrokes for this feature
-      - we need to save keystrokes whenever possible... (precious keystrokes...)
-  - HUD
-    - [ ] make status bar more informative
-    - [ ] get current line number
-    - [ ] set up boundaries for status bar, motion and rendering
-  - Refactor (engineering factor)
+  - bne | Editable
+    - [ ] yank, putReplace
+    - [ ] !!editable: replace, delete, change
+  - ef | Refactor (engineering factor)
     - [x] Use dependency injection. abstract Console
     - [x] copy template during build process
     - [x] I wonder if it would be better to use raw literal string for Console.WriteLine
-  - Editable
-    - [ ] yank, putReplace
-    - [ ] !!editable: replace, delete, change
-  - Other Core Stuff
+    - [ ] decouple motion algorithm from BufferService
+    - [ ] add unit tests
+    - [ ] decouple WordMotion from EditorService
+    - [ ] simplify BufferHelper.Get()
+    - [ ] extract small CursorMotion service
+    - [ ] combine action with CommandInfo
+  - ef | Configurable
+    - [ ] add config to decide whether to move cursor to nextline on hitting the edge
+      - since this is SUPER trivial, no need to waste extra keystrokes for this feature
+      - we need to save keystrokes whenever possible... (precious keystrokes...)
+  - Other Core Stuff (unable to categorize)
     - [x] !!Save/ Load file
 - Medium tasks (can be done in a few days)
-  - Console/ Buffer data binding and rendering
+  - bnr | Console/ Buffer data binding and rendering
     - [ ] should be able to scroll
     - [ ] virtual cursor position
-  - Editable
+  - bne | Editable
     - [ ] insert
     - [ ] putInsert
     - [ ] undo, redo, search, save, quit
-  - Universal command attribute
+  - ef | Universal command attribute
     - [ ] IHasRegister
     - [ ] IHasHistory
-  - Other Core Stuff
+  - Other Core Stuff (unable to categorize)
     - [ ] visual mode
 - Hard tasks (can be done in a month or more or years...)
-  - Other Core Stuff
-    - [ ] Multiple cursors
-  - Advanced Hotkey Trigger or Accessibility
+  - a11y | Advanced Hotkey Trigger or Accessibility
     - [ ] resolve multiple key press
     - [ ] resolve multiple key inputs
     - [ ] flash visual
-  - Refactor (engineering factor)
+  - ef | Refactor (engineering factor)
     - remove ex command while keeping all the capacity
     - support any kinds of keyboard layout
       - CharaChorder One 3-D switches (5-way tactile)
@@ -73,3 +78,5 @@
       - or, we could delve into lower level API of a specific platform, to gain some experience
       - [ ] migrate to Terminal.Gui
       - [ ] use Windows API to leverage advanced Console features
+  - Other Core Stuff (unable to categorize)
+    - [ ] Multiple cursors
