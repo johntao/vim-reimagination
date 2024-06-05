@@ -1,6 +1,6 @@
 namespace VimReimagination.Service;
 
-internal class ConsoleCursor : ICursor
+public class ConsoleCursor : ICursor
 {
   public bool CursorVisible
   {
