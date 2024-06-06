@@ -40,8 +40,8 @@
       - [x] dummy one
       - [ ] actual one
     - [x] decouple WordMotion from EditorService
-    - [ ] decouple WordMotion from CommandService
-    - [ ] !!combine action with CommandInfo
+    - [x] decouple WordMotion from CommandService
+    - [x] !!combine action with CommandInfo
     - [ ] simplify BufferHelper.Get()
     - [ ] extract small CursorMotion service
   - ef | Configurable

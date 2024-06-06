@@ -1,30 +1,21 @@
-using Cmd = VimReimagination.Model.Commands.All;
 namespace VimReimagination.Service;
-internal class CustomizingKeymapTask(IReadWrite tr, TableRenderer.IPublic tbl, ICursor cur) : CustomizingKeymapTask.IRun
+internal class CustomizingKeymapTask(IReadWrite tr, TableRenderer.IPublic tbl, ICursor cur, CommandService.IExe cmd) : CustomizingKeymapTask.IRun
 {
   #region types
   internal interface IRun
   {
-    Dictionary<char, Cmd> Run(ChoosingKeymapTask.Result result);
-  }
-  internal class CommandInfo(Cmd command, string description, char qwertyKey, char dvorakKey)
-  {
-    public Cmd Command { get; } = command;
-    public string Description { get; } = description;
-    public char QwertyKey { get; } = qwertyKey;
-    public char DvorakKey { get; } = dvorakKey;
-    public char YourChoice { get; internal set; } = ' ';
+    Dictionary<char, CommandInfo> Run(ChoosingKeymapTask.Result result);
   }
   #endregion
   #region static
-  internal static IEnumerable<string[]> To5ColTable(CommandInfo[] stuffs)
+  internal static IEnumerable<string[]> To5ColTable(IList<CommandInfo> stuffs)
   {
     yield return new[] { "NormalCommand", "Description", "Qwerty", "Dvorak", "YourChoice" };
     foreach (var item in stuffs)
     {
       yield return new[]
       {
-        item.Command.ToString(),
+        item.Code.ToString(),
         item.Description,
         item.QwertyKey.ToString(),
         item.DvorakKey.ToString(),
@@ -32,41 +23,18 @@ internal class CustomizingKeymapTask(IReadWrite tr, TableRenderer.IPublic tbl, I
       };
     }
   }
-  private static readonly CommandInfo[] _stuff =
-  [
-    new(Cmd.Row_Pattern_BigWordStart_Back,    "Move by pattern 'Start of Big Word'  , Back , Row dir", 'q', '"'),
-    new(Cmd.Row_Pattern_BigWordEnd_Back,      "Move by pattern 'End of Big Word'    , Back , Row dir", 'w', '<'),
-    new(Cmd.Row_Pattern_BigWordStart_Forth,   "Move by pattern 'Start of Big Word'  , Forth, Row dir", 'e', '>'),
-    new(Cmd.Row_Pattern_BigWordEnd_Forth,     "Move by pattern 'End of Big Word'    , Forth, Row dir", 'r', 'p'),
-    new(Cmd.Row_Pattern_SmallWordStart_Back,  "Move by pattern 'Start of Small Word', Back , Row dir", 'a', 'a'),
-    new(Cmd.Row_Pattern_SmallWordEnd_Back,    "Move by pattern 'End of Small Word'  , Back , Row dir", 's', 'o'),
-    new(Cmd.Row_Pattern_SmallWordStart_Forth, "Move by pattern 'Start of Small Word', Forth, Row dir", 'd', 'e'),
-    new(Cmd.Row_Pattern_SmallWordEnd_Forth,   "Move by pattern 'End of Small Word'  , Forth, Row dir", 'f', 'u'),
-    new(Cmd.Row_1unit_Back,  "Move 1 unit, Back , Row dir", 'h', 'd'),
-    new(Cmd.Col_1unit_Forth, "Move 1 unit, Forth, Col dir", 'j', 'h'),
-    new(Cmd.Col_1unit_Back,  "Move 1 unit, Back , Col dir", 'k', 't'),
-    new(Cmd.Row_1unit_Forth, "Move 1 unit, Forth, Row dir", 'l', 'n'),
-    new(Cmd.Row_FullScreen_Back_StopOnEdge,  "Move 1 full screen width , Back , Row dir, Stop on edge", 'H', 'D'),
-    new(Cmd.Col_FullScreen_Forth_StopOnEdge, "Move 1 full screen height, Forth, Col dir, Stop on edge", 'J', 'H'),
-    new(Cmd.Col_FullScreen_Back_StopOnEdge,  "Move 1 full screen height, Back , Col dir, Stop on edge", 'K', 'T'),
-    new(Cmd.Row_FullScreen_Forth_StopOnEdge, "Move 1 full screen width , Forth, Row dir, Stop on edge", 'L', 'N'),
-    new(Cmd.SmallDelete,     "Delete the character under the cursor", 'x', 'q'),
-    new(Cmd.SaveFile,        "Dump current buffer to file", 'z', ';'),
-  ];
-  private static readonly char[] _dvorakKeys = _stuff.Select(q => q.DvorakKey).ToArray();
-  private static readonly char[] _qwertyKeys = _stuff.Select(q => q.QwertyKey).ToArray();
   #endregion
   private readonly IReadWrite _tr = tr;
   private readonly TableRenderer.IPublic _tbl = tbl;
+  private readonly CommandService.IExe _cmd = cmd;
   private readonly ICursor _cur = cur;
-  public Dictionary<char, Cmd> Run(ChoosingKeymapTask.Result result)
+  public Dictionary<char, CommandInfo> Run(ChoosingKeymapTask.Result result)
   {
-    var normalCommands = _stuff.Select(q => q.Command).ToArray();
     return result switch
     {
-      ChoosingKeymapTask.Result.UseDefaultQwerty => _qwertyKeys.Zip(normalCommands).ToDictionary(),
-      ChoosingKeymapTask.Result.MapQwertyToDvorak => _dvorakKeys.Zip(normalCommands).ToDictionary(),
-      ChoosingKeymapTask.Result.MapByUser => MapByUser().Zip(normalCommands).ToDictionary(),
+      ChoosingKeymapTask.Result.UseDefaultQwerty => _cmd.List.ToDictionary(q => q.QwertyKey),
+      ChoosingKeymapTask.Result.MapQwertyToDvorak => _cmd.List.ToDictionary(q => q.DvorakKey),
+      ChoosingKeymapTask.Result.MapByUser => MapByUser().Zip(_cmd.List).ToDictionary(),
       _ => throw new InvalidOperationException(),
     };
   }
@@ -81,7 +49,7 @@ Press Backspace to cancel mapping and map the rest using Dvorak
 Press arrow keys to navigate
 """;
     _tr.WriteLine(Message);
-    _tbl.Initialize(To5ColTable(_stuff));
+    _tbl.Initialize(To5ColTable(_cmd.List));
     var isLooping = true;
     var useQwerty = false;
     while (isLooping)
@@ -104,13 +72,13 @@ Press arrow keys to navigate
           break;
         case var q when !char.IsControl(q.KeyChar):
           var currentIdx = top - _tbl.StartLineIdx;
-          var hasConflict = _stuff.Any((item, idx) => item.YourChoice == readkey.KeyChar && idx != currentIdx);
+          bool hasConflict = _cmd.List.Any((item, idx) => item.YourChoice == readkey.KeyChar && idx != currentIdx);
           if (hasConflict)
           {
             _tbl.UpdateChoice("!!");
             break;
           }
-          var item = _stuff[currentIdx];
+          var item = _cmd.List[currentIdx];
           item.YourChoice = readkey.KeyChar;
           _tbl.UpdateChoice(item.YourChoice + " ");
           if (top >= _tbl.EndLineIdx) break;
@@ -128,7 +96,7 @@ Press arrow keys to navigate
       }
     }
     _cur.CursorVisible = true;
-    return _stuff.Select(q =>
+    return _cmd.List.Select(q =>
     {
       if (q.YourChoice == ' ')
         q.YourChoice = useQwerty ? q.QwertyKey : q.DvorakKey;

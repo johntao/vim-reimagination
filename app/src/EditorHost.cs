@@ -1,7 +1,5 @@
 using Microsoft.Extensions.Hosting;
 using VimReimagination.Service;
-using Cmd = VimReimagination.Model.Commands.All;
-
 internal class EditorHost(
   CustomizingKeymapTask.IRun mappingCommands,
   ChoosingKeymapTask.IRun chooseLayout,
@@ -18,7 +16,7 @@ internal class EditorHost(
     Task.Delay(1000, cancellationToken).ContinueWith((_) =>
     {
       ChoosingKeymapTask.Result result = _chooseLayout.Run();
-      Dictionary<char, Cmd> layout = _mappingCommands.Run(result);
+      Dictionary<char, CommandInfo> layout = _mappingCommands.Run(result);
       _editor.Run(layout);
     }, cancellationToken);
     return Task.CompletedTask;
