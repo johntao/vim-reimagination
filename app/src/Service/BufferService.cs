@@ -28,8 +28,8 @@ internal class BufferService(IReadWrite tr, IWindow win, ICursor cur) : IBufferS
   }
   public bool HasNext() => _direction switch
   {
-    Direction.Forward => _cursor1D + 1 < _buffer1d.Length,
-    Direction.Backward => _cursor1D - 1 >= 0,
+    Direction.RowForward => _cursor1D + 1 < _buffer1d.Length,
+    Direction.RowBackward => _cursor1D - 1 >= 0,
     _ => throw new NotImplementedException(),
   };
   public bool HasNext_Move()
@@ -44,11 +44,11 @@ internal class BufferService(IReadWrite tr, IWindow win, ICursor cur) : IBufferS
   {
     switch (_direction)
     {
-      case Direction.Forward:
+      case Direction.RowForward:
         ++_cursor1D;
         ++Cursor2D;
         break;
-      case Direction.Backward:
+      case Direction.RowBackward:
         --_cursor1D;
         --Cursor2D;
         break;

@@ -4,8 +4,8 @@ namespace VimReimagination.Model;
 /// </summary>
 internal enum Direction
 {
-  Forward,
-  Backward,
+  RowForward,
+  RowBackward,
 }
 internal enum CharKind
 {
@@ -13,4 +13,12 @@ internal enum CharKind
   Primary,
   Secondary,
   Space,
+}
+internal enum TextPattern
+{
+  None,
+  SmallWordStart,
+  SmallWordEnd,
+  BigWordStart,
+  BigWordEnd,
 }

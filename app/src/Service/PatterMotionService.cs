@@ -1,0 +1,35 @@
+using VimReimagination.Model;
+using VimReimagination.Service;
+using VimReimagination.WordMotion;
+
+internal class PatternMotionService(IWindow win, ICursor cur, IBufferService buffer) : PatternMotionService.IGo
+{
+  #region types and static
+  internal interface IGo
+  {
+    void Row(TextPattern bigWordStart, Direction rowBackward);
+  }
+  #endregion
+  private static readonly SmallWordMotionPattern _smallWord = new();
+  private static readonly BigWordMotionPattern _bigWord = new();
+  private readonly IWindow _win = win;
+  private readonly ICursor _cur = cur;
+  private readonly IBufferService _buffer = buffer;
+  public void Row(TextPattern textPattern, Direction direction)
+  {
+    var cursor = new Cursor2D(_win, _cur);
+    var (newLeft, newTop) = (textPattern, direction) switch
+    {
+      (TextPattern.SmallWordStart, Direction.RowBackward) => _smallWord.ChargeUntilBlankExclusive(cursor, _buffer, Direction.RowBackward),
+      (TextPattern.SmallWordEnd, Direction.RowBackward) => _smallWord.ChargeUntilMatterInclusive(cursor, _buffer, Direction.RowBackward),
+      (TextPattern.SmallWordStart, Direction.RowForward) => _smallWord.ChargeUntilMatterInclusive(cursor, _buffer, Direction.RowForward),
+      (TextPattern.SmallWordEnd, Direction.RowForward) => _smallWord.ChargeUntilBlankExclusive(cursor, _buffer, Direction.RowForward),
+      (TextPattern.BigWordStart, Direction.RowBackward) => _bigWord.ChargeUntilBlankExclusive(cursor, _buffer, Direction.RowBackward),
+      (TextPattern.BigWordEnd, Direction.RowBackward) => _bigWord.ChargeUntilMatterInclusive(cursor, _buffer, Direction.RowBackward),
+      (TextPattern.BigWordStart, Direction.RowForward) => _bigWord.ChargeUntilMatterInclusive(cursor, _buffer, Direction.RowForward),
+      (TextPattern.BigWordEnd, Direction.RowForward) => _bigWord.ChargeUntilBlankExclusive(cursor, _buffer, Direction.RowForward),
+      _ => throw new NotImplementedException(),
+    };
+    _cur.SetCursorPosition(newLeft, newTop);
+  }
+}

@@ -11,8 +11,8 @@ internal struct Cursor2D(int Left, int Top, (int Width, int Height) Window)
   private Cursor2D((int Left, int Top) cursor, IWindow win) : this(cursor.Left, cursor.Top, win.Window) { }
   internal readonly Cursor2D Offset(Direction direction) => direction switch
   {
-    Direction.Forward => HasHitBoundary ? this : new Cursor2D(Left - 1, Top, Window),
-    Direction.Backward => HasHitBoundary ? this : new Cursor2D(Left + 1, Top, Window),
+    Direction.RowForward => HasHitBoundary ? this : new Cursor2D(Left - 1, Top, Window),
+    Direction.RowBackward => HasHitBoundary ? this : new Cursor2D(Left + 1, Top, Window),
     _ => throw new NotImplementedException(),
   };
   public static Cursor2D operator ++(Cursor2D a)
