@@ -4,7 +4,6 @@
     - [x] fix a bug where we cannot set YourChoice again
     - [x] fix a bug where double exclaimation mark is not working binding
     - [x] enhance the mapping algorithm so that users NO NEEDS to use arrow keys
-    - [ ] should have a way to re-bind keys after the program is running
   - a11y | HUD
     - [ ] make status bar more informative
     - [ ] get current line number
@@ -14,8 +13,8 @@
     - [x] buffer should not mix with motion algorithm, buffer should not store Cursor2D
     - [x] buffer boundary
     - [x] algorithm to fill in empty spaces (make the buffer reflect to the window size)
+    - [x] resolve newlines
     - [ ] remove text in the background
-    - [ ] resolve newlines
     - [ ] resolve different buffer types
   - bnc | Motion
     - word-based motions
@@ -27,7 +26,7 @@
       - [x] big word motion
     - text-object algorithm
     - ternary IRepeatable
-      - [ ] !!implement IRepeatable for a,s,d,f,q,w,e,r
+      - [x] !!implement IRepeatable for a,s,d,f,q,w,e,r
   - bne | Editable
     - [ ] yank, putReplace
     - [ ] !!editable: replace, delete, change
@@ -44,6 +43,7 @@
     - [x] !!combine action with CommandInfo
     - [ ] simplify BufferHelper.Get()
     - [ ] extract small CursorMotion service
+    - [ ] every task should be re-runnable as an executable command
   - ef | Configurable
     - [ ] add config to decide whether to move cursor to nextline on hitting the edge
       - since this is SUPER trivial, no need to waste extra keystrokes for this feature
