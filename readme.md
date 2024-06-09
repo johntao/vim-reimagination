@@ -26,7 +26,7 @@ Lastly, I would like to implement some features that are not available in VIM, a
 - a11y
   - [x] Choose QWERTY, Dvorak, or custom keymap
 - a11y HUD
-  - [ ] Status bar
+  - [x] Status bar
 - basic text editing
   - [x] delete
   - [ ] replace

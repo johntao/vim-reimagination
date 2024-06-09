@@ -14,7 +14,7 @@
     - [x] buffer boundary
     - [x] algorithm to fill in empty spaces (make the buffer reflect to the window size)
     - [x] resolve newlines
-    - [ ] remove text in the background
+    - [x] remove empty spaces in the background
     - [ ] resolve different buffer types
   - bnc | Motion
     - word-based motions
@@ -28,8 +28,8 @@
     - ternary IRepeatable
       - [x] implement IRepeatable for a,s,d,f,q,w,e,r
   - bne | Editable
-    - [ ] yank, putReplace
     - [ ] !!editable: replace, delete, change
+    - [ ] yank, putReplace
   - ef | Refactor (engineering factor)
     - [x] Use dependency injection. abstract Console
     - [x] copy template during build process

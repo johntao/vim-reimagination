@@ -242,7 +242,7 @@
       - it is so weird that we must use `AsSpan()` to make `CopyTo()` work
       - I wonder if there's a simpler way to do it
     - [x] we should probably shrink some interface whenever possible
-    - [ ] the template is acting weird, if we omit the last space in the last line, the template will not be rendered properly
+    - [ ] the template.txt is acting weird, if we omit the last space in the last line, the template will not be rendered properly
   - editable and save to file
     - we trim the newline and add space to the buffer
     - we should reverse this process when saving to file
@@ -263,9 +263,17 @@
 
 ## about the Editor service
 
-  - [ ] motion details implementation should be hidden from the editor service
+  - [x] motion details implementation should be hidden from the editor service
 
 ## about status bar
   - [ ] we should probably use attribute to log the method call (do not explicit log the method call by using tons of nameof)
+    - [ ] should also investigate if it is possible to introduce AOP here
   - it is always better create a new class for a new feature
     - so that, it won't pollute the existing class
+  - we thought the implementation would be something like IUseStatusBar, IUseHistory, IRepeatable, IUseRegister
+    - but, it turns out those interfaces would be too much, since the only place to put them is in the Command.List
+    - for now, Command.List is quite simple and clean, we should probably keep it that way
+    - so, the implementation transform into a IStatusBarService, reminds me about the principle of composition over inheritance
+    - if we use the previous interfaces approach, we would probably bloat the Command.List and make a complex inheritance tree
+    - as for IStatusBarService, it is a simple service that only expose a single method `Write()`
+    - we can make it as if ILogger or something, and other services can use it whenever needed
