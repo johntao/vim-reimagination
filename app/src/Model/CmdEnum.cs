@@ -1,5 +1,5 @@
 namespace VimReimagination.Model;
-internal static class Commands
+internal static class CmdEnum
 {
   const byte CategoryPageStart = 8;
   internal enum Category : short

@@ -2,22 +2,22 @@ namespace VimReimagination.Service;
 using VimReimagination.Model;
 /// <summary>
 /// </summary>
-internal class EditorService(
+internal class Editor(
   IReadWrite tr,
   IBuffer buffer,
-  StatusBarService.IWrite status
-) : EditorService.IRun
+  StatusBar.IWrite status
+) : Editor.IRun
 {
   #region types and static
   internal interface IRun
   {
     void Run(Dictionary<char, CommandInfo> keymap);
   }
-  static EditorService() { }
+  static Editor() { }
   #endregion
   private readonly IBuffer _buffer = buffer;
   private readonly IReadWrite _tr = tr;
-  private readonly StatusBarService.IWrite _status = status;
+  private readonly StatusBar.IWrite _status = status;
   public void Run(Dictionary<char, CommandInfo> keymap)
   {
     while (true)

@@ -1,6 +1,6 @@
+namespace VimReimagination.WordMotion;
 using VimReimagination.Model;
 using System.Buffers;
-namespace VimReimagination.WordMotion;
 /// <summary>
 /// this implementation fully comply with vim word motion
 /// </summary>

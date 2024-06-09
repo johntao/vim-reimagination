@@ -1,12 +1,12 @@
 namespace VimReimagination.Service;
 using VimReimagination.Model;
-using Cmd = Model.Commands.All;
-internal class CommandService(
+using Cmd = Model.CmdEnum.All;
+internal class Command(
   IWindow win,
   IBuffer buffer,
-  PatternMotionService.IGo pm,
+  PatternMotion.IGo pm,
   BasicMotion.IGo bm
-) : CommandService.IGet
+) : Command.IGet
 {
   #region types and static
   internal interface IGet
@@ -16,7 +16,7 @@ internal class CommandService(
   private static CommandInfo[] _list = null!;
   #endregion
   private readonly BasicMotion.IGo _bm = bm;
-  private readonly PatternMotionService.IGo _pm = pm;
+  private readonly PatternMotion.IGo _pm = pm;
   private readonly IWindow _win = win;
   private readonly IBuffer _buffer = buffer;
   public IList<CommandInfo> List

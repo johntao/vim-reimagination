@@ -6,13 +6,13 @@ internal class EditorHost(
   CustomizingKeymapTask.IRun mappingCommands,
   ChoosingKeymapTask.IRun chooseLayout,
   IReadWrite tr,
-  EditorService.IRun editor
+  Editor.IRun editor
   ) : IHostedService
 {
   private readonly IReadWrite _tr = tr;
   private readonly CustomizingKeymapTask.IRun _mappingCommands = mappingCommands;
   private readonly ChoosingKeymapTask.IRun _chooseLayout = chooseLayout;
-  private readonly EditorService.IRun _editor = editor;
+  private readonly Editor.IRun _editor = editor;
   public Task StartAsync(CancellationToken cancellationToken)
   {
     Task.Delay(1000, cancellationToken).ContinueWith((_) =>

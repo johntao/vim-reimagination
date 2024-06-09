@@ -1,5 +1,5 @@
 namespace VimReimagination.Model;
-using Cmd = Commands.All;
+using Cmd = CmdEnum.All;
 internal class CommandInfo(Cmd code, string description, char qwertyKey, char dvorakKey, Action run)
 {
   public readonly Cmd Code = code;

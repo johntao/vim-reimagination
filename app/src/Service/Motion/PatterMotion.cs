@@ -2,11 +2,11 @@ namespace VimReimagination.Service;
 using VimReimagination.Model;
 using VimReimagination.WordMotion;
 
-internal class PatternMotionService(
+internal class PatternMotion(
   IWindow win,
   ICursor cur,
   IBuffer buffer
-) : PatternMotionService.IGo
+) : PatternMotion.IGo
 {
   #region types and static
   internal interface IGo

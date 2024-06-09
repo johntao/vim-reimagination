@@ -4,7 +4,7 @@ internal class CustomizingKeymapTask(
   IReadWrite tr,
   TableRenderer.IPublic tbl,
   ICursor cur,
-  CommandService.IGet cmd
+  Command.IGet cmd
 ) : CustomizingKeymapTask.IRun
 {
   #region types
@@ -32,7 +32,7 @@ internal class CustomizingKeymapTask(
   #endregion
   private readonly IReadWrite _tr = tr;
   private readonly TableRenderer.IPublic _tbl = tbl;
-  private readonly CommandService.IGet _cmd = cmd;
+  private readonly Command.IGet _cmd = cmd;
   private readonly ICursor _cur = cur;
   public Dictionary<char, CommandInfo> Run(ChoosingKeymapTask.Result result)
   {

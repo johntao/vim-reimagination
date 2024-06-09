@@ -1,10 +1,8 @@
+namespace VimReimagination.WordMotion;
 using VimReimagination.Model;
 using System.Buffers;
 using VimReimagination.Service;
-
-namespace VimReimagination.WordMotion;
-
-internal abstract class WordMotion : IWordMotionV3
+internal abstract class WordMotion : IWordMotion
 {
   #region static
   protected static readonly SearchValues<char> _searchSpace;

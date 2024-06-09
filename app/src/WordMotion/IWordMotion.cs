@@ -1,8 +1,7 @@
+namespace VimReimagination.WordMotion;
 using VimReimagination.Model;
 using VimReimagination.Service;
-
-namespace VimReimagination.WordMotion;
-internal interface IWordMotionV3
+internal interface IWordMotion
 {
   Cursor2D ChargeUntilBlankExclusive(Cursor2D cursor2D, IBuffer buffer, Direction direction);
   Cursor2D ChargeUntilMatterInclusive(Cursor2D cursor2D, IBuffer buffer, Direction direction);

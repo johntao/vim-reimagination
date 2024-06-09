@@ -11,13 +11,13 @@ builder.Services
   .AddSingleton<IReadWrite, ConsoleReadWrite>()
   .AddSingleton<IWindow, ConsoleWindow>()
   .AddSingleton<ICursor, ConsoleCursor>()
-  .AddSingleton<StatusBarService.IWrite, StatusBarService>()
+  .AddSingleton<StatusBar.IWrite, StatusBar>()
   .AddSingleton<TableRenderer.IPublic, TableRenderer>()
   .AddSingleton<ChoosingKeymapTask.IRun, ChoosingKeymapTask>()
-  .AddSingleton<PatternMotionService.IGo, PatternMotionService>()
+  .AddSingleton<PatternMotion.IGo, PatternMotion>()
   .AddSingleton<BasicMotion.IGo, BasicMotion>()
-  .AddSingleton<CommandService.IGet, CommandService>()
-  .AddSingleton<EditorService.IRun, EditorService>()
+  .AddSingleton<Command.IGet, Command>()
+  .AddSingleton<Editor.IRun, Editor>()
   .AddSingleton<IBuffer, VRBuffer>()
   ;
 
