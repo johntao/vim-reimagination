@@ -1,4 +1,5 @@
 namespace VimReimagination.Service;
+using VimReimagination.Model;
 internal class CustomizingKeymapTask(
   IReadWrite tr,
   TableRenderer.IPublic tbl,

@@ -1,4 +1,4 @@
-using VimReimagination.Service;
+namespace VimReimagination.Service;
 
 internal class BasicMotionService(IWindow win, ICursor cur) : BasicMotionService.IGo
 {

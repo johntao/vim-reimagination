@@ -1,4 +1,4 @@
-using VimReimagination.Service;
+namespace VimReimagination.Service;
 internal class StatusBarService(IWindow win, ICursor cur, IReadWrite rw) : StatusBarService.IWrite
 {
   internal interface IWrite

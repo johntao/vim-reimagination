@@ -1,5 +1,5 @@
+namespace VimReimagination.Service;
 using VimReimagination.Model;
-using VimReimagination.Service;
 using VimReimagination.WordMotion;
 
 internal class PatternMotionService(

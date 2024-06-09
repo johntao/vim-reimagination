@@ -1,4 +1,5 @@
 namespace VimReimagination.Service;
+using VimReimagination.Model;
 /// <summary>
 /// </summary>
 internal class EditorService(

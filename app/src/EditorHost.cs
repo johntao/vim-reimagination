@@ -1,4 +1,6 @@
+namespace VimReimagination;
 using Microsoft.Extensions.Hosting;
+using VimReimagination.Model;
 using VimReimagination.Service;
 internal class EditorHost(
   CustomizingKeymapTask.IRun mappingCommands,

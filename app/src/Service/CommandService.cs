@@ -1,15 +1,6 @@
+namespace VimReimagination.Service;
 using VimReimagination.Model;
-using VimReimagination.Service;
-using Cmd = VimReimagination.Model.Commands.All;
-internal class CommandInfo(Cmd code, string description, char qwertyKey, char dvorakKey, Action run)
-{
-  public readonly Cmd Code = code;
-  public readonly string Description = description;
-  public readonly char QwertyKey = qwertyKey;
-  public readonly char DvorakKey = dvorakKey;
-  public readonly Action Run = run;
-  public char YourChoice { get; internal set; } = ' ';
-}
+using Cmd = Model.Commands.All;
 internal class CommandService(
   IWindow win,
   IBufferService buffer,
