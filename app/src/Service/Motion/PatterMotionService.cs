@@ -5,7 +5,7 @@ using VimReimagination.WordMotion;
 internal class PatternMotionService(
   IWindow win,
   ICursor cur,
-  IBufferService buffer
+  IBuffer buffer
 ) : PatternMotionService.IGo
 {
   #region types and static
@@ -23,7 +23,7 @@ internal class PatternMotionService(
   #endregion
   private readonly IWindow _win = win;
   private readonly ICursor _cur = cur;
-  private readonly IBufferService _buffer = buffer;
+  private readonly IBuffer _buffer = buffer;
   public void Row(TextPattern textPattern, Direction direction)
   {
     _prevPattern = textPattern;

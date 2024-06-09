@@ -1,6 +1,6 @@
 namespace VimReimagination.Service;
 
-internal class BasicMotionService(IWindow win, ICursor cur) : BasicMotionService.IGo
+internal class BasicMotion(IWindow win, ICursor cur) : BasicMotion.IGo
 {
   internal interface IGo
   {

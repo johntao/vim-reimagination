@@ -3,9 +3,9 @@ using VimReimagination.Model;
 using Cmd = Model.Commands.All;
 internal class CommandService(
   IWindow win,
-  IBufferService buffer,
+  IBuffer buffer,
   PatternMotionService.IGo pm,
-  BasicMotionService.IGo bm
+  BasicMotion.IGo bm
 ) : CommandService.IGet
 {
   #region types and static
@@ -15,10 +15,10 @@ internal class CommandService(
   }
   private static CommandInfo[] _list = null!;
   #endregion
-  private readonly BasicMotionService.IGo _bm = bm;
+  private readonly BasicMotion.IGo _bm = bm;
   private readonly PatternMotionService.IGo _pm = pm;
   private readonly IWindow _win = win;
-  private readonly IBufferService _buffer = buffer;
+  private readonly IBuffer _buffer = buffer;
   public IList<CommandInfo> List
   {
     get

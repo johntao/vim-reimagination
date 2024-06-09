@@ -4,7 +4,7 @@ using VimReimagination.Model;
 /// </summary>
 internal class EditorService(
   IReadWrite tr,
-  IBufferService buffer,
+  IBuffer buffer,
   StatusBarService.IWrite status
 ) : EditorService.IRun
 {
@@ -15,7 +15,7 @@ internal class EditorService(
   }
   static EditorService() { }
   #endregion
-  private readonly IBufferService _buffer = buffer;
+  private readonly IBuffer _buffer = buffer;
   private readonly IReadWrite _tr = tr;
   private readonly StatusBarService.IWrite _status = status;
   public void Run(Dictionary<char, CommandInfo> keymap)

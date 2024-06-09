@@ -5,7 +5,7 @@ namespace VimReimagination.Service;
 /// <summary>
 /// Can't tell the advantage of using ref struct, but it's required to use ref struct for `ReadOnlySpan<char> Text`
 /// </summary>
-internal class BufferService(IReadWrite tr, IWindow win, ICursor cur) : IBufferService
+internal class VRBuffer(IReadWrite tr, IWindow win, ICursor cur) : IBuffer
 {
   private readonly IReadWrite _tr = tr;
   private readonly IWindow _win = win;
@@ -88,7 +88,7 @@ internal class BufferService(IReadWrite tr, IWindow win, ICursor cur) : IBufferS
     }
   }
 }
-internal interface IBufferService
+internal interface IBuffer
 {
   char Previous { get; }
   char Current { get; }

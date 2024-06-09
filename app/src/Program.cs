@@ -15,10 +15,10 @@ builder.Services
   .AddSingleton<TableRenderer.IPublic, TableRenderer>()
   .AddSingleton<ChoosingKeymapTask.IRun, ChoosingKeymapTask>()
   .AddSingleton<PatternMotionService.IGo, PatternMotionService>()
-  .AddSingleton<BasicMotionService.IGo, BasicMotionService>()
+  .AddSingleton<BasicMotion.IGo, BasicMotion>()
   .AddSingleton<CommandService.IGet, CommandService>()
   .AddSingleton<EditorService.IRun, EditorService>()
-  .AddSingleton<IBufferService, BufferService>()
+  .AddSingleton<IBuffer, VRBuffer>()
   ;
 
 using IHost host = builder.Build();
