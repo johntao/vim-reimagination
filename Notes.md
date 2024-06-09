@@ -264,3 +264,8 @@
 ## about the Editor service
 
   - [ ] motion details implementation should be hidden from the editor service
+
+## about status bar
+  - [ ] we should probably use attribute to log the method call (do not explicit log the method call by using tons of nameof)
+  - it is always better create a new class for a new feature
+    - so that, it won't pollute the existing class

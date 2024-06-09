@@ -17,6 +17,7 @@ public class ConsoleCursor : ICursor
     set => Console.CursorLeft = value;
   }
   public void SetCursorPosition(int left, int top) => Console.SetCursorPosition(left, top);
+  public void SetCursorPosition((int left, int top) tuple) => Console.SetCursorPosition(tuple.left, tuple.top);
   public (int Left, int Top) GetCursorPosition2D() => Console.GetCursorPosition();
   public int GetCursorPosition1D(IWindow win)
   {
@@ -32,4 +33,5 @@ internal interface ICursor
   (int Left, int Top) GetCursorPosition2D();
   int GetCursorPosition1D(IWindow win);
   void SetCursorPosition(int left, int top);
+  void SetCursorPosition((int left, int top) tuple);
 }

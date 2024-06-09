@@ -5,9 +5,9 @@
     - [x] fix a bug where double exclaimation mark is not working binding
     - [x] enhance the mapping algorithm so that users NO NEEDS to use arrow keys
   - a11y | HUD
+    - [x] set up boundaries for status bar, motion and rendering
     - [ ] make status bar more informative
     - [ ] get current line number
-    - [ ] set up boundaries for status bar, motion and rendering
   - bnr | Console/ Buffer data binding and rendering
     - [x] add text in the background. text aware cursor motion
     - [x] buffer should not mix with motion algorithm, buffer should not store Cursor2D
@@ -26,7 +26,7 @@
       - [x] big word motion
     - text-object algorithm
     - ternary IRepeatable
-      - [x] !!implement IRepeatable for a,s,d,f,q,w,e,r
+      - [x] implement IRepeatable for a,s,d,f,q,w,e,r
   - bne | Editable
     - [ ] yank, putReplace
     - [ ] !!editable: replace, delete, change
@@ -40,7 +40,7 @@
       - [ ] actual one
     - [x] decouple WordMotion from EditorService
     - [x] decouple WordMotion from CommandService
-    - [x] !!combine action with CommandInfo
+    - [x] combine action with CommandInfo
     - [ ] simplify BufferHelper.Get()
     - [ ] extract small CursorMotion service
     - [ ] every task should be re-runnable as an executable command
@@ -49,7 +49,7 @@
       - since this is SUPER trivial, no need to waste extra keystrokes for this feature
       - we need to save keystrokes whenever possible... (precious keystrokes...)
   - Other Core Stuff (unable to categorize)
-    - [x] !!Save/ Load file
+    - [x] Save/ Load file
 - Medium tasks (can be done in a few days)
   - bnr | Console/ Buffer data binding and rendering
     - [ ] should be able to scroll

@@ -10,11 +10,12 @@ builder.Services
   .AddSingleton<IReadWrite, ConsoleReadWrite>()
   .AddSingleton<IWindow, ConsoleWindow>()
   .AddSingleton<ICursor, ConsoleCursor>()
+  .AddSingleton<StatusBarService.IWrite, StatusBarService>()
   .AddSingleton<TableRenderer.IPublic, TableRenderer>()
   .AddSingleton<ChoosingKeymapTask.IRun, ChoosingKeymapTask>()
   .AddSingleton<PatternMotionService.IGo, PatternMotionService>()
   .AddSingleton<BasicMotionService.IGo, BasicMotionService>()
-  .AddSingleton<CommandService.IExe, CommandService>()
+  .AddSingleton<CommandService.IGet, CommandService>()
   .AddSingleton<EditorService.IRun, EditorService>()
   .AddSingleton<IBufferService, BufferService>()
   ;

@@ -1,5 +1,10 @@
 namespace VimReimagination.Service;
-internal class CustomizingKeymapTask(IReadWrite tr, TableRenderer.IPublic tbl, ICursor cur, CommandService.IExe cmd) : CustomizingKeymapTask.IRun
+internal class CustomizingKeymapTask(
+  IReadWrite tr,
+  TableRenderer.IPublic tbl,
+  ICursor cur,
+  CommandService.IGet cmd
+) : CustomizingKeymapTask.IRun
 {
   #region types
   internal interface IRun
@@ -26,7 +31,7 @@ internal class CustomizingKeymapTask(IReadWrite tr, TableRenderer.IPublic tbl, I
   #endregion
   private readonly IReadWrite _tr = tr;
   private readonly TableRenderer.IPublic _tbl = tbl;
-  private readonly CommandService.IExe _cmd = cmd;
+  private readonly CommandService.IGet _cmd = cmd;
   private readonly ICursor _cur = cur;
   public Dictionary<char, CommandInfo> Run(ChoosingKeymapTask.Result result)
   {

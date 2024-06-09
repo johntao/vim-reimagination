@@ -2,7 +2,11 @@ using VimReimagination.Model;
 using VimReimagination.Service;
 using VimReimagination.WordMotion;
 
-internal class PatternMotionService(IWindow win, ICursor cur, IBufferService buffer) : PatternMotionService.IGo
+internal class PatternMotionService(
+  IWindow win,
+  ICursor cur,
+  IBufferService buffer
+) : PatternMotionService.IGo
 {
   #region types and static
   internal interface IGo
