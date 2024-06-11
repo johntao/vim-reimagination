@@ -5,7 +5,7 @@ future enhancement:
 - column style
 - row style
 */
-internal class TableRenderer(IReadWrite tr, ICursor cur) : TableRenderer.IPublic
+internal class TableRenderer(IReadWrite rw, ICursor cur) : TableRenderer.IPublic
 {
   internal interface IPublic
   {
@@ -22,7 +22,7 @@ internal class TableRenderer(IReadWrite tr, ICursor cur) : TableRenderer.IPublic
     Normal,
   }
   private const string Delimiter = " | ";
-  private readonly IReadWrite _tr = tr;
+  private readonly IReadWrite _rw = rw;
   private readonly ICursor _cur = cur;
   #region state that required initialization
   private int[] _widths = null!;
@@ -56,7 +56,7 @@ internal class TableRenderer(IReadWrite tr, ICursor cur) : TableRenderer.IPublic
     _rows.Skip(1).ForEach((cells, _) => RenderRow(cells));
     EndLineIdx = --_cur.CursorTop;
     _cur.SetCursorPosition(0, StartLineIdx);
-    _tr.Write('>');
+    _rw.Write('>');
   }
   #endregion
   string PadMiddle(string q, int idx) => q.PadMiddle(_widths[idx]);
@@ -71,12 +71,12 @@ internal class TableRenderer(IReadWrite tr, ICursor cur) : TableRenderer.IPublic
       RowStyle.Normal => cells.Select(PadRight),
       _ => throw new NotImplementedException(),
     };
-    _tr.WriteLine($"{new string(' ', _hOffset)}{string.Join(Delimiter, formattedCells)}");
+    _rw.WriteLine($"{new string(' ', _hOffset)}{string.Join(Delimiter, formattedCells)}");
   }
   public void UpdateChoice(string yourChoice)
   {
     _cur.CursorLeft = _choiceColIdx;
-    _tr.Write(yourChoice);
+    _rw.Write(yourChoice);
     _cur.CursorLeft = 0;
   }
 }

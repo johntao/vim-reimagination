@@ -1,36 +1,19 @@
 namespace VimReimagination.Service;
 using VimReimagination.Model;
 internal class CustomizingKeymapTask(
-  IReadWrite tr,
+  IReadWrite rw,
   TableRenderer.IPublic tbl,
   ICursor cur,
   Command.IGet cmd
 ) : CustomizingKeymapTask.IRun
 {
-  #region types
+  #region types and static
   internal interface IRun
   {
     Dictionary<char, CommandInfo> Run(ChoosingKeymapTask.Result result);
   }
   #endregion
-  #region static
-  internal static IEnumerable<string[]> To5ColTable(IList<CommandInfo> stuffs)
-  {
-    yield return new[] { "NormalCommand", "Description", "Qwerty", "Dvorak", "YourChoice" };
-    foreach (var item in stuffs)
-    {
-      yield return new[]
-      {
-        item.Code.ToString(),
-        item.Description,
-        item.QwertyKey.ToString(),
-        item.DvorakKey.ToString(),
-        item.YourChoice.ToString(),
-      };
-    }
-  }
-  #endregion
-  private readonly IReadWrite _tr = tr;
+  private readonly IReadWrite _rw = rw;
   private readonly TableRenderer.IPublic _tbl = tbl;
   private readonly Command.IGet _cmd = cmd;
   private readonly ICursor _cur = cur;
@@ -46,7 +29,7 @@ internal class CustomizingKeymapTask(
   }
   private char[] MapByUser()
   {
-    _tr.Clear();
+    _rw.Clear();
     _cur.CursorVisible = false;
     const string Message = """
 Press any key to map the following command to that key
@@ -54,27 +37,27 @@ Press Enter to cancel mapping and map the rest using QWERTY
 Press Backspace to cancel mapping and map the rest using Dvorak
 Press arrow keys to navigate
 """;
-    _tr.WriteLine(Message);
-    _tbl.Initialize(To5ColTable(_cmd.List));
+    _rw.WriteLine(Message);
+    _tbl.Initialize(_cmd.List.To5ColTable());
     var isLooping = true;
     var useQwerty = false;
     while (isLooping)
     {
-      var readkey = _tr.ReadKey();
+      var readkey = _rw.ReadKey();
       var top = _cur.CursorTop;
       switch (readkey)
       {
         case var q when q.Key is ConsoleKey.UpArrow:
           if (top <= _tbl.StartLineIdx) break;
-          _tr.Write(' ');
+          _rw.Write(' ');
           --_cur.CursorTop;
-          _tr.Write('>');
+          _rw.Write('>');
           break;
         case var q when q.Key is ConsoleKey.DownArrow:
           if (top >= _tbl.EndLineIdx) break;
-          _tr.Write(' ');
+          _rw.Write(' ');
           ++_cur.CursorTop;
-          _tr.Write('>');
+          _rw.Write('>');
           break;
         case var q when !char.IsControl(q.KeyChar):
           var currentIdx = top - _tbl.StartLineIdx;
@@ -88,9 +71,9 @@ Press arrow keys to navigate
           item.YourChoice = readkey.KeyChar;
           _tbl.UpdateChoice(item.YourChoice + " ");
           if (top >= _tbl.EndLineIdx) break;
-          _tr.Write(' ');
+          _rw.Write(' ');
           ++_cur.CursorTop;
-          _tr.Write('>');
+          _rw.Write('>');
           break;
         case var q when q.Key is ConsoleKey.Backspace:
           isLooping = false;

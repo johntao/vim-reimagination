@@ -3,11 +3,10 @@ using VimReimagination.Helper;
 
 namespace VimReimagination.Service;
 /// <summary>
-/// Can't tell the advantage of using ref struct, but it's required to use ref struct for `ReadOnlySpan<char> Text`
 /// </summary>
-internal class VRBuffer(IReadWrite tr, IWindow win, ICursor cur) : IBuffer
+internal class VRBuffer(IReadWrite rw, IWindow win, ICursor cur) : IBuffer
 {
-  private readonly IReadWrite _tr = tr;
+  private readonly IReadWrite _rw = rw;
   private readonly IWindow _win = win;
   private readonly ICursor _cur = cur;
   private int _cursor1D;
@@ -60,8 +59,8 @@ internal class VRBuffer(IReadWrite tr, IWindow win, ICursor cur) : IBuffer
     if (_winWidth == _win.Width) return;
     _winWidth = _win.Width;
     (_buffer1d, _ranges) = BufferHelper.Get(_winWidth, _win.Height);
-    _tr.Clear();
-    _tr.Write(_buffer1d);
+    _rw.Clear();
+    _rw.Write(_buffer1d);
     _cur.SetCursorPosition(0, 0);
   }
 
@@ -72,7 +71,7 @@ internal class VRBuffer(IReadWrite tr, IWindow win, ICursor cur) : IBuffer
     //in fact, the cursor is only true when the cursor is moved by the word motion, otherwise, the cursor is not updated.
     var pos = _cur.GetCursorPosition1D(_win);
     _buffer1d[pos] = v;
-    _tr.Write(v);
+    _rw.Write(v);
   }
 
   public void SaveFile()

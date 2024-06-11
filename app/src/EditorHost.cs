@@ -5,11 +5,11 @@ using VimReimagination.Service;
 internal class EditorHost(
   CustomizingKeymapTask.IRun mappingCommands,
   ChoosingKeymapTask.IRun chooseLayout,
-  IReadWrite tr,
+  IReadWrite rw,
   Editor.IRun editor
   ) : IHostedService
 {
-  private readonly IReadWrite _tr = tr;
+  private readonly IReadWrite _rw = rw;
   private readonly CustomizingKeymapTask.IRun _mappingCommands = mappingCommands;
   private readonly ChoosingKeymapTask.IRun _chooseLayout = chooseLayout;
   private readonly Editor.IRun _editor = editor;
@@ -25,7 +25,7 @@ internal class EditorHost(
   }
   public Task StopAsync(CancellationToken cancellationToken)
   {
-    _tr.Clear();
+    _rw.Clear();
     return Task.CompletedTask;
   }
 }
