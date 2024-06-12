@@ -28,7 +28,7 @@ internal class Editor(
       _buffer.IfWindowResizedThenReloadBuffer();
       var readkey = _rw.ReadKey();
       var keychar = readkey.KeyChar;
-      Dictionary<char, CommandInfo> keymap = _modalKeyMap.Get;
+      Dictionary<char, CommandInfo> keymap = _modalKeyMap.Current;
       if (keymap.TryGetValue(keychar, out var cmd))
       {
         cmd.Run();

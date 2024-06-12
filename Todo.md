@@ -42,7 +42,8 @@
     - [x] decouple WordMotion from CommandService
     - [x] combine action with CommandInfo
     - [ ] simplify BufferHelper.Get()
-    - [ ] extract small CursorMotion service
+    - [ ] extract small CursorRender service (also, extract the cursor render logic from TableRenderer)
+      - make TableRenderer more generic
     - [ ] every task should be re-runnable as an executable command
   - ef | Configurable
     - [ ] add config to decide whether to move cursor to nextline on hitting the edge
