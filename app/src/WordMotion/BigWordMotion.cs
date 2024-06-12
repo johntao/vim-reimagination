@@ -2,7 +2,6 @@ namespace VimReimagination.WordMotion;
 using VimReimagination.Model;
 using System.Buffers;
 /// <summary>
-/// this implementation fully comply with vim word motion
 /// </summary>
 internal class BigWordMotionPattern : WordMotion
 {
