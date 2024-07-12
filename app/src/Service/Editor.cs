@@ -26,14 +26,32 @@ internal class Editor(
     while (true)
     {
       _buffer.IfWindowResizedThenReloadBuffer();
-      var readkey = _rw.ReadKey();
-      var keychar = readkey.KeyChar;
-      Dictionary<char, CommandInfo> keymap = _modalKeyMap.Current;
-      if (keymap.TryGetValue(keychar, out var cmd))
+      switch (_modalKeyMap.Modal)
       {
-        cmd.Run();
-        _status.Write($"{keychar} --> {cmd.Code} ");
+        case Modal.Normal:
+          {
+            var readkey = _rw.ReadKey();
+            var keychar = readkey.KeyChar;
+            Dictionary<char, CommandInfo> keymap = _modalKeyMap.Current;
+            if (keymap.TryGetValue(keychar, out var cmd))
+            {
+              cmd.Run();
+              _status.Write($"{keychar} --> {cmd.Code} ");
+            }
+          }
+          break;
+        case Modal.Replace:
+          {
+            // var readkey = _rw.ReadKey();
+            // _rw.WriteMove(_buffer.CurrentLine);
+            // var readkey = _rw.ReadKey();
+            // var keychar = readkey.KeyChar;
+            // _buffer.Replace(keychar);
+            continue;
+          }
+        default: throw new InvalidOperationException();
       }
+
     }
   }
 }

@@ -35,6 +35,7 @@ internal static class CmdEnum
     Row_FullScreen_Forth_StopOnEdge,
     SmallDelete = Category.NormalPageStart,
     SaveFile,
+    ReplaceMode,
   }
   internal static All[] ListOfMotionCommands = Enum.GetValues<All>().Where(static q => q.HasFlag((All)Category.MotionPageStart)).ToArray();
   internal static All[] ListOfNormalCommands = Enum.GetValues<All>().Where(static q => q.HasFlag((All)Category.NormalPageStart)).ToArray();

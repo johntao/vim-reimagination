@@ -4,8 +4,11 @@ using ModalKeyMap = Dictionary<Modal, Dictionary<char, Model.CommandInfo>>;
 internal interface IKeyMap
 {
   Dictionary<char, CommandInfo> Current { get; }
+  Modal Modal { get; set; }
   void Initialize();
 }
+/* it is okay to use instance member once we register as singleton with DI
+*/
 internal class KeyMap(
   ChoosingKeymapTask.IRun chooseLayout,
   CustomizingKeymapTask.IRun mappingCommands
@@ -26,5 +29,6 @@ internal class KeyMap(
       [Modal.Replace] = [],
     };
   }
+  public Modal Modal { get => _modal; set => _modal = value; }
   public Dictionary<char, CommandInfo> Current => _modalKeyMap[_modal];
 }

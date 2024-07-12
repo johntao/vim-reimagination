@@ -5,7 +5,8 @@ internal class Command(
   IWindow win,
   IBuffer buffer,
   PatternMotion.IGo pm,
-  BasicMotion.IGo bm
+  BasicMotion.IGo bm,
+  IKeyMap km
 ) : Command.IGet
 {
   #region types and static
@@ -17,6 +18,7 @@ internal class Command(
   #endregion
   private readonly BasicMotion.IGo _bm = bm;
   private readonly PatternMotion.IGo _pm = pm;
+  private readonly IKeyMap _km = km;
   private readonly IWindow _win = win;
   private readonly IBuffer _buffer = buffer;
   public IList<CommandInfo> List
@@ -46,6 +48,7 @@ internal class Command(
         new(Cmd.Row_FullScreen_Forth_StopOnEdge, "Move 1 full screen width , Forth, Row dir, Stop on edge", 'L', 'N', () => _bm.RowStop(_win.Width)),
         new(Cmd.SmallDelete,     "Delete the character under the cursor", 'x', 'q', () => _buffer.SetChar(' ')),
         new(Cmd.SaveFile,        "Dump current buffer to file", 'z', ';', _buffer.SaveFile),
+        new(Cmd.ReplaceMode,     "Enter Replace Mode", 'm', 'm', () => _km.Modal = Modal.Replace),
       ];
       return _list;
     }
