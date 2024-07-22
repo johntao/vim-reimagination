@@ -5,6 +5,12 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "C#: vim-reimagination Debug",
+      "type": "dotnet",
+      "request": "launch",
+      "projectPath": "${workspaceFolder}/app/vim-reimagination.csproj"
+    },
+    {
       "name": ".NET Core Launch (console)",
       "type": "coreclr",
       "request": "launch",

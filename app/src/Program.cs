@@ -12,14 +12,38 @@ builder.Services
   .AddSingleton<IWindow, ConsoleWindow>()
   .AddSingleton<ICursor, ConsoleCursor>()
   .AddSingleton<StatusBar.IWrite, StatusBar>()
-  .AddSingleton<TableRenderer.IPublic, TableRenderer>()
+  .AddSingleton<ITableRenderer, TableRendererV2>()
   .AddSingleton<ChoosingKeymapTask.IRun, ChoosingKeymapTask>()
   .AddSingleton<PatternMotion.IGo, PatternMotion>()
   .AddSingleton<BasicMotion.IGo, BasicMotion>()
   .AddSingleton<Command.IGet, Command>()
-  .AddSingleton<Editor.IRun, Editor>()
   .AddSingleton<IBuffer, VRBuffer>()
   ;
 
 using IHost host = builder.Build();
+Console.WriteLine("Press any key to start");
+Console.ReadKey();
 await host.RunAsync();
+
+
+
+// IEnumerable<int> qq = Qqq();
+
+// var ww = qq.GetEnumerator();
+// Console.WriteLine($"{ww.Current}\t{ww.MoveNext()}");
+// Console.WriteLine($"{ww.Current}\t{ww.MoveNext()}");
+// Console.WriteLine($"{ww.Current}\t{ww.MoveNext()}");
+// Console.WriteLine($"{ww.Current}\t{ww.MoveNext()}");
+// Console.WriteLine($"{ww.Current}\t{ww.MoveNext()}");
+
+
+// // while (ww.MoveNext())
+// // {
+// //   Console.WriteLine(ww.Current);
+// // }
+// static IEnumerable<int> Qqq()
+// {
+//   yield return 1;
+//   yield return 3;
+//   yield return 7;
+// }

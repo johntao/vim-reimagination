@@ -1,19 +1,7 @@
 namespace VimReimagination.Service;
 using VimReimagination.Helper;
-/*
-future enhancement:
-- column style
-- row style
-*/
-internal class TableRenderer(IReadWrite rw, ICursor cur) : TableRenderer.IPublic
+internal class TableRenderer(IReadWrite rw, ICursor cur) : ITableRenderer
 {
-  internal interface IPublic
-  {
-    void Initialize(IEnumerable<string[]> rows, int hOffset = 1);
-    void UpdateChoice(string yourChoice);
-    int StartLineIdx { get; }
-    int EndLineIdx { get; }
-  }
   enum RowStyle
   {
     None,
