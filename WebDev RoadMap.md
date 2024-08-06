@@ -1,0 +1,40 @@
+- Terminology
+  - Tag, Node, Element all these three names are mostly interchangeable
+    - although there were subtle difference between these names
+    - we will stick with "element" in the following segments for consistency
+- Entry Point
+  - [x] By entering blank data url in the address bar
+  - [ ] (Medium) By loading a local HTML file
+  - [ ] (Advanced) By loading a local HTML file with a local server (using vscode "Live Server" extension)
+- Browser Devtool (the following items applies to every entry points)
+  - [ ] Basic
+    - [ ] get used to these two "Elements", "Console" tabs in the devtool
+    - [ ] get used to "Computed" and "Styles" sub-tabs in the right panel of "Elements" tab in the devtool
+    - [ ] get used to "Select to Inspect" an element (shortcut: "ctrl + shift + c" in Windows)
+  - [x] Edit HTML
+    - [x] understand body (a block element that declare only once), div (block element), span (inline element)
+    - [ ] understand other block/ inline elements
+      - e.g. p, b, ul, li...
+  - [ ] Edit CSS
+    - [x] understand the difference between block and inline elements
+    - [ ] understand more css properties that works on block or inline elements
+    - [ ] understand the [box model](https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/The_box_model)
+    - [ ] use devtool "Computed" panel to edit box-model properties directly
+    - [ ] use devtool "Styles" panel to edit "element" css properties directly
+    - [ ] (Medium) use devtool "Styles" panel to declare extra "style rules" applying to single or multiple elements
+    - [ ] (Advanced) understand the advanced display type "flex and inline-flex"
+  - [ ] Execute JS in console
+    - [ ] know how to use $0 to reference a "Selected" element
+    - [ ] know how to "console.log('hello world')" and "alert('hello world')"
+    - [ ] compose inline onclick event in HTML
+- (Medium) Local HTML file
+  - [ ] Edit JS in files
+    - [ ] use script element to embed javascript
+    - [ ] use script element to reference external javascript file
+    - [ ] compose js modules by reference multiple javascript files
+  - [ ] Edit CSS
+    - [ ] use style element to reference external css file
+- (Advanced) Local HTML file with a local server
+  - [ ] Edit JS in files
+    - [ ] compose js modules with ESM syntax
+  
